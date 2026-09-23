@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 450" width="100%" height="100%">
+  <defs>
+    <linearGradient id="g5Bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1A242B" />
+      <stop offset="100%" stop-color="#0B1013" />
+    </linearGradient>
+    <linearGradient id="basinGrad5" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FFFFFF" />
+      <stop offset="60%" stop-color="#E2E7EB" />
+      <stop offset="100%" stop-color="#9BA8B2" />
+    </linearGradient>
+  </defs>
+  <rect width="600" height="450" rx="10" fill="url(#g5Bg)" />
+
+  <!-- Shampoo Unit Set Up in Modern Wash Area -->
+  <g transform="translate(60, 40) scale(0.85)">
+    <!-- Rear Pedestal -->
+    <path d="M120 180 L220 180 L240 370 L100 370 Z" fill="#1C2025" stroke="#111" stroke-width="2" />
+    <!-- White Tilting Ceramic Basin -->
+    <path d="M80 120 C80 90, 110 80, 170 80 C230 80, 260 90, 260 120 C260 155, 220 175, 170 175 C120 175, 80 155, 80 120 Z" fill="url(#basinGrad5)" stroke="#7A8790" stroke-width="2" />
+    <ellipse cx="170" cy="125" rx="70" ry="30" fill="#CBD5DC" />
+    <!-- Integrated Chair -->
+    <path d="M220 370 L480 370 C500 370, 510 355, 510 330 L510 260 C510 230, 470 220, 420 220 L240 220 Z" fill="#181A1D" stroke="#111" stroke-width="2" />
+    <!-- Chair Cushion -->
+    <path d="M230 210 L330 210 C345 210, 355 220, 360 240 L380 310 C385 325, 470 325, 480 310 L490 325 C490 345, 450 355, 360 355 C320 355, 290 335, 280 300 L260 240 C255 220, 245 210, 230 210 Z" fill="#292E36" stroke="#D4AF37" stroke-width="1.5" />
+  </g>
+
+  <rect x="0" y="380" width="600" height="70" fill="rgba(15,14,13,0.9)" />
+  <text x="30" y="415" font-family="'Cairo', sans-serif" font-size="15" font-weight="800" fill="#FFFFFF">محطة غسيل شعر وشامبو</text>
+  <text x="30" y="435" font-family="'Cairo', sans-serif" font-size="12" font-weight="600" fill="#D4AF37">حوض سيراميك إيطالي متحرك وتمديدات سباكة معزولة</text>
+</svg>

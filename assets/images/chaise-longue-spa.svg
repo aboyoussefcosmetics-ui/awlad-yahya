@@ -1,0 +1,68 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 500" width="100%" height="100%">
+  <defs>
+    <radialGradient id="bgGlow7" cx="50%" cy="50%" r="60%">
+      <stop offset="0%" stop-color="#282622" />
+      <stop offset="100%" stop-color="#121110" />
+    </radialGradient>
+    <linearGradient id="metalGrey7" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#E8ECEF" />
+      <stop offset="50%" stop-color="#949A9F" />
+      <stop offset="100%" stop-color="#4C5156" />
+    </linearGradient>
+    <linearGradient id="gold7" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FFF0C7" />
+      <stop offset="45%" stop-color="#D4AF37" />
+      <stop offset="100%" stop-color="#8F6C1E" />
+    </linearGradient>
+  </defs>
+  <rect width="600" height="500" rx="16" fill="url(#bgGlow7)" />
+  <ellipse cx="300" cy="455" rx="240" ry="22" fill="#000000" opacity="0.75" />
+
+  <!-- Heavy Steel Base & Cross-Support Legs -->
+  <rect x="180" y="435" width="240" height="14" rx="4" fill="url(#metalGrey7)" stroke="#111" />
+  <!-- Scissor / Column Lift Base -->
+  <path d="M220 435 L260 350 L340 350 L380 435" stroke="url(#metalGrey7)" stroke-width="14" stroke-linejoin="round" fill="none" />
+  <path d="M380 435 L340 350 L260 350 L220 435" stroke="#333" stroke-width="4" stroke-linejoin="round" fill="none" />
+  <!-- Under-bed Accessory Basket / Tray -->
+  <rect x="230" y="380" width="140" height="24" rx="3" fill="#1C1B1A" stroke="url(#gold7)" stroke-width="1" />
+  <line x1="250" y1="380" x2="250" y2="404" stroke="#444" stroke-width="1.5" />
+  <line x1="280" y1="380" x2="280" y2="404" stroke="#444" stroke-width="1.5" />
+  <line x1="310" y1="380" x2="310" y2="404" stroke="#444" stroke-width="1.5" />
+  <line x1="340" y1="380" x2="340" y2="404" stroke="#444" stroke-width="1.5" />
+
+  <!-- Main Bed Horizontal Frame Support -->
+  <rect x="100" y="340" width="400" height="14" rx="3" fill="url(#metalGrey7)" />
+
+  <!-- 3-Section Articulated Cushions (Backrest, Center, Legrest) -->
+  <!-- Backrest Section (Reclined angle) -->
+  <g transform="translate(100, 240) rotate(-22)">
+    <rect x="0" y="0" width="135" height="42" rx="8" fill="#242220" stroke="url(#gold7)" stroke-width="1.8" />
+    <rect x="10" y="8" width="115" height="26" rx="5" fill="#302D2A" />
+    <!-- Face Breathing Hole Cutout Plug -->
+    <ellipse cx="68" cy="21" rx="14" ry="7" fill="#181716" stroke="url(#gold7)" stroke-width="1" />
+  </g>
+
+  <!-- Middle Fixed Section -->
+  <rect x="215" y="305" width="130" height="42" rx="8" fill="#242220" stroke="url(#gold7)" stroke-width="1.8" />
+  <rect x="225" y="313" width="110" height="26" rx="5" fill="#302D2A" />
+  <line x1="240" y1="326" x2="320" y2="326" stroke="#48443F" stroke-width="1.5" stroke-dasharray="4 3" />
+
+  <!-- Legrest Section (Slightly tilted down) -->
+  <g transform="translate(340, 305) rotate(14)">
+    <rect x="0" y="0" width="145" height="42" rx="8" fill="#242220" stroke="url(#gold7)" stroke-width="1.8" />
+    <rect x="10" y="8" width="125" height="26" rx="5" fill="#302D2A" />
+    <line x1="25" y1="21" x2="120" y2="21" stroke="#48443F" stroke-width="1.5" stroke-dasharray="4 3" />
+  </g>
+
+  <!-- Removable Contoured Armrests -->
+  <rect x="200" y="275" width="85" height="18" rx="6" fill="#1C1B1A" stroke="url(#metalGrey7)" stroke-width="1.5" />
+  <path d="M242 293 L242 320" stroke="url(#metalGrey7)" stroke-width="6" stroke-linecap="round" />
+
+  <!-- Mechanical Position Adjustment Handles -->
+  <circle cx="160" cy="330" r="7" fill="url(#gold7)" stroke="#111" stroke-width="1.5" />
+  <circle cx="410" cy="350" r="7" fill="url(#gold7)" stroke="#111" stroke-width="1.5" />
+
+  <!-- Badge / Tag -->
+  <rect x="20" y="20" width="125" height="32" rx="6" fill="#1B1B1B" stroke="url(#gold7)" stroke-width="1" />
+  <text x="82" y="41" font-family="'Cairo', sans-serif" font-size="12" font-weight="800" fill="#FFFFFF" text-anchor="middle">شيزلونجات</text>
+</svg>

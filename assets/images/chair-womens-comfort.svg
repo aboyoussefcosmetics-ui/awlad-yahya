@@ -1,0 +1,53 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 500" width="100%" height="100%">
+  <defs>
+    <radialGradient id="bgGlow5" cx="50%" cy="50%" r="60%">
+      <stop offset="0%" stop-color="#2E241E" />
+      <stop offset="100%" stop-color="#14110F" />
+    </radialGradient>
+    <linearGradient id="gold5" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FFF0C7" />
+      <stop offset="45%" stop-color="#D4AF37" />
+      <stop offset="100%" stop-color="#8F6C1E" />
+    </linearGradient>
+    <radialGradient id="leatherWarmBrown" cx="45%" cy="35%" r="60%">
+      <stop offset="0%" stop-color="#473A33" />
+      <stop offset="60%" stop-color="#2D231E" />
+      <stop offset="100%" stop-color="#1A1411" />
+    </radialGradient>
+  </defs>
+  <rect width="600" height="500" rx="16" fill="url(#bgGlow5)" />
+  <ellipse cx="300" cy="450" rx="180" ry="22" fill="#000000" opacity="0.75" />
+
+  <!-- Gold Plated Heavy Circular Disc Base -->
+  <ellipse cx="300" cy="435" rx="125" ry="24" fill="url(#gold5)" stroke="#111" stroke-width="1.5" />
+  <ellipse cx="300" cy="430" rx="112" ry="18" fill="#1C1815" />
+  <rect x="284" y="335" width="32" height="95" fill="url(#gold5)" />
+  <!-- Pedal -->
+  <path d="M316 395 L370 415 L378 426 L358 430 L316 405 Z" fill="url(#gold5)" />
+
+  <!-- Tub Chair Structure -->
+  <path d="M190 230 C185 330, 210 350, 300 350 C390 350, 415 330, 410 230 C405 180, 375 165, 300 165 C225 165, 195 180, 190 230 Z" fill="url(#leatherWarmBrown)" stroke="#111" stroke-width="2" />
+  <!-- Gold Stud Trim Around Edge -->
+  <path d="M192 230 C187 325, 212 346, 300 346 C388 346, 413 325, 408 230" fill="none" stroke="url(#gold5)" stroke-width="2" stroke-dasharray="3 4" />
+
+  <!-- Plush Thick Seat Cushion -->
+  <ellipse cx="300" cy="310" rx="86" ry="30" fill="#221A15" stroke="url(#gold5)" stroke-width="1.5" />
+  <ellipse cx="300" cy="307" rx="74" ry="22" fill="#3D3029" />
+
+  <!-- Diamond Tufting in Backrest -->
+  <g stroke="#534339" stroke-width="1.5">
+    <line x1="250" y1="195" x2="350" y2="270" />
+    <line x1="350" y1="195" x2="250" y2="270" />
+  </g>
+  <circle cx="300" cy="232" r="4.5" fill="url(#gold5)" />
+  <circle cx="260" cy="232" r="3.5" fill="url(#gold5)" />
+  <circle cx="340" cy="232" r="3.5" fill="url(#gold5)" />
+
+  <!-- Sleek Gold T-Footrest -->
+  <rect x="296" y="350" width="8" height="55" fill="url(#gold5)" />
+  <rect x="235" y="405" width="130" height="8" rx="4" fill="url(#gold5)" />
+
+  <!-- Badge / Tag -->
+  <rect x="20" y="20" width="175" height="32" rx="6" fill="#1B1B1B" stroke="url(#gold5)" stroke-width="1" />
+  <text x="107" y="41" font-family="'Cairo', sans-serif" font-size="12" font-weight="800" fill="#F0DCB0" text-anchor="middle">موديل فاخر — ديلايت ستايل</text>
+</svg>

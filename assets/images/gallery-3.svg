@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 450" width="100%" height="100%">
+  <defs>
+    <linearGradient id="g3Bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#2D1F25" />
+      <stop offset="100%" stop-color="#120D10" />
+    </linearGradient>
+    <linearGradient id="roseAccent3" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FFCAD4" />
+      <stop offset="50%" stop-color="#D8829D" />
+      <stop offset="100%" stop-color="#8F3F59" />
+    </linearGradient>
+  </defs>
+  <rect width="600" height="450" rx="10" fill="url(#g3Bg)" />
+
+  <!-- Mirror Station Arch & Ambient LED Rim Glow -->
+  <g transform="translate(180, 30)">
+    <path d="M40 320 L40 100 C40 40, 200 40, 200 100 L200 320 Z" fill="#1C1519" stroke="url(#roseAccent3)" stroke-width="2.5" />
+    <path d="M48 315 L48 100 C48 48, 192 48, 192 100 L192 315 Z" fill="none" stroke="#FFFFFF" stroke-width="1" opacity="0.3" />
+    <!-- Center Vanity Light Reflection -->
+    <ellipse cx="120" cy="110" rx="40" ry="20" fill="#FFFFFF" opacity="0.1" />
+    <line x1="20" y1="260" x2="220" y2="260" stroke="url(#roseAccent3)" stroke-width="3" />
+  </g>
+
+  <!-- Modern Salon Chair Foreground -->
+  <g transform="translate(210, 160) scale(0.65)">
+    <polygon points="40,380 240,380 260,350 20,350" fill="#DCDCDC" />
+    <rect x="130" y="270" width="20" height="90" fill="#DCDCDC" />
+    <path d="M50 170 C40 280, 60 290, 140 290 C220 290, 240 280, 230 170 C225 120, 195 110, 140 110 C85 110, 55 120, 50 170 Z" fill="#251C21" stroke="url(#roseAccent3)" stroke-width="2.5" />
+    <ellipse cx="140" cy="250" rx="65" ry="22" fill="#3D2E36" />
+  </g>
+
+  <rect x="0" y="380" width="600" height="70" fill="rgba(15,14,13,0.9)" />
+  <text x="30" y="415" font-family="'Cairo', sans-serif" font-size="15" font-weight="800" fill="#FFFFFF">تجهيز صالونات التجميل والكوافير</text>
+  <text x="30" y="435" font-family="'Cairo', sans-serif" font-size="12" font-weight="600" fill="#D8829D">تصميمات انسيابية راقية مع قواعد كروم ومضخات هيدروليك ناعمة</text>
+</svg>

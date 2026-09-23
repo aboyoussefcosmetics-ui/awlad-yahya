@@ -1,0 +1,82 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 500" width="100%" height="100%">
+  <defs>
+    <radialGradient id="bgGlow1" cx="50%" cy="50%" r="60%">
+      <stop offset="0%" stop-color="#2A241C" />
+      <stop offset="100%" stop-color="#141414" />
+    </radialGradient>
+    <linearGradient id="gold1" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#F2E3B5" />
+      <stop offset="40%" stop-color="#D4AF37" />
+      <stop offset="100%" stop-color="#916F20" />
+    </linearGradient>
+    <linearGradient id="chrome1" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#FFFFFF" />
+      <stop offset="50%" stop-color="#9E9E9E" />
+      <stop offset="100%" stop-color="#555555" />
+    </linearGradient>
+    <radialGradient id="leatherBlack1" cx="45%" cy="35%" r="60%">
+      <stop offset="0%" stop-color="#383533" />
+      <stop offset="60%" stop-color="#1E1C1A" />
+      <stop offset="100%" stop-color="#0E0D0C" />
+    </radialGradient>
+  </defs>
+  <rect width="600" height="500" rx="16" fill="url(#bgGlow1)" />
+  <ellipse cx="300" cy="450" rx="190" ry="24" fill="#000000" opacity="0.75" />
+
+  <!-- Base & Hydraulic -->
+  <ellipse cx="300" cy="435" rx="125" ry="24" fill="url(#chrome1)" stroke="#222" stroke-width="2" />
+  <ellipse cx="300" cy="430" rx="110" ry="18" fill="#1C1C1C" />
+  <rect x="282" y="340" width="36" height="92" fill="url(#chrome1)" stroke="#333" />
+  <rect x="278" y="415" width="44" height="10" rx="2" fill="url(#gold1)" />
+  <!-- Pedal -->
+  <path d="M315 395 L375 415 L385 430 L368 434 L315 405 Z" fill="url(#chrome1)" />
+
+  <!-- Footrest Assembly -->
+  <path d="M250 330 L180 400 L240 435 L265 410 L210 395 L265 340 Z" fill="url(#chrome1)" />
+  <polygon points="150,410 240,410 220,440 130,440" fill="url(#chrome1)" stroke="#222" />
+  <polygon points="155,413 235,413 218,437 138,437" fill="#222" />
+  <line x1="160" y1="422" x2="215" y2="422" stroke="url(#gold1)" stroke-width="2" />
+  <line x1="150" y1="430" x2="205" y2="430" stroke="url(#gold1)" stroke-width="2" />
+
+  <!-- Seat Frame & Cushion -->
+  <rect x="210" y="315" width="180" height="30" rx="8" fill="url(#chrome1)" />
+  <path d="M205 285 C205 275, 225 270, 300 270 C375 270, 395 275, 395 285 L398 322 C398 332, 380 336, 300 336 C220 336, 202 332, 202 322 Z" fill="url(#leatherBlack1)" stroke="#161514" stroke-width="2" />
+  <line x1="225" y1="298" x2="375" y2="298" stroke="#444" stroke-width="1.5" stroke-dasharray="4 2" />
+  <circle cx="260" cy="298" r="3.5" fill="url(#gold1)" />
+  <circle cx="300" cy="299" r="4" fill="url(#gold1)" />
+  <circle cx="340" cy="298" r="3.5" fill="url(#gold1)" />
+
+  <!-- Backrest -->
+  <path d="M225 145 C235 135, 365 135, 375 145 L385 280 C385 290, 215 290, 215 280 Z" fill="url(#leatherBlack1)" stroke="url(#gold1)" stroke-width="2" />
+  <!-- Chesterfield Diamond Tufting -->
+  <g stroke="#3A3835" stroke-width="1.5">
+    <line x1="250" y1="160" x2="350" y2="235" />
+    <line x1="350" y1="160" x2="250" y2="235" />
+    <line x1="235" y1="200" x2="365" y2="275" />
+    <line x1="365" y1="200" x2="235" y2="275" />
+  </g>
+  <circle cx="300" cy="198" r="4.5" fill="url(#gold1)" />
+  <circle cx="260" cy="235" r="4" fill="url(#gold1)" />
+  <circle cx="340" cy="235" r="4" fill="url(#gold1)" />
+  <circle cx="300" cy="268" r="4" fill="url(#gold1)" />
+
+  <!-- Headrest -->
+  <rect x="288" y="115" width="5" height="25" fill="url(#chrome1)" />
+  <rect x="307" y="115" width="5" height="25" fill="url(#chrome1)" />
+  <rect x="250" y="90" width="100" height="34" rx="8" fill="url(#leatherBlack1)" stroke="url(#gold1)" stroke-width="1.5" />
+  <circle cx="300" cy="107" r="3" fill="url(#gold1)" />
+
+  <!-- Armrests -->
+  <!-- Left -->
+  <path d="M190 315 C175 310, 172 250, 178 220 C182 205, 202 205, 215 210 L220 226 C208 224, 196 224, 195 238 C192 260, 198 305, 208 312 Z" fill="url(#chrome1)" stroke="#222" />
+  <path d="M182 210 L220 210" stroke="url(#gold1)" stroke-width="5" stroke-linecap="round" />
+  <!-- Right -->
+  <path d="M410 315 C425 310, 428 250, 422 220 C418 205, 398 205, 385 210 L380 226 C392 224, 404 224, 405 238 C408 260, 402 305, 392 312 Z" fill="url(#chrome1)" stroke="#222" />
+  <path d="M418 210 L380 210" stroke="url(#gold1)" stroke-width="5" stroke-linecap="round" />
+  <line x1="416" y1="240" x2="435" y2="225" stroke="url(#chrome1)" stroke-width="3" stroke-linecap="round" />
+  <circle cx="438" cy="223" r="5" fill="url(#gold1)" />
+
+  <!-- Badge / Tag -->
+  <rect x="20" y="20" width="160" height="32" rx="6" fill="#1B1B1B" stroke="url(#gold1)" stroke-width="1" />
+  <text x="100" y="41" font-family="'Cairo', sans-serif" font-size="12" font-weight="800" fill="#FFFFFF" text-anchor="middle">كراسي حلاقة وكوافير</text>
+</svg>

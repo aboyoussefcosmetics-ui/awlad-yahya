@@ -1,0 +1,91 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 500" width="100%" height="100%">
+  <defs>
+    <radialGradient id="bgGlow8" cx="50%" cy="50%" r="60%">
+      <stop offset="0%" stop-color="#22252A" />
+      <stop offset="100%" stop-color="#101214" />
+    </radialGradient>
+    <linearGradient id="chrome8" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#FFFFFF" />
+      <stop offset="45%" stop-color="#B2B8BE" />
+      <stop offset="100%" stop-color="#5B626A" />
+    </linearGradient>
+    <linearGradient id="gold8" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#F2E3B5" />
+      <stop offset="50%" stop-color="#D4AF37" />
+      <stop offset="100%" stop-color="#916F20" />
+    </linearGradient>
+  </defs>
+  <rect width="600" height="500" rx="16" fill="url(#bgGlow8)" />
+  <ellipse cx="220" cy="450" rx="110" ry="18" fill="#000000" opacity="0.75" />
+  <ellipse cx="430" cy="450" rx="90" ry="16" fill="#000000" opacity="0.75" />
+
+  <!-- ITEM 1: MULTI-TIER SALON TROLLEY CART (Left Side) -->
+  <g id="salonTrolley">
+    <!-- Steel Frame Columns -->
+    <rect x="140" y="140" width="8" height="280" fill="url(#chrome8)" />
+    <rect x="280" y="140" width="8" height="280" fill="url(#chrome8)" />
+    <!-- Push Handle -->
+    <path d="M125 140 L140 140 M280 140 L295 140" stroke="url(#chrome8)" stroke-width="8" stroke-linecap="round" />
+
+    <!-- 4 Pull-out Storage Trays / Drawers -->
+    <!-- Top Work Surface with Tool Slots -->
+    <rect x="135" y="145" width="160" height="24" rx="4" fill="#1A1C20" stroke="url(#gold8)" stroke-width="1.5" />
+    <!-- Blow Dryer Holder Ring & Accessory Cups -->
+    <circle cx="270" cy="157" r="8" fill="none" stroke="url(#chrome8)" stroke-width="2.5" />
+    <circle cx="245" cy="157" r="6" fill="#2C3036" />
+    <circle cx="230" cy="157" r="5" fill="#2C3036" />
+
+    <!-- Drawer 1 -->
+    <rect x="150" y="185" width="130" height="42" rx="4" fill="#24272D" stroke="#111" stroke-width="1.5" />
+    <rect x="195" y="201" width="40" height="8" rx="2" fill="url(#gold8)" />
+
+    <!-- Drawer 2 -->
+    <rect x="150" y="240" width="130" height="42" rx="4" fill="#24272D" stroke="#111" stroke-width="1.5" />
+    <rect x="195" y="256" width="40" height="8" rx="2" fill="url(#gold8)" />
+
+    <!-- Drawer 3 -->
+    <rect x="150" y="295" width="130" height="42" rx="4" fill="#24272D" stroke="#111" stroke-width="1.5" />
+    <rect x="195" y="311" width="40" height="8" rx="2" fill="url(#gold8)" />
+
+    <!-- Bottom Open Wire Basket -->
+    <rect x="145" y="350" width="140" height="50" rx="4" fill="#1C1E22" stroke="url(#chrome8)" stroke-width="1.5" />
+    <line x1="165" y1="350" x2="165" y2="400" stroke="#444" stroke-width="1" />
+    <line x1="185" y1="350" x2="185" y2="400" stroke="#444" stroke-width="1" />
+    <line x1="205" y1="350" x2="205" y2="400" stroke="#444" stroke-width="1" />
+    <line x1="225" y1="350" x2="225" y2="400" stroke="#444" stroke-width="1" />
+    <line x1="245" y1="350" x2="245" y2="400" stroke="#444" stroke-width="1" />
+    <line x1="265" y1="350" x2="265" y2="400" stroke="#444" stroke-width="1" />
+
+    <!-- 4 Smooth 360-degree Caster Wheels -->
+    <circle cx="144" cy="435" r="9" fill="#1A1C20" stroke="url(#chrome8)" stroke-width="2" />
+    <circle cx="284" cy="435" r="9" fill="#1A1C20" stroke="url(#chrome8)" stroke-width="2" />
+  </g>
+
+  <!-- ITEM 2: STYLIST ROLLING SADDLE STOOL (Right Side) -->
+  <g id="stylistStool">
+    <!-- 5-Star Chrome Star Base -->
+    <path d="M430 415 L360 435 M430 415 L500 435 M430 415 L430 442 M430 415 L390 440 M430 415 L470 440" stroke="url(#chrome8)" stroke-width="8" stroke-linecap="round" />
+    <!-- Caster wheels -->
+    <circle cx="355" cy="442" r="7" fill="#181A1C" stroke="url(#chrome8)" stroke-width="1.5" />
+    <circle cx="505" cy="442" r="7" fill="#181A1C" stroke="url(#chrome8)" stroke-width="1.5" />
+    <circle cx="430" cy="448" r="7" fill="#181A1C" stroke="url(#chrome8)" stroke-width="1.5" />
+
+    <!-- Gas Lift Cylinder -->
+    <rect x="424" y="300" width="12" height="115" fill="url(#chrome8)" />
+    <!-- Height Adjustment Lever -->
+    <path d="M436 325 L470 320" stroke="url(#chrome8)" stroke-width="4" stroke-linecap="round" />
+    <circle cx="472" cy="319" r="4.5" fill="url(#gold8)" />
+
+    <!-- Thick Round Ergonomic Leather Stool Seat -->
+    <ellipse cx="430" cy="290" rx="55" ry="24" fill="#202226" stroke="url(#gold8)" stroke-width="1.5" />
+    <ellipse cx="430" cy="285" rx="46" ry="18" fill="#31353C" />
+    <circle cx="430" cy="285" r="3" fill="url(#gold8)" />
+    <!-- Low Backrest Support Bar -->
+    <path d="M430 285 L430 200" stroke="url(#chrome8)" stroke-width="8" />
+    <rect x="385" y="180" width="90" height="28" rx="8" fill="#202226" stroke="url(#gold8)" stroke-width="1.2" />
+  </g>
+
+  <!-- Badge / Tag -->
+  <rect x="20" y="20" width="195" height="32" rx="6" fill="#1B1B1B" stroke="url(#gold8)" stroke-width="1" />
+  <text x="117" y="41" font-family="'Cairo', sans-serif" font-size="12" font-weight="800" fill="#FFFFFF" text-anchor="middle">مستلزمات وتجهيزات الصالونات</text>
+</svg>

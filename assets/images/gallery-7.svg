@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 450" width="100%" height="100%">
+  <defs>
+    <linearGradient id="g7Bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#24262A" />
+      <stop offset="100%" stop-color="#0E1012" />
+    </linearGradient>
+    <radialGradient id="sparkGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#FFE8A3" />
+      <stop offset="30%" stop-color="#FF9E2C" stop-opacity="0.8" />
+      <stop offset="100%" stop-color="#FF4800" stop-opacity="0" />
+    </radialGradient>
+  </defs>
+  <rect width="600" height="450" rx="10" fill="url(#g7Bg)" />
+
+  <!-- Factory Industrial Workshop Scene -->
+  <!-- Overhead Gantry & Truss -->
+  <line x1="0" y1="40" x2="600" y2="40" stroke="#33383F" stroke-width="6" />
+  <line x1="100" y1="40" x2="150" y2="100" stroke="#252A30" stroke-width="3" />
+  <line x1="200" y1="40" x2="250" y2="100" stroke="#252A30" stroke-width="3" />
+  <line x1="350" y1="40" x2="400" y2="100" stroke="#252A30" stroke-width="3" />
+
+  <!-- Heavy Duty Welding Bench & Steel Chair Frames in Production -->
+  <rect x="120" y="240" width="360" height="20" fill="#3D434A" />
+  <rect x="150" y="260" width="20" height="100" fill="#252A30" />
+  <rect x="430" y="260" width="20" height="100" fill="#252A30" />
+
+  <!-- Steel Tube Frame Being Assembled -->
+  <g stroke="#C0C7CE" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" fill="none">
+    <path d="M220 240 L220 160 L380 160 L380 240" />
+    <path d="M260 160 L260 110 L340 110 L340 160" />
+  </g>
+  <!-- Welding Sparks & Heat Core -->
+  <circle cx="220" cy="160" r="45" fill="url(#sparkGlow)" />
+  <circle cx="220" cy="160" r="12" fill="#FFFFFF" />
+  <!-- Spark Particles -->
+  <line x1="220" y1="160" x2="180" y2="130" stroke="#FFD166" stroke-width="2" />
+  <line x1="220" y1="160" x2="250" y2="120" stroke="#FFD166" stroke-width="2" />
+  <line x1="220" y1="160" x2="170" y2="180" stroke="#FF9E2C" stroke-width="2" />
+  <line x1="220" y1="160" x2="240" y2="200" stroke="#FF9E2C" stroke-width="2" />
+  <line x1="220" y1="160" x2="190" y2="210" stroke="#FFD166" stroke-width="2" />
+
+  <rect x="0" y="380" width="600" height="70" fill="rgba(15,14,13,0.9)" />
+  <text x="30" y="415" font-family="'Cairo', sans-serif" font-size="15" font-weight="800" fill="#FFFFFF">تصنيع الهياكل المعدنية واللحام الدقيق</text>
+  <text x="30" y="435" font-family="'Cairo', sans-serif" font-size="12" font-weight="600" fill="#D4AF37">هياكل فولاذية سميكة معالجة ضد الصدأ ومجهزة لتحمل أقصى درجات التشغيل</text>
+</svg>

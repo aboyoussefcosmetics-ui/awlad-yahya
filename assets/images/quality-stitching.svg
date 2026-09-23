@@ -1,0 +1,80 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 400" width="100%" height="100%">
+  <defs>
+    <radialGradient id="qBg4" cx="50%" cy="50%" r="60%">
+      <stop offset="0%" stop-color="#2D2824" />
+      <stop offset="100%" stop-color="#141211" />
+    </radialGradient>
+    <linearGradient id="threadGold" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#FFFFFF" />
+      <stop offset="30%" stop-color="#F5D88A" />
+      <stop offset="70%" stop-color="#D4AF37" />
+      <stop offset="100%" stop-color="#997720" />
+    </linearGradient>
+    <radialGradient id="deepLeatherBrown" cx="50%" cy="50%" r="70%">
+      <stop offset="0%" stop-color="#342B25" />
+      <stop offset="60%" stop-color="#221C18" />
+      <stop offset="100%" stop-color="#120F0D" />
+    </radialGradient>
+  </defs>
+  <rect width="500" height="400" rx="12" fill="url(#qBg4)" />
+
+  <!-- Macro Upholstery Seam & Double Stitching -->
+  <!-- Left Leather Panel -->
+  <path d="M40 40 L240 40 L235 360 L40 360 Z" fill="url(#deepLeatherBrown)" stroke="#111" stroke-width="2" />
+  <!-- Right Leather Panel -->
+  <path d="M260 40 L460 40 L460 360 L265 360 Z" fill="url(#deepLeatherBrown)" stroke="#111" stroke-width="2" />
+
+  <!-- Center Recessed Fold / Piping Groove -->
+  <path d="M240 40 L260 40 L265 360 L235 360 Z" fill="#0C0A09" />
+  <line x1="250" y1="40" x2="250" y2="360" stroke="#000000" stroke-width="4" />
+
+  <!-- Left Stitch Line (Heavy Duty Thread) -->
+  <g stroke="url(#threadGold)" stroke-width="4.5" stroke-linecap="round">
+    <line x1="205" y1="60" x2="215" y2="85" />
+    <line x1="205" y1="100" x2="215" y2="125" />
+    <line x1="205" y1="140" x2="215" y2="165" />
+    <line x1="205" y1="180" x2="215" y2="205" />
+    <line x1="205" y1="220" x2="215" y2="245" />
+    <line x1="205" y1="260" x2="215" y2="285" />
+    <line x1="205" y1="300" x2="215" y2="325" />
+    <line x1="205" y1="340" x2="215" y2="360" />
+  </g>
+  <!-- Thread Hole Shadows -->
+  <g fill="#0D0B0A">
+    <ellipse cx="205" cy="60" rx="3" ry="2" /> <ellipse cx="215" cy="85" rx="3" ry="2" />
+    <ellipse cx="205" cy="100" rx="3" ry="2" /> <ellipse cx="215" cy="125" rx="3" ry="2" />
+    <ellipse cx="205" cy="140" rx="3" ry="2" /> <ellipse cx="215" cy="165" rx="3" ry="2" />
+    <ellipse cx="205" cy="180" rx="3" ry="2" /> <ellipse cx="215" cy="205" rx="3" ry="2" />
+    <ellipse cx="205" cy="220" rx="3" ry="2" /> <ellipse cx="215" cy="245" rx="3" ry="2" />
+    <ellipse cx="205" cy="260" rx="3" ry="2" /> <ellipse cx="215" cy="285" rx="3" ry="2" />
+  </g>
+
+  <!-- Right Stitch Line (Heavy Duty Thread) -->
+  <g stroke="url(#threadGold)" stroke-width="4.5" stroke-linecap="round">
+    <line x1="285" y1="60" x2="295" y2="85" />
+    <line x1="285" y1="100" x2="295" y2="125" />
+    <line x1="285" y1="140" x2="295" y2="165" />
+    <line x1="285" y1="180" x2="295" y2="205" />
+    <line x1="285" y1="220" x2="295" y2="245" />
+    <line x1="285" y1="260" x2="295" y2="285" />
+    <line x1="285" y1="300" x2="295" y2="325" />
+    <line x1="285" y1="340" x2="295" y2="360" />
+  </g>
+  <g fill="#0D0B0A">
+    <ellipse cx="285" cy="60" rx="3" ry="2" /> <ellipse cx="295" cy="85" rx="3" ry="2" />
+    <ellipse cx="285" cy="100" rx="3" ry="2" /> <ellipse cx="295" cy="125" rx="3" ry="2" />
+    <ellipse cx="285" cy="140" rx="3" ry="2" /> <ellipse cx="295" cy="165" rx="3" ry="2" />
+    <ellipse cx="285" cy="180" rx="3" ry="2" /> <ellipse cx="295" cy="205" rx="3" ry="2" />
+    <ellipse cx="285" cy="220" rx="3" ry="2" /> <ellipse cx="295" cy="245" rx="3" ry="2" />
+    <ellipse cx="285" cy="260" rx="3" ry="2" /> <ellipse cx="295" cy="285" rx="3" ry="2" />
+  </g>
+
+  <!-- Artisan Quality Stamp -->
+  <g transform="translate(60, 240)">
+    <rect x="0" y="0" width="120" height="48" rx="6" fill="#181513" stroke="url(#threadGold)" stroke-width="1.5" />
+    <text x="60" y="21" font-family="'Cairo', sans-serif" font-size="9.5" font-weight="900" fill="#FFFFFF" text-anchor="middle">خياطة مزدوجة</text>
+    <text x="60" y="37" font-family="'Cairo', sans-serif" font-size="8.5" font-weight="600" fill="url(#threadGold)" text-anchor="middle">متانة فائقة ومظهر أنيق</text>
+  </g>
+
+  <text x="250" y="28" font-family="'Cairo', sans-serif" font-size="13" font-weight="800" fill="#FFFFFF" text-anchor="middle">دقة التنجيد والتقفيل اليدوي المحترف</text>
+</svg>

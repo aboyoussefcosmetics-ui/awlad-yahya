@@ -1,0 +1,65 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 400" width="100%" height="100%">
+  <defs>
+    <radialGradient id="qBg2" cx="50%" cy="50%" r="60%">
+      <stop offset="0%" stop-color="#2D231C" />
+      <stop offset="100%" stop-color="#14110E" />
+    </radialGradient>
+    <radialGradient id="leatherGrainMacro" cx="45%" cy="40%" r="65%">
+      <stop offset="0%" stop-color="#3D3028" />
+      <stop offset="50%" stop-color="#28201B" />
+      <stop offset="100%" stop-color="#15110E" />
+    </radialGradient>
+    <linearGradient id="goldLeather" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FFF0C7" />
+      <stop offset="50%" stop-color="#D4AF37" />
+      <stop offset="100%" stop-color="#8F6C1E" />
+    </linearGradient>
+    <!-- Liquid Water Drop Gradient -->
+    <radialGradient id="waterDrop" cx="35%" cy="30%" r="60%">
+      <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.95" />
+      <stop offset="30%" stop-color="#7AC7FF" stop-opacity="0.75" />
+      <stop offset="80%" stop-color="#006BB8" stop-opacity="0.85" />
+      <stop offset="100%" stop-color="#003566" stop-opacity="0.9" />
+    </radialGradient>
+  </defs>
+  <rect width="500" height="400" rx="12" fill="url(#qBg2)" />
+
+  <!-- Textured Leather Swatch Surface -->
+  <rect x="50" y="50" width="400" height="300" rx="14" fill="url(#leatherGrainMacro)" stroke="url(#goldLeather)" stroke-width="2" />
+
+  <!-- Leather Micro-Grain Organic Texture Simulation -->
+  <g stroke="#3A2E26" stroke-width="1.2" opacity="0.45">
+    <path d="M70 80 Q90 100, 110 80 T150 85 T190 80 T230 90 T270 80 T310 85 T350 80 T390 85 T430 80" fill="none" />
+    <path d="M70 120 Q100 135, 130 120 T190 125 T250 120 T310 130 T370 120 T430 125" fill="none" />
+    <path d="M70 160 Q95 175, 120 160 T180 165 T240 160 T300 170 T360 160 T420 165" fill="none" />
+    <path d="M70 200 Q105 215, 140 200 T210 205 T280 200 T350 210 T420 200" fill="none" />
+    <path d="M70 240 Q90 255, 110 240 T170 245 T230 240 T290 250 T350 240 T410 245" fill="none" />
+    <path d="M70 280 Q100 295, 130 280 T200 285 T270 280 T340 290 T410 280" fill="none" />
+    <path d="M70 320 Q95 335, 120 320 T180 325 T240 320 T300 330 T360 320 T420 325" fill="none" />
+  </g>
+
+  <!-- Water Repellent Bead Effect (Hydrophobic Demonstration) -->
+  <!-- Big Water Droplet -->
+  <ellipse cx="230" cy="180" rx="36" ry="32" fill="url(#waterDrop)" filter="drop-shadow(0px 8px 10px rgba(0,0,0,0.6))" />
+  <!-- Droplet Glare Highlight -->
+  <ellipse cx="220" cy="170" rx="12" ry="7" fill="#FFFFFF" opacity="0.8" transform="rotate(-20, 220, 170)" />
+  <circle cx="244" cy="192" r="3.5" fill="#FFFFFF" opacity="0.6" />
+
+  <!-- Smaller Droplets -->
+  <ellipse cx="160" cy="230" rx="18" ry="16" fill="url(#waterDrop)" />
+  <ellipse cx="155" cy="225" rx="6" ry="3.5" fill="#FFFFFF" opacity="0.8" />
+
+  <ellipse cx="310" cy="150" rx="22" ry="20" fill="url(#waterDrop)" />
+  <ellipse cx="304" cy="144" rx="7" ry="4" fill="#FFFFFF" opacity="0.8" />
+
+  <circle cx="280" cy="240" r="10" fill="url(#waterDrop)" />
+
+  <!-- Quality Stamp in Corner -->
+  <g transform="translate(320, 240)">
+    <circle cx="50" cy="50" r="38" fill="#1B1714" stroke="url(#goldLeather)" stroke-width="2" />
+    <path d="M30 50 L44 64 L72 36" fill="none" stroke="url(#goldLeather)" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" />
+    <text x="50" y="80" font-family="'Cairo', sans-serif" font-size="8" font-weight="800" fill="#EADCC9" text-anchor="middle">معالج ضد الصبغات</text>
+  </g>
+
+  <text x="250" y="32" font-family="'Cairo', sans-serif" font-size="14" font-weight="800" fill="#FFFFFF" text-anchor="middle">جلد مستورد عالي المقاومة ومضاد للسوائل</text>
+</svg>

@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 450" width="100%" height="100%">
+  <defs>
+    <linearGradient id="g8Bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#26221D" />
+      <stop offset="100%" stop-color="#12100E" />
+    </linearGradient>
+    <linearGradient id="g8Gold" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FFF0C7" />
+      <stop offset="50%" stop-color="#D4AF37" />
+      <stop offset="100%" stop-color="#8F6C1E" />
+    </linearGradient>
+  </defs>
+  <rect width="600" height="450" rx="10" fill="url(#g8Bg)" />
+
+  <!-- Artisan Upholstery Workshop Table -->
+  <g transform="translate(60, 40)">
+    <!-- Bench -->
+    <rect x="50" y="240" width="380" height="20" fill="#3D3228" />
+    <rect x="80" y="260" width="20" height="90" fill="#241E18" />
+    <rect x="380" y="260" width="20" height="90" fill="#241E18" />
+
+    <!-- Leather Rolls in Rack on Background Wall -->
+    <rect x="40" y="30" width="400" height="15" rx="3" fill="#221C16" />
+    <rect x="60" y="45" width="25" height="110" rx="6" fill="#8B263E" stroke="#111" /> <!-- Burgundy Roll -->
+    <rect x="95" y="45" width="25" height="110" rx="6" fill="#202124" stroke="#111" /> <!-- Black Roll -->
+    <rect x="130" y="45" width="25" height="110" rx="6" fill="#7A4926" stroke="#111" /> <!-- Cognac Roll -->
+    <rect x="165" y="45" width="25" height="110" rx="6" fill="#234E42" stroke="#111" /> <!-- Emerald Green Roll -->
+    <rect x="200" y="45" width="25" height="110" rx="6" fill="#364958" stroke="#111" /> <!-- Navy Slate Roll -->
+    <rect x="235" y="45" width="25" height="110" rx="6" fill="#D4AF37" stroke="#111" /> <!-- Gold Accent Roll -->
+
+    <!-- Chair Backrest Cushion in Active Upholstery Process on Bench -->
+    <rect x="220" y="160" width="160" height="90" rx="10" fill="#8B263E" stroke="url(#g8Gold)" stroke-width="2" />
+    <!-- Diamond Tufting in Progress -->
+    <line x1="240" y1="180" x2="360" y2="230" stroke="#FFF" stroke-width="1.5" stroke-dasharray="4 2" />
+    <line x1="360" y1="180" x2="240" y2="230" stroke="#FFF" stroke-width="1.5" stroke-dasharray="4 2" />
+    <circle cx="300" cy="205" r="4.5" fill="url(#g8Gold)" />
+  </g>
+
+  <rect x="0" y="380" width="600" height="70" fill="rgba(15,14,13,0.9)" />
+  <text x="30" y="415" font-family="'Cairo', sans-serif" font-size="15" font-weight="800" fill="#FFFFFF">ورشة التنجيد وتخصيص الألوان</text>
+  <text x="30" y="435" font-family="'Cairo', sans-serif" font-size="12" font-weight="600" fill="#D4AF37">كتالوج واسع من جلود التنجيد والألوان والدرجات بما يلائم هوية كل صالون</text>
+</svg>

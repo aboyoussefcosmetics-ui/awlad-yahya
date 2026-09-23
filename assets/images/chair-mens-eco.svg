@@ -1,0 +1,58 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 500" width="100%" height="100%">
+  <defs>
+    <radialGradient id="bgGlow3" cx="50%" cy="50%" r="60%">
+      <stop offset="0%" stop-color="#26231E" />
+      <stop offset="100%" stop-color="#141414" />
+    </radialGradient>
+    <linearGradient id="bronzeEco" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#D9C2A7" />
+      <stop offset="50%" stop-color="#8F7861" />
+      <stop offset="100%" stop-color="#544433" />
+    </linearGradient>
+    <linearGradient id="chromeEco" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#EEEEEE" />
+      <stop offset="50%" stop-color="#AAAAAA" />
+      <stop offset="100%" stop-color="#555555" />
+    </linearGradient>
+  </defs>
+  <rect width="600" height="500" rx="16" fill="url(#bgGlow3)" />
+  <ellipse cx="300" cy="450" rx="180" ry="20" fill="#000000" opacity="0.75" />
+
+  <!-- Heavy Round Base -->
+  <ellipse cx="300" cy="435" rx="115" ry="22" fill="url(#chromeEco)" stroke="#222" stroke-width="1.5" />
+  <ellipse cx="300" cy="430" rx="100" ry="17" fill="#1E1D1C" />
+  <rect x="284" y="345" width="32" height="85" fill="url(#chromeEco)" stroke="#333" />
+  <!-- Pedal -->
+  <path d="M312 400 L365 418 L375 428 L355 432 L312 410 Z" fill="url(#chromeEco)" />
+
+  <!-- Footrest Assembly -->
+  <path d="M255 340 L195 405 L245 430 L260 415 L215 398 L265 350 Z" fill="url(#chromeEco)" />
+  <rect x="155" y="410" width="80" height="20" rx="3" fill="#222" stroke="url(#chromeEco)" stroke-width="1.5" />
+
+  <!-- Practical Sturdy Seat -->
+  <rect x="215" y="280" width="170" height="60" rx="8" fill="#1C1B1A" stroke="#2D2B29" stroke-width="2" />
+  <rect x="220" y="285" width="160" height="50" rx="6" fill="#2A2826" />
+  <line x1="230" y1="310" x2="370" y2="310" stroke="#444" stroke-width="1.5" stroke-dasharray="6 4" />
+
+  <!-- Solid Ergonomic Backrest -->
+  <rect x="225" y="160" width="150" height="120" rx="8" fill="#2A2826" stroke="#1F1E1D" stroke-width="2" />
+  <rect x="235" y="170" width="130" height="100" rx="6" fill="#22201E" />
+  <!-- Vertical Support Stitching -->
+  <line x1="270" y1="175" x2="270" y2="265" stroke="#3D3A36" stroke-width="2" />
+  <line x1="300" y1="175" x2="300" y2="265" stroke="#3D3A36" stroke-width="2" />
+  <line x1="330" y1="175" x2="330" y2="265" stroke="#3D3A36" stroke-width="2" />
+
+  <!-- Adjustable Headrest -->
+  <rect x="294" y="125" width="12" height="30" fill="url(#chromeEco)" />
+  <rect x="255" y="95" width="90" height="32" rx="6" fill="#2A2826" stroke="#444" stroke-width="1" />
+
+  <!-- Tubed Chrome Armrests -->
+  <path d="M190 315 L190 230 C190 215, 215 215, 225 230 L225 315" fill="none" stroke="url(#chromeEco)" stroke-width="12" stroke-linecap="round" />
+  <path d="M410 315 L410 230 C410 215, 385 215, 375 230 L375 315" fill="none" stroke="url(#chromeEco)" stroke-width="12" stroke-linecap="round" />
+  <rect x="180" y="215" width="40" height="12" rx="4" fill="#1C1B1A" />
+  <rect x="380" y="215" width="40" height="12" rx="4" fill="#1C1B1A" />
+
+  <!-- Badge / Tag -->
+  <rect x="20" y="20" width="175" height="32" rx="6" fill="#1B1B1B" stroke="url(#bronzeEco)" stroke-width="1" />
+  <text x="107" y="41" font-family="'Cairo', sans-serif" font-size="12" font-weight="800" fill="#E8D5C4" text-anchor="middle">موديل اقتصادي — بريمير</text>
+</svg>
