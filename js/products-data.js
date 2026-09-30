@@ -128,7 +128,7 @@ window.productsData = [
         "status":  "Available",
         "featured":  "Yes",
         "displayOrder":  3,
-        "price":  "1000",
+        "price":  "10000",
         "showPrice":  "Yes",
         "image":  "assets/products/BC-032/main.webp",
         "images":  [
