@@ -9,14 +9,32 @@ document.addEventListener('DOMContentLoaded', () => {
   // ==========================================
   // 1. DATA DEFINITIONS: Products & Categories
   // ==========================================
-  // Synchronized dynamically from data/Awlad_Yahya_Product_Catalog_Database.xlsx via js/products-data.js
-  const productsData = (typeof window !== 'undefined' && Array.isArray(window.productsData) && window.productsData.length > 0)
-    ? window.productsData
-    : [];
+  // Synchronized dynamically from Supabase and data/Awlad_Yahya_Product_Catalog_Database.xlsx
+  let productsData = (() => {
+    try {
+      const cached = localStorage.getItem('ay_local_products');
+      if (cached) {
+        const parsed = JSON.parse(cached);
+        if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+      }
+    } catch (e) {}
+    return (typeof window !== 'undefined' && Array.isArray(window.productsData) && window.productsData.length > 0)
+      ? window.productsData
+      : [];
+  })();
 
-  const categoriesData = (typeof window !== 'undefined' && Array.isArray(window.categoriesData))
-    ? window.categoriesData
-    : [];
+  let categoriesData = (() => {
+    try {
+      const cached = localStorage.getItem('ay_local_categories');
+      if (cached) {
+        const parsed = JSON.parse(cached);
+        if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+      }
+    } catch (e) {}
+    return (typeof window !== 'undefined' && Array.isArray(window.categoriesData))
+      ? window.categoriesData
+      : [];
+  })();
 
   // ==========================================
   // 2. THEME TOGGLE (Dark / Light Mode)
@@ -292,6 +310,20 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Initial products render
   renderProducts('all');
+
+  // Background Cloud Sync from Supabase
+  if (typeof window !== 'undefined' && window.AySupabase) {
+    window.AySupabase.getProducts().then(cloudProds => {
+      if (Array.isArray(cloudProds) && cloudProds.length > 0) {
+        productsData = cloudProds;
+        const currentActiveBtn = document.querySelector('.products-filter-nav .filter-btn.active');
+        const activeCategory = currentActiveBtn ? currentActiveBtn.dataset.filter : 'all';
+        renderProducts(activeCategory);
+      }
+    }).catch(err => {
+      console.debug('Cloud sync info:', err.message);
+    });
+  }
 
   // Synchronize category selection across filter buttons & top bar chips
   function setGlobalCategoryFilter(category, shouldScroll = false) {
