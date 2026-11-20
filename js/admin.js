@@ -19,7 +19,8 @@
     categoryFilter: 'all',
     statusFilter: 'all',
     editingProductId: null,
-    editingCategoryId: null
+    editingCategoryId: null,
+    currentModalImages: []
   };
 
   // DOM Elements
@@ -268,12 +269,159 @@
     }).join('');
   }
 
+  // ==========================================
+  // PRODUCT MODAL TABS & DRAG-AND-DROP MANAGER
+  // ==========================================
+  function switchProductModalTab(tabKey) {
+    const tabBtns = document.querySelectorAll('#productModalTabsNav .modal-tab-btn');
+    const tabPanes = document.querySelectorAll('#productEditModal .modal-tab-content');
+
+    tabBtns.forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.modaltab === tabKey);
+    });
+
+    tabPanes.forEach(pane => {
+      pane.classList.toggle('active', pane.id === `modalTab-${tabKey}`);
+    });
+  }
+
+  function renderModalImagesGrid() {
+    const grid = document.getElementById('prodImagesPreviewGrid');
+    const countEl = document.getElementById('prodImagesCount');
+    const inputMain = document.getElementById('prodImage');
+    const inputExtra = document.getElementById('prodExtraImages');
+
+    if (!grid) return;
+
+    if (countEl) countEl.textContent = state.currentModalImages.length;
+
+    // Sync underlying input fields
+    if (inputMain) inputMain.value = state.currentModalImages[0] || '';
+    if (inputExtra) inputExtra.value = state.currentModalImages.slice(1).join('\n');
+
+    if (state.currentModalImages.length === 0) {
+      grid.innerHTML = `
+        <div style="grid-column: 1 / -1; text-align: center; padding: 24px; color: var(--admin-text-muted); background: var(--admin-bg-card); border-radius: var(--radius-md); border: 1px dashed var(--admin-border);">
+          لم يتم تحديد أي صور لهذا الموديل حتى الآن. اسحب الصور وأفلتها في المربع أعلاه.
+        </div>
+      `;
+      return;
+    }
+
+    grid.innerHTML = state.currentModalImages.map((imgUrl, idx) => {
+      const isMain = idx === 0;
+      const displayFilename = imgUrl.startsWith('data:') ? `صورة مرفوعة حديثاً (${idx + 1})` : imgUrl.split('/').pop();
+      return `
+        <div class="prod-image-card ${isMain ? 'is-main' : ''}">
+          ${isMain ? '<span class="prod-img-badge">⭐ الرئيسية</span>' : ''}
+          <div class="prod-img-preview">
+            <img src="${imgUrl}" alt="صورة الموديل ${idx + 1}">
+          </div>
+          <div style="font-size: 0.72rem; color: var(--admin-text-muted); margin-bottom: 6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="${displayFilename}">
+            ${displayFilename}
+          </div>
+          <div class="prod-img-controls">
+            ${!isMain ? `
+              <button type="button" class="set-main" onclick="window.AyAdmin.setModalMainImage(${idx})" title="تعيين كصورة رئيسية للموديل">
+                تعيين كرئيسية
+              </button>
+            ` : ''}
+            <button type="button" class="remove-img" onclick="window.AyAdmin.removeModalImage(${idx})" title="حذف الصورة">
+              حذف ✕
+            </button>
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  function setModalMainImage(index) {
+    if (index <= 0 || index >= state.currentModalImages.length) return;
+    const selected = state.currentModalImages.splice(index, 1)[0];
+    state.currentModalImages.unshift(selected);
+    renderModalImagesGrid();
+    showToast('تم تعيين الصورة كصورة رئيسية للموديل!', 'info');
+  }
+
+  function removeModalImage(index) {
+    if (index < 0 || index >= state.currentModalImages.length) return;
+    state.currentModalImages.splice(index, 1);
+    renderModalImagesGrid();
+    showToast('تمت إزالة الصورة من الموديل.', 'info');
+  }
+
+  function handleImageFiles(fileList) {
+    if (!fileList || fileList.length === 0) return;
+    const files = Array.from(fileList);
+    let loadedCount = 0;
+
+    showToast(`جاري معالجة ${files.length} صورة...`, 'info');
+
+    files.forEach(file => {
+      if (!file.type.startsWith('image/')) {
+        showToast(`الملف ${file.name} ليس صورة صالحة.`, 'error');
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        state.currentModalImages.push(e.target.result);
+        loadedCount++;
+        if (loadedCount === files.length) {
+          renderModalImagesGrid();
+          showToast(`تمت إضافة ${loadedCount} صورة للموديل بنجاح!`, 'success');
+        }
+      };
+      reader.readAsDataURL(file);
+    });
+  }
+
+  function openMediaPickerForProduct() {
+    const modal = document.getElementById('mediaPickerModal');
+    const grid = document.getElementById('mediaPickerGrid');
+    if (!modal || !grid) return;
+
+    // Collect all available image paths
+    const imageSet = new Set();
+    state.products.forEach(p => {
+      if (p.image) imageSet.add(p.image);
+      if (Array.isArray(p.images)) p.images.forEach(img => { if (img) imageSet.add(img); });
+    });
+    state.categories.forEach(c => {
+      if (c.image) imageSet.add(c.image);
+    });
+
+    const list = Array.from(imageSet);
+    grid.innerHTML = list.map(url => `
+      <div class="media-item-card" onclick="window.AyAdmin.selectMediaForProduct('${url}')" title="اضغط لاختيار هذه الصورة للموديل">
+        <div class="media-preview-box">
+          <img src="${url}" loading="lazy" alt="صورة">
+        </div>
+        <div class="media-filename">${url.split('/').pop()}</div>
+      </div>
+    `).join('');
+
+    modal.classList.add('active');
+  }
+
+  function selectMediaForProduct(url) {
+    if (!state.currentModalImages.includes(url)) {
+      state.currentModalImages.push(url);
+      renderModalImagesGrid();
+      showToast('تمت إضافة الصورة للموديل بنجاح!', 'success');
+    }
+    closeModal('mediaPickerModal');
+  }
+
   // Add & Edit Product Modals
   function openProductModal(productId = null) {
     state.editingProductId = productId;
     const modal = document.getElementById('productEditModal');
     const titleEl = document.getElementById('productModalTitle');
     const form = document.getElementById('productEditForm');
+
+    // Reset to first tab
+    switchProductModalTab('info');
 
     // Populate Category Dropdown
     const catSelect = document.getElementById('prodCategory');
@@ -297,8 +445,6 @@
       document.getElementById('prodStatus').value = p.status || 'Available';
       document.getElementById('prodFeatured').value = p.featured || 'No';
       document.getElementById('prodDisplayOrder').value = p.displayOrder || 0;
-      document.getElementById('prodImage').value = p.image || '';
-      document.getElementById('prodExtraImages').value = Array.isArray(p.images) ? p.images.slice(1).join('\n') : '';
       document.getElementById('prodShortDesc').value = p.shortDesc || '';
       document.getElementById('prodFullDesc').value = p.fullDescription || '';
       document.getElementById('prodSpecs').value = p.specifications || '';
@@ -307,15 +453,21 @@
       document.getElementById('prodWhatsapp').value = p.whatsAppMessage || '';
       document.getElementById('prodSeoTitle').value = p.seoTitle || '';
       document.getElementById('prodSeoDesc').value = p.seoDescription || '';
+
+      // Initialize images array
+      const existingImages = Array.isArray(p.images) && p.images.length > 0 ? [...p.images] : (p.image ? [p.image] : []);
+      state.currentModalImages = existingImages;
+      renderModalImagesGrid();
     } else {
       titleEl.textContent = 'إضافة موديل جديد للمصنع';
       form.reset();
-      // Generate clean new ID
       const nextNum = state.products.length + 1;
       document.getElementById('prodId').value = `AY-NEW-${nextNum}`;
       document.getElementById('prodCode').value = `AY-${nextNum}`;
       document.getElementById('prodStatus').value = 'Available';
       document.getElementById('prodShowPrice').value = 'Yes';
+      state.currentModalImages = [];
+      renderModalImagesGrid();
     }
 
     modal.classList.add('active');
@@ -335,10 +487,14 @@
     const featured = document.getElementById('prodFeatured').value;
     const displayOrder = parseInt(document.getElementById('prodDisplayOrder').value, 10) || 0;
 
-    const mainImage = document.getElementById('prodImage').value.trim();
-    const extraImagesRaw = document.getElementById('prodExtraImages').value.trim();
-    const extraImages = extraImagesRaw ? extraImagesRaw.split('\n').map(s => s.trim()).filter(Boolean) : [];
-    const images = mainImage ? [mainImage, ...extraImages] : extraImages;
+    // Use currentModalImages
+    let images = [...state.currentModalImages];
+    // Fallback if user edited text manually in advanced details
+    const manualMain = document.getElementById('prodImage')?.value.trim();
+    if (images.length === 0 && manualMain) {
+      images.push(manualMain);
+    }
+    const mainImage = images[0] || manualMain || '';
 
     const shortDesc = document.getElementById('prodShortDesc').value.trim();
     const fullDescription = document.getElementById('prodFullDesc').value.trim();
@@ -360,7 +516,7 @@
       status,
       featured,
       displayOrder,
-      image: mainImage || (images[0] || ''),
+      image: mainImage,
       images,
       shortDesc,
       fullDescription,
@@ -743,6 +899,52 @@
         }
       });
     });
+
+    // Product Modal Tab Navigation
+    const tabsNav = document.getElementById('productModalTabsNav');
+    if (tabsNav) {
+      tabsNav.querySelectorAll('.modal-tab-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const tab = btn.dataset.modaltab;
+          if (tab) switchProductModalTab(tab);
+        });
+      });
+    }
+
+    // Product Image Dropzone & File Input
+    const dropzone = document.getElementById('prodDropzone');
+    const fileInput = document.getElementById('prodFileInput');
+
+    if (dropzone && fileInput) {
+      ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+        dropzone.addEventListener(eventName, (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+        });
+      });
+
+      ['dragenter', 'dragover'].forEach(eventName => {
+        dropzone.addEventListener(eventName, () => dropzone.classList.add('dragover'));
+      });
+
+      ['dragleave', 'drop'].forEach(eventName => {
+        dropzone.addEventListener(eventName, () => dropzone.classList.remove('dragover'));
+      });
+
+      dropzone.addEventListener('drop', (e) => {
+        const dt = e.dataTransfer;
+        if (dt && dt.files && dt.files.length > 0) {
+          handleImageFiles(dt.files);
+        }
+      });
+
+      fileInput.addEventListener('change', (e) => {
+        if (e.target.files && e.target.files.length > 0) {
+          handleImageFiles(e.target.files);
+          e.target.value = '';
+        }
+      });
+    }
   }
 
   function closeModal(modalId) {
@@ -807,6 +1009,11 @@
     editProduct: (id) => openProductModal(id),
     duplicateProduct: (id) => duplicateProduct(id),
     deleteProduct: (id) => deleteProduct(id),
+    switchProductModalTab: (tabId) => switchProductModalTab(tabId),
+    setModalMainImage: (idx) => setModalMainImage(idx),
+    removeModalImage: (idx) => removeModalImage(idx),
+    openMediaPickerForProduct: () => openMediaPickerForProduct(),
+    selectMediaForProduct: (url) => selectMediaForProduct(url),
     openAddCategory: () => openCategoryModal(null),
     editCategory: (id) => openCategoryModal(id),
     copyImageUrl: (url) => copyImageUrl(url),

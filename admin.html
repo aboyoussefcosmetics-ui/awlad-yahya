@@ -629,105 +629,189 @@
     <div class="admin-modal">
       <div class="modal-header">
         <h3 id="productModalTitle">تعديل الموديل</h3>
-        <button type="button" class="icon-btn" onclick="window.AyAdmin.closeModal('productEditModal')">
+        <button type="button" class="icon-btn" onclick="window.AyAdmin.closeModal('productEditModal')" title="إغلاق">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
         </button>
       </div>
+
+      <!-- Modal Internal Tabs Navigation -->
+      <div class="modal-tabs-nav" id="productModalTabsNav">
+        <button type="button" class="modal-tab-btn active" data-modaltab="info">📋 البيانات والأسعار</button>
+        <button type="button" class="modal-tab-btn" data-modaltab="images">🖼️ صور الموديل (Drag & Drop)</button>
+        <button type="button" class="modal-tab-btn" data-modaltab="specs">📝 المواصفات والأوصاف</button>
+        <button type="button" class="modal-tab-btn" data-modaltab="seo">🔍 الواتساب والـ SEO</button>
+      </div>
+
       <form id="productEditForm">
         <div class="modal-body">
-          <div class="form-grid-2">
-            <div class="form-group">
-              <label>معرف الموديل الفريد (ID) *</label>
-              <input type="text" id="prodId" required dir="ltr">
-            </div>
-            <div class="form-group">
-              <label>كود الموديل التجاري (Code) *</label>
-              <input type="text" id="prodCode" required dir="ltr">
-            </div>
-            <div class="form-group full">
-              <label>اسم الموديل *</label>
-              <input type="text" id="prodName" required placeholder="مثال: كرسي حلاقة ملكي هيدروليك ذهبي">
-            </div>
-            <div class="form-group">
-              <label>القسم / التصنيف *</label>
-              <select id="prodCategory" required></select>
-            </div>
-            <div class="form-group">
-              <label>السعر بالجنيه المصري (اتركه فارغاً إن كان عند الطلب)</label>
-              <input type="text" id="prodPrice" placeholder="مثال: 10000" dir="ltr">
-            </div>
-            <div class="form-group">
-              <label>إظهار السعر في الموقع</label>
-              <select id="prodShowPrice">
-                <option value="Yes">نعم، أظهر السعر</option>
-                <option value="No">لا، أظهر «السعر عند الطلب»</option>
-              </select>
-            </div>
-            <div class="form-group">
-              <label>حالة التوفر</label>
-              <select id="prodStatus">
-                <option value="Available">متوفر بالمصنع جاهز للتسليم</option>
-                <option value="Out of stock">غير متوفر / تصنيع بالطلب</option>
-              </select>
-            </div>
-            <div class="form-group">
-              <label>تمييز الموديل (Featured)</label>
-              <select id="prodFeatured">
-                <option value="No">عادي</option>
-                <option value="Yes">★ مميز في الصفحة الرئيسية</option>
-              </select>
-            </div>
-            <div class="form-group">
-              <label>ترتيب الظهور (Display Order)</label>
-              <input type="number" id="prodDisplayOrder" value="0">
-            </div>
-            <div class="form-group full">
-              <label>مسار الصورة الرئيسية *</label>
-              <input type="text" id="prodImage" required placeholder="assets/products/BC-032/angle-2.jpg" dir="ltr">
-            </div>
-            <div class="form-group full">
-              <label>صور الزوايا الإضافية (رابط كل صورة في سطر جديد)</label>
-              <textarea id="prodExtraImages" rows="2" placeholder="assets/products/BC-032/angle-1.jpg&#10;assets/products/BC-032/main.webp" dir="ltr"></textarea>
-            </div>
-            <div class="form-group full">
-              <label>الوصف المختصر</label>
-              <input type="text" id="prodShortDesc" placeholder="نبذة تعريفية سريعة تظهر ببطاقة المعرض">
-            </div>
-            <div class="form-group full">
-              <label>الوصف الفني الكامل</label>
-              <textarea id="prodFullDesc" rows="3" placeholder="شرح تفصيلي لمزايا الموديل"></textarea>
-            </div>
-            <div class="form-group">
-              <label>المواصفات الفنية ونظام الحركة</label>
-              <input type="text" id="prodSpecs" placeholder="مضخة هيدروليكية فولاذية عالية التحمل">
-            </div>
-            <div class="form-group">
-              <label>الخامات ونوعية الجلد</label>
-              <input type="text" id="prodMaterials" placeholder="جلد مستورد معالج وإسفنج محقون">
-            </div>
-            <div class="form-group">
-              <label>خيارات الألوان المتاحة</label>
-              <input type="text" id="prodColors" placeholder="أسود، بني، جملي، بيج، أبيض">
-            </div>
-            <div class="form-group">
-              <label>رسالة الواتساب المخصصة</label>
-              <input type="text" id="prodWhatsapp" placeholder="مرحباً، أود الاستفسار عن موديل...">
-            </div>
-            <div class="form-group">
-              <label>عنوان صفحة الموديل (SEO Title)</label>
-              <input type="text" id="prodSeoTitle">
-            </div>
-            <div class="form-group">
-              <label>وصف الموديل في محركات البحث (SEO Desc)</label>
-              <input type="text" id="prodSeoDesc">
+
+          <!-- TAB 1: BASIC INFO & PRICING -->
+          <div class="modal-tab-content active" id="modalTab-info">
+            <div class="form-grid-2">
+              <div class="form-group">
+                <label>معرف الموديل الفريد (ID) *</label>
+                <input type="text" id="prodId" required dir="ltr">
+              </div>
+              <div class="form-group">
+                <label>كود الموديل التجاري (Code) *</label>
+                <input type="text" id="prodCode" required dir="ltr">
+              </div>
+              <div class="form-group full">
+                <label>اسم الموديل *</label>
+                <input type="text" id="prodName" required placeholder="مثال: كرسي حلاقة ملكي هيدروليك ذهبي">
+              </div>
+              <div class="form-group">
+                <label>القسم / التصنيف *</label>
+                <select id="prodCategory" required></select>
+              </div>
+              <div class="form-group">
+                <label>السعر بالجنيه المصري (اتركه فارغاً إن كان عند الطلب)</label>
+                <input type="text" id="prodPrice" placeholder="مثال: 10000" dir="ltr">
+              </div>
+              <div class="form-group">
+                <label>إظهار السعر في الموقع</label>
+                <select id="prodShowPrice">
+                  <option value="Yes">نعم، أظهر السعر للعملاء</option>
+                  <option value="No">لا، أظهر «السعر عند الطلب»</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>حالة التوفر</label>
+                <select id="prodStatus">
+                  <option value="Available">متوفر بالمصنع جاهز للتسليم</option>
+                  <option value="Out of stock">غير متوفر / تصنيع بالطلب</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>تمييز الموديل (Featured)</label>
+                <select id="prodFeatured">
+                  <option value="No">عادي</option>
+                  <option value="Yes">★ مميز في الصفحة الرئيسية والمعرض</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>ترتيب الظهور (Display Order)</label>
+                <input type="number" id="prodDisplayOrder" value="0">
+              </div>
             </div>
           </div>
+
+          <!-- TAB 2: IMAGES & DRAG AND DROP -->
+          <div class="modal-tab-content" id="modalTab-images">
+            <!-- Visual Drag & Drop Zone -->
+            <div class="image-dropzone" id="prodDropzone">
+              <input type="file" id="prodFileInput" accept="image/*" multiple style="display: none;">
+              <div class="dropzone-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+              </div>
+              <h4>اسحب وأفلت صور الكرسي هنا (Drag & Drop)</h4>
+              <p>أو اختر الصور مباشرة من جهازك (JPG, PNG, WEBP)</p>
+              <div class="dropzone-actions">
+                <button type="button" class="header-btn primary" onclick="document.getElementById('prodFileInput').click()">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                  <span>اختيار صور من جهازك</span>
+                </button>
+                <button type="button" class="header-btn" onclick="window.AyAdmin.openMediaPickerForProduct()">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 14 14"/></svg>
+                  <span>اختيار من مكتبة صور الموقع</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Current Images Visual Preview Grid -->
+            <h4 style="font-size: 1rem; font-weight: 800; margin-bottom: 10px; display: flex; align-items: center; justify-content: space-between;">
+              <span>الصور المحددة لهذا الموديل (<span id="prodImagesCount">0</span>)</span>
+              <span style="font-size: 0.8rem; font-weight: normal; color: var(--admin-text-muted);">الصورة الأولى هي المعروضة كواجهة رئيسية</span>
+            </h4>
+            <div class="prod-images-grid" id="prodImagesPreviewGrid"></div>
+
+            <!-- Advanced Manual Inputs (Collapsible) -->
+            <details style="margin-top: 24px; background: var(--admin-bg-card); padding: 14px; border-radius: var(--radius-md); border: 1px solid var(--admin-border);">
+              <summary style="cursor: pointer; font-weight: 700; color: var(--admin-text-muted); font-size: 0.88rem;">
+                ⚙️ إدخال الروابط يدوياً (للمستخدمين المتقدمين)
+              </summary>
+              <div style="margin-top: 14px;">
+                <div class="form-group" style="margin-bottom: 12px;">
+                  <label>مسار الصورة الرئيسية (Main Image URL)</label>
+                  <input type="text" id="prodImage" placeholder="assets/products/BC-032/angle-2.jpg" dir="ltr">
+                </div>
+                <div class="form-group">
+                  <label>صور الزوايا الإضافية (رابط كل صورة في سطر جديد)</label>
+                  <textarea id="prodExtraImages" rows="2" placeholder="assets/products/BC-032/angle-1.jpg&#10;assets/products/BC-032/main.webp" dir="ltr"></textarea>
+                </div>
+              </div>
+            </details>
+          </div>
+
+          <!-- TAB 3: DESCRIPTIONS & SPECIFICATIONS -->
+          <div class="modal-tab-content" id="modalTab-specs">
+            <div class="form-grid-2">
+              <div class="form-group full">
+                <label>الوصف المختصر (يظهر ببطاقة المعرض والكتالوج) *</label>
+                <input type="text" id="prodShortDesc" placeholder="نبذة تعريفية سريعة عن الموديل وخاماته" required>
+              </div>
+              <div class="form-group full">
+                <label>الوصف الفني الكامل (يظهر في صفحة تفاصيل المنتج)</label>
+                <textarea id="prodFullDesc" rows="4" placeholder="شرح تفصيلي لتصميم الكرسي ومميزاته للصالونات ومراكز التجميل"></textarea>
+              </div>
+              <div class="form-group full">
+                <label>المواصفات الفنية ونظام الحركة والهيدروليك</label>
+                <input type="text" id="prodSpecs" placeholder="مضخة هيدروليكية فولاذية عالية التحمل، قاعدة دائرية مطلية بالكروم">
+              </div>
+              <div class="form-group">
+                <label>الخامات ونوعية الجلد والإسفنج</label>
+                <input type="text" id="prodMaterials" placeholder="جلد مستورد معالج وإسفنج محقون عالي الكثافة">
+              </div>
+              <div class="form-group">
+                <label>خيارات الألوان المتاحة بالمصنع</label>
+                <input type="text" id="prodColors" placeholder="أسود، بني، جملي، بيج، أبيض">
+              </div>
+            </div>
+          </div>
+
+          <!-- TAB 4: WHATSAPP & SEO -->
+          <div class="modal-tab-content" id="modalTab-seo">
+            <div class="form-grid-2">
+              <div class="form-group full">
+                <label>رسالة الواتساب المخصصة للاستفسار</label>
+                <input type="text" id="prodWhatsapp" placeholder="مرحباً، أود الاستفسار عن كود هذا الموديل وحجزه من مصنع أولاد يحيى">
+              </div>
+              <div class="form-group full">
+                <label>عنوان صفحة الموديل لمحركات البحث (SEO Title)</label>
+                <input type="text" id="prodSeoTitle" placeholder="كرسي حلاقة ملكي هيدروليك | مصنع أولاد يحيى">
+              </div>
+              <div class="form-group full">
+                <label>وصف الموديل لمحركات البحث (SEO Meta Description)</label>
+                <textarea id="prodSeoDesc" rows="3" placeholder="أفضل كرسي حلاقة هيدروليك بصناعة متقنة وضمان حقيقي من مصنع أولاد يحيى"></textarea>
+              </div>
+            </div>
+          </div>
+
         </div>
+
         <div class="modal-footer">
           <button type="button" class="header-btn" onclick="window.AyAdmin.closeModal('productEditModal')">إلغاء</button>
           <button type="submit" class="header-btn primary">حفظ الموديل</button>
         </div>
       </form>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       MODAL 3: MEDIA PICKER POPUP
+       ========================================================================= -->
+  <div class="admin-modal-overlay" id="mediaPickerModal" style="z-index: 1100;">
+    <div class="admin-modal" style="max-width: 720px; max-height: 80vh;">
+      <div class="modal-header">
+        <h3>اختيار صورة من مكتبة الموقع</h3>
+        <button type="button" class="icon-btn" onclick="window.AyAdmin.closeModal('mediaPickerModal')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p style="font-size: 0.88rem; color: var(--admin-text-muted); margin-bottom: 14px;">اضغط على أي صورة لإضافتها مباشرة إلى صور هذا الموديل:</p>
+        <div class="media-grid" id="mediaPickerGrid"></div>
+      </div>
     </div>
   </div>
 
