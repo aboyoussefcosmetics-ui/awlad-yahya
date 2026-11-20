@@ -350,30 +350,114 @@
     showToast('تمت إزالة الصورة من الموديل.', 'info');
   }
 
-  function handleImageFiles(fileList) {
-    if (!fileList || fileList.length === 0) return;
-    const files = Array.from(fileList);
-    let loadedCount = 0;
-
-    showToast(`جاري معالجة ${files.length} صورة...`, 'info');
-
-    files.forEach(file => {
-      if (!file.type.startsWith('image/')) {
-        showToast(`الملف ${file.name} ليس صورة صالحة.`, 'error');
-        return;
-      }
-
+  /**
+   * Compresses an image file in the browser using HTML5 Canvas.
+   * Resizes oversized phone/camera photos down to max 1400px,
+   * converts to WebP (or JPEG fallback) at 0.82 quality.
+   * Reduces 5-10MB images down to ~150-250KB while preserving crisp details.
+   */
+  function compressImageFile(file, maxWidth = 1400, maxHeight = 1400, quality = 0.82) {
+    return new Promise((resolve, reject) => {
+      const originalSize = file.size;
       const reader = new FileReader();
-      reader.onload = (e) => {
-        state.currentModalImages.push(e.target.result);
-        loadedCount++;
-        if (loadedCount === files.length) {
-          renderModalImagesGrid();
-          showToast(`تمت إضافة ${loadedCount} صورة للموديل بنجاح!`, 'success');
-        }
+
+      reader.onerror = () => reject(new Error('فشل قراءة ملف الصورة'));
+      reader.onload = (readerEvent) => {
+        const img = new Image();
+        img.onerror = () => reject(new Error('فشل فك تشفير الصورة'));
+        img.onload = () => {
+          let width = img.width;
+          let height = img.height;
+
+          // Scale down proportionally if larger than maximum bounds
+          if (width > maxWidth || height > maxHeight) {
+            if (width / height > maxWidth / maxHeight) {
+              height = Math.round((height * maxWidth) / width);
+              width = maxWidth;
+            } else {
+              width = Math.round((width * maxHeight) / height);
+              height = maxHeight;
+            }
+          }
+
+          const canvas = document.createElement('canvas');
+          canvas.width = width;
+          canvas.height = height;
+
+          const ctx = canvas.getContext('2d');
+          ctx.imageSmoothingEnabled = true;
+          ctx.imageSmoothingQuality = 'high';
+          ctx.drawImage(img, 0, 0, width, height);
+
+          // Export as webp, fallback to jpeg if unsupported
+          let outputType = 'image/webp';
+          let dataUrl = canvas.toDataURL(outputType, quality);
+          if (!dataUrl.startsWith('data:image/webp')) {
+            outputType = 'image/jpeg';
+            dataUrl = canvas.toDataURL(outputType, quality);
+          }
+
+          const compressedSize = Math.round((dataUrl.length * 3) / 4);
+
+          // If original file was already smaller and optimized, keep original
+          if (compressedSize >= originalSize && originalSize > 0) {
+            dataUrl = readerEvent.target.result;
+          }
+
+          resolve({
+            dataUrl,
+            originalSize,
+            compressedSize,
+            width,
+            height,
+            name: file.name
+          });
+        };
+        img.src = readerEvent.target.result;
       };
       reader.readAsDataURL(file);
     });
+  }
+
+  async function handleImageFiles(fileList) {
+    if (!fileList || fileList.length === 0) return;
+    const files = Array.from(fileList);
+
+    const validFiles = files.filter(f => f.type.startsWith('image/'));
+    if (validFiles.length === 0) {
+      showToast('يرجى اختيار ملفات صور صالحة (JPG, PNG, WEBP).', 'error');
+      return;
+    }
+
+    showToast(`جاري معالجة وضغط ${validFiles.length} صورة تلقائياً لتسريع التصفح...`, 'info');
+
+    let totalSavedKb = 0;
+    let processedCount = 0;
+
+    for (const file of validFiles) {
+      try {
+        const result = await compressImageFile(file);
+        state.currentModalImages.push(result.dataUrl);
+        processedCount++;
+
+        const origKb = Math.round(result.originalSize / 1024);
+        const compKb = Math.round(result.compressedSize / 1024);
+        const saved = Math.max(0, origKb - compKb);
+        totalSavedKb += saved;
+      } catch (err) {
+        console.error('Image compression error:', err);
+        showToast(`تعذر ضغط الصورة ${file.name}`, 'error');
+      }
+    }
+
+    if (processedCount > 0) {
+      renderModalImagesGrid();
+      const savedMb = (totalSavedKb / 1024).toFixed(1);
+      const msg = totalSavedKb > 400
+        ? `تم ضغط وإضافة ${processedCount} صورة بنجاح! ⚡ (تم توفير ${savedMb} MB لتسريع فتح الموقع)`
+        : `تمت معالجة وإضافة ${processedCount} صورة للموديل بنجاح! ⚡`;
+      showToast(msg, 'success');
+    }
   }
 
   function openMediaPickerForProduct() {
