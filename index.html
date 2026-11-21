@@ -18,6 +18,12 @@
   <meta property="og:image" content="assets/images/hero-barber-chair.jpg">
   <meta property="og:url" content="https://awladyahya.com">
 
+  <!-- Canonical Link (Dynamic) -->
+  <link rel="canonical" id="canonicalLink" href="https://awladyahya.com">
+
+  <!-- Google Site Verification (GSC) -->
+  <meta name="google-site-verification" id="googleSiteVerificationMeta" content="">
+
   <!-- Favicon -->
   <link rel="icon" type="image/svg+xml" href="assets/images/logo.svg">
 
@@ -29,28 +35,114 @@
   <!-- Stylesheet -->
   <link rel="stylesheet" href="css/style.css">
 
-  <!-- Structured Data / JSON-LD -->
-  <script type="application/ld+json">
+  <!-- Structured Data: Organization & LocalBusiness (RULES.md Standard 5) -->
+  <script type="application/ld+json" id="orgSchemaJson">
   {
     "@context": "https://schema.org",
-    "@type": "LocalBusiness",
-    "name": "مصنع أولاد يحيى لتصنيع كراسي الحلاقة",
-    "alternateName": "Awlad Yahya Barber Chairs Factory",
-    "description": "مصنع متخصص في تصنيع وتوريد كراسي الحلاقة، كراسي صالونات التجميل، كراسي الشامبو، الشيزلونجات، وتجهيزات الصالونات.",
-    "telephone": "+201008355616",
-    "url": "https://awladyahya.com",
-    "sameAs": [
-      "https://www.facebook.com/YahiaSonsCosmetics",
-      "https://wa.me/c/201064116703",
-      "https://t.me/YahiaSons"
-    ],
-    "priceRange": "$$",
-    "address": {
-      "@type": "PostalAddress",
-      "addressCountry": "EG"
-    }
+    "@graph": [
+      {
+        "@type": ["LocalBusiness", "Organization"],
+        "@id": "https://awladyahya.com/#organization",
+        "name": "مصنع أولاد يحيى لتصنيع كراسي الحلاقة ومعدات الصالونات",
+        "alternateName": "Awlad Yahya Barber Chairs Factory",
+        "url": "https://awladyahya.com",
+        "logo": "https://awladyahya.com/assets/images/logo.svg",
+        "image": "https://awladyahya.com/assets/images/hero-barber-chair.jpg",
+        "description": "مصنع مصري متخصص ورائد في تصنيع كراسي الحلاقة الهيدروليك الفاخرة، كراسي صالونات التجميل والكوافير، أحواض غسيل الشعر، الشيزلونجات، وتجهيزات الصالونات المتكاملة بأعلى معايير المتانة والضمان المباشر.",
+        "telephone": "+201008355616",
+        "priceRange": "$$",
+        "currenciesAccepted": "EGP",
+        "paymentAccepted": "Cash, Bank Transfer, Vodafone Cash",
+        "address": {
+          "@type": "PostalAddress",
+          "addressLocality": "القاهرة",
+          "addressRegion": "القاهرة",
+          "addressCountry": "EG"
+        },
+        "geo": {
+          "@type": "GeoCoordinates",
+          "latitude": "30.0444",
+          "longitude": "31.2357"
+        },
+        "openingHoursSpecification": [
+          {
+            "@type": "OpeningHoursSpecification",
+            "dayOfWeek": ["Saturday", "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday"],
+            "opens": "09:00",
+            "closes": "20:00"
+          }
+        ],
+        "sameAs": [
+          "https://www.facebook.com/YahiaSonsCosmetics",
+          "https://wa.me/c/201064116703",
+          "https://t.me/YahiaSons"
+        ],
+        "hasOfferCatalog": {
+          "@type": "OfferCatalog",
+          "name": "كتالوج تصنيع معدات وكراسي الصالونات",
+          "itemListElement": [
+            {
+              "@type": "OfferCatalog",
+              "name": "كراسي حلاقة وكوافير هيدروليك",
+              "itemListElement": "كراسي حلاقة رجالي كلاسيك، كراسي ملكية، كراسي كوافير حريمي"
+            },
+            {
+              "@type": "OfferCatalog",
+              "name": "أحواض ووحدات غسيل الشعر",
+              "itemListElement": "أحواض سيراميك إيطالي وبورسلين مع كراسي الشامبو المتكاملة"
+            },
+            {
+              "@type": "OfferCatalog",
+              "name": "كراسي حلاقة أطفال وشيزلونجات",
+              "itemListElement": "كراسي أطفال بأشكال جذابة وشيزلونجات عناية وبشرة"
+            }
+          ]
+        }
+      },
+      {
+        "@type": "FAQPage",
+        "@id": "https://awladyahya.com/#faq",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "هل يوجد شحن لكافة المحافظات من مصنع أولاد يحيى؟",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "نعم، تتوفر خدمة الشحن والتوصيل الآمن مع التغليف المحكم لجميع محافظات جمهورية مصر العربية مباشرة من أرض المصنع."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "هل يمكن اختيار ألوان وتخصيص تنجيد كراسي الحلاقة؟",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "نعم، يوفر مصنع أولاد يحيى إمكانية تخصيص درجات ألوان الجلد ونوعية التنجيد والخياطة (كابيتونيه يدوي أو مودرن) حسب هوية وديكور صالونك."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "هل تتوفر موديلات اقتصادية للمشروعات الجديدة وصالونات الشباب؟",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "نعم، نوفر تشكيلة عملية واقتصادية متينة تناسب من يبدأ مشروعه الجديد بأفضل سعر مصنع وبجودة تفوق المستورد."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "هل يوفر المصنع بيع جملة وتجهيز صالونات بالكامل؟",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "نعم، نقدم عروضاً وتخفيضات خاصة لتجار الجملة ولأصحاب الصالونات الكبرى والمراكز مع توافر كافة قطع الغيار وخدمة ما بعد البيع."
+            }
+          }
+        ]
+      }
+    ]
   }
   </script>
+
+  <!-- Dynamic Product Schema (Injected on PDP view) -->
+  <script type="application/ld+json" id="productDynamicSchemaJson">{}</script>
 </head>
 <body>
 
@@ -373,7 +465,12 @@
 
         <!-- Products Grid (Dynamic injection via script.js) -->
         <div class="products-grid" id="productsContainer">
-          <!-- Rendered by JS -->
+          <!-- Rendered by JS with Skeleton Loading -->
+        </div>
+
+        <!-- Catalog Pagination Controls (RULES.md Standard 1) -->
+        <div class="catalog-pagination" id="catalogPagination">
+          <!-- Rendered dynamically by script.js -->
         </div>
       </div>
 

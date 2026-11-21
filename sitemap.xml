@@ -1,0 +1,474 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
+  <!-- Homepage -->
+  <url>
+    <loc>https://awladyahya.com/</loc>
+    <lastmod>2026-11-21</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>1.0</priority>
+  </url>
+
+  <!-- Royal Chair Special Landing Page -->
+  <url>
+    <loc>https://awladyahya.com/royal-chair.html</loc>
+    <lastmod>2026-11-21</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <!-- Category: كراسي حلاقة وكوافير -->
+  <url>
+    <loc>https://awladyahya.com/#category/BC</loc>
+    <lastmod>2026-11-21</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <!-- Category: كراسي أطفال -->
+  <url>
+    <loc>https://awladyahya.com/#category/KC</loc>
+    <lastmod>2026-11-21</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <!-- Category: أحواض غسيل الشعر -->
+  <url>
+    <loc>https://awladyahya.com/#category/SH</loc>
+    <lastmod>2026-11-21</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <!-- Category: شيزلونجات -->
+  <url>
+    <loc>https://awladyahya.com/#category/CH</loc>
+    <lastmod>2026-11-21</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <!-- Category: مستلزمات وتجهيزات الصالونات -->
+  <url>
+    <loc>https://awladyahya.com/#category/EQ</loc>
+    <lastmod>2026-11-21</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://awladyahya.com/#product/BC-031</loc>
+    <lastmod>2026-11-21</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+    <image:image>
+      <image:loc>https://awladyahya.com/assets/products/BC-031/main.webp</image:loc>
+      <image:title>ملكى حديث فضى</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://awladyahya.com/#product/BC-030</loc>
+    <lastmod>2026-11-21</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+    <image:image>
+      <image:loc>https://awladyahya.com/assets/products/BC-030/main.webp</image:loc>
+      <image:title>ملكى مصرى كبير استانليس بالكامل ذهبى</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://awladyahya.com/#product/BC-032</loc>
+    <lastmod>2026-11-21</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+    <image:image>
+      <image:loc>https://awladyahya.com/assets/products/BC-032/main.webp</image:loc>
+      <image:title>ملكى حديث ذهبى</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://awladyahya.com/#product/BC-029</loc>
+    <lastmod>2026-11-21</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+    <image:image>
+      <image:loc>https://awladyahya.com/assets/products/BC-029/main.webp</image:loc>
+      <image:title>ملكى مصرى كبير استانليس بالكامل فضى</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://awladyahya.com/#product/BC-003</loc>
+    <lastmod>2026-11-21</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+    <image:image>
+      <image:loc>https://awladyahya.com/assets/products/BC-03/main.webp</image:loc>
+      <image:title>شبك ذهبى</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://awladyahya.com/#product/BC-009</loc>
+    <lastmod>2026-11-21</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+    <image:image>
+      <image:loc>https://awladyahya.com/assets/products/BC-09/main.webp</image:loc>
+      <image:title>كرسى تفاحه دواسه كاوتش</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://awladyahya.com/#product/BC-010</loc>
+    <lastmod>2026-11-21</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+    <image:image>
+      <image:loc>https://awladyahya.com/assets/products/BC-010/main.webp</image:loc>
+      <image:title>تمساح دواسه معدن</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://awladyahya.com/#product/BC-012</loc>
+    <lastmod>2026-11-21</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+    <image:image>
+      <image:loc>https://awladyahya.com/assets/products/BC-012/main.webp</image:loc>
+      <image:title>كريستال دواسه كوتش</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://awladyahya.com/#product/BC-013</loc>
+    <lastmod>2026-11-21</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+    <image:image>
+      <image:loc>https://awladyahya.com/assets/products/BC-013/main.webp</image:loc>
+      <image:title>كرسي رويال هيدروليك مدور (Royal Round) ذهبى</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://awladyahya.com/#product/BC-014</loc>
+    <lastmod>2026-11-21</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+    <image:image>
+      <image:loc>https://awladyahya.com/assets/products/BC-014/main.webp</image:loc>
+      <image:title>كرسي رويال هيدروليك مدور (Royal Round) فضى</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://awladyahya.com/#product/BC-001</loc>
+    <lastmod>2026-11-21</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+    <image:image>
+      <image:loc>https://awladyahya.com/assets/products/BC-01/main.webp</image:loc>
+      <image:title>كرسى ثابت عادى</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://awladyahya.com/#product/BC-002</loc>
+    <lastmod>2026-11-21</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+    <image:image>
+      <image:loc>https://awladyahya.com/assets/products/BC-02/main.webp</image:loc>
+      <image:title>كرسى لوكس دواسه عريضه</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://awladyahya.com/#product/BC-016</loc>
+    <lastmod>2026-11-21</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+    <image:image>
+      <image:loc>https://awladyahya.com/assets/products/BC-016/main.webp</image:loc>
+      <image:title>موزه باكم كبير ذهبى</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://awladyahya.com/#product/BC-019</loc>
+    <lastmod>2026-11-21</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+    <image:image>
+      <image:loc>https://awladyahya.com/assets/products/BC-019/main.webp</image:loc>
+      <image:title>موزه باكم كبير فضى</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://awladyahya.com/#product/BC-020</loc>
+    <lastmod>2026-11-21</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+    <image:image>
+      <image:loc>https://awladyahya.com/assets/products/BC-020/main.webp</image:loc>
+      <image:title>موزه حريمى فضى</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://awladyahya.com/#product/BC-018</loc>
+    <lastmod>2026-11-21</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+    <image:image>
+      <image:loc>https://awladyahya.com/assets/products/BC-018/main.webp</image:loc>
+      <image:title>موزه حريمى ذهبى</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://awladyahya.com/#product/BC-021</loc>
+    <lastmod>2026-11-21</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+    <image:image>
+      <image:loc>https://awladyahya.com/assets/products/BC-021/main.webp</image:loc>
+      <image:title>مربع يد استانليس باكم حريمى فضى</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://awladyahya.com/#product/BC-022</loc>
+    <lastmod>2026-11-21</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+    <image:image>
+      <image:loc>https://awladyahya.com/assets/products/BC-022/main.webp</image:loc>
+      <image:title>مربع يد استانليس باكم كبير فضى</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://awladyahya.com/#product/BC-025</loc>
+    <lastmod>2026-11-21</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+    <image:image>
+      <image:loc>https://awladyahya.com/assets/products/BC-025/main.webp</image:loc>
+      <image:title>مربع اقتصادى فضى اسود</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://awladyahya.com/#product/BC-026</loc>
+    <lastmod>2026-11-21</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+    <image:image>
+      <image:loc>https://awladyahya.com/assets/products/BC-026/main.webp</image:loc>
+      <image:title>مربع اقتصادى فضى جلد مختلف</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://awladyahya.com/#product/BC-023</loc>
+    <lastmod>2026-11-21</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+    <image:image>
+      <image:loc>https://awladyahya.com/assets/products/BC-023/main.webp</image:loc>
+      <image:title>مربع يد استانليس باكم حريمى ذهبى</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://awladyahya.com/#product/BC-024</loc>
+    <lastmod>2026-11-21</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+    <image:image>
+      <image:loc>https://awladyahya.com/assets/products/BC-024/main.webp</image:loc>
+      <image:title>مربع يد استالنليس باكم كبير ذهبى</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://awladyahya.com/#product/BC-028</loc>
+    <lastmod>2026-11-21</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+    <image:image>
+      <image:loc>https://awladyahya.com/assets/products/BC-028/main.webp</image:loc>
+      <image:title>مربع اقتصادى ذهبى</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://awladyahya.com/#product/BC-033</loc>
+    <lastmod>2026-11-21</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+    <image:image>
+      <image:loc>https://awladyahya.com/assets/products/BC-033/main.webp</image:loc>
+      <image:title>كرسى الورده</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://awladyahya.com/#product/BC-034</loc>
+    <lastmod>2026-11-21</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+    <image:image>
+      <image:loc>https://awladyahya.com/assets/products/BC-034/main.webp</image:loc>
+      <image:title>كرسى الفنجان</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://awladyahya.com/#product/CH-01</loc>
+    <lastmod>2026-11-21</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+    <image:image>
+      <image:loc>https://awladyahya.com/assets/products/CH-01/main.webp</image:loc>
+      <image:title>شازلونج</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://awladyahya.com/#product/CH-02</loc>
+    <lastmod>2026-11-21</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+    <image:image>
+      <image:loc>https://awladyahya.com/assets/products/CH-02/main.webp</image:loc>
+      <image:title>كرسى قاعده نجمه للشازلونج</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://awladyahya.com/#product/BC-036</loc>
+    <lastmod>2026-11-21</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+    <image:image>
+      <image:loc>https://awladyahya.com/assets/products/BC-036/main.webp</image:loc>
+      <image:title>طياره بنتلى</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://awladyahya.com/#product/CH-03</loc>
+    <lastmod>2026-11-21</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+    <image:image>
+      <image:loc>https://awladyahya.com/assets/products/CH-03/main.webp</image:loc>
+      <image:title>كرسى بدكير بالبف</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://awladyahya.com/#product/SH-02</loc>
+    <lastmod>2026-11-21</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+    <image:image>
+      <image:loc>https://awladyahya.com/assets/products/SH-02/main.webp</image:loc>
+      <image:title>حوض غسيل بورسلين ذهبى</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://awladyahya.com/#product/SH-03</loc>
+    <lastmod>2026-11-21</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+    <image:image>
+      <image:loc>https://awladyahya.com/assets/products/SH-03/main.webp</image:loc>
+      <image:title>حوض غسيل بورسلين فضى</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://awladyahya.com/#product/SH-04</loc>
+    <lastmod>2026-11-21</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+    <image:image>
+      <image:loc>https://awladyahya.com/assets/products/SH-04/main.webp</image:loc>
+      <image:title>حوض غسيل بورسلين بدون اكسسوار</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://awladyahya.com/#product/SH-01</loc>
+    <lastmod>2026-11-21</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+    <image:image>
+      <image:loc>https://awladyahya.com/assets/products/SH-01/main.webp</image:loc>
+      <image:title>حوض غسيل شعبى</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://awladyahya.com/#product/KC-001</loc>
+    <lastmod>2026-11-21</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+    <image:image>
+      <image:loc>https://awladyahya.com/assets/products/KC-001/main.webp</image:loc>
+      <image:title>كرسي حلاقة أطفال شكل سيارة </image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://awladyahya.com/#product/BC-017</loc>
+    <lastmod>2026-11-21</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+    <image:image>
+      <image:loc>https://awladyahya.com/assets/images/chair-mens-classic.svg</image:loc>
+      <image:title>كرسى موزه</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://awladyahya.com/#product/BC-007</loc>
+    <lastmod>2026-11-21</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+    <image:image>
+      <image:loc>https://awladyahya.com/assets/images/chair-mens-classic.svg</image:loc>
+      <image:title>دبابه فك وتركيب بالكامل دواسه كاوتش</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://awladyahya.com/#product/BC-008</loc>
+    <lastmod>2026-11-21</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+    <image:image>
+      <image:loc>https://awladyahya.com/assets/images/chair-mens-classic.svg</image:loc>
+      <image:title>تفاحه دواسه معدن</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://awladyahya.com/#product/BC-011</loc>
+    <lastmod>2026-11-21</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+    <image:image>
+      <image:loc>https://awladyahya.com/assets/images/chair-mens-classic.svg</image:loc>
+      <image:title>كريستال دواسه معدن</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://awladyahya.com/#product/BC-006</loc>
+    <lastmod>2026-11-21</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+    <image:image>
+      <image:loc>https://awladyahya.com/assets/images/chair-mens-classic.svg</image:loc>
+      <image:title>كرسى لوكس دواسه كوتش ثابت</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://awladyahya.com/#product/BC-035</loc>
+    <lastmod>2026-11-21</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+    <image:image>
+      <image:loc>https://awladyahya.com/assets/images/chair-mens-classic.svg</image:loc>
+      <image:title>ملكى حديث</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://awladyahya.com/#product/BC-004</loc>
+    <lastmod>2026-11-21</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+    <image:image>
+      <image:loc>https://awladyahya.com/assets/images/chair-mens-classic.svg</image:loc>
+      <image:title>كرسى دبابه ثابت دواسه كوتش</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://awladyahya.com/#product/BC-005</loc>
+    <lastmod>2026-11-21</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+    <image:image>
+      <image:loc>https://awladyahya.com/assets/images/chair-mens-classic.svg</image:loc>
+      <image:title>كرسى دبابه بيلف دواسه كوتش</image:title>
+    </image:image>
+  </url>
+</urlset>

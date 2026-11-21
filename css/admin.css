@@ -1066,3 +1066,100 @@ body {
     padding: 0 16px;
   }
 }
+
+/* =============================================================================
+   RULES.md STANDARD 4 & 1: ADMIN SKELETON & PAGINATION
+   ============================================================================= */
+@keyframes adminShimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.admin-skeleton-box {
+  background: linear-gradient(
+    90deg,
+    var(--admin-bg-card) 25%,
+    var(--admin-bg-input) 50%,
+    var(--admin-bg-card) 75%
+  );
+  background-size: 200% 100%;
+  animation: adminShimmer 1.5s infinite linear;
+  border-radius: var(--radius-sm);
+  display: inline-block;
+}
+
+.admin-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  background: var(--admin-bg-card);
+  border: 1px solid var(--admin-border);
+  border-top: none;
+  border-radius: 0 0 var(--radius-md) var(--radius-md);
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.admin-pagination-info {
+  font-size: 0.88rem;
+  color: var(--admin-text-muted);
+  font-weight: 600;
+}
+
+.admin-pagination-btns {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.admin-page-btn {
+  min-width: 34px;
+  height: 34px;
+  padding: 0 10px;
+  border-radius: var(--radius-sm);
+  background: var(--admin-bg-input);
+  border: 1px solid var(--admin-border);
+  color: var(--admin-text-main);
+  font-family: inherit;
+  font-size: 0.88rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.admin-page-btn:hover:not(:disabled) {
+  border-color: var(--admin-gold);
+  color: var(--admin-gold);
+}
+
+.admin-page-btn.active {
+  background: var(--admin-gold);
+  border-color: var(--admin-gold);
+  color: #000;
+  font-weight: 800;
+}
+
+.admin-page-btn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+/* Media Library Upload Dropzone */
+.media-upload-area {
+  border: 2px dashed var(--admin-border-focus);
+  background: var(--admin-bg-card);
+  border-radius: var(--radius-lg);
+  padding: 28px;
+  text-align: center;
+  margin-bottom: 24px;
+  transition: var(--transition);
+  cursor: pointer;
+}
+
+.media-upload-area:hover,
+.media-upload-area.dragover {
+  border-color: var(--admin-gold);
+  background: var(--admin-gold-subtle);
+}
+

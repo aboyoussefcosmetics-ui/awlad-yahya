@@ -1,0 +1,25 @@
+# Awlad Yahya Barber Chairs Factory - Robots Directives
+# Optimized for Googlebot, Bingbot, and AI Search Crawlers (GEO Optimization)
+
+User-agent: *
+Allow: /
+Disallow: /admin.html
+Disallow: /data/
+
+# AI Search Crawlers (ChatGPT / SearchGPT, Copilot, Perplexity, Claude, Gemini)
+User-agent: GPTBot
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: CCBot
+Allow: /
+
+Sitemap: https://awladyahya.com/sitemap.xml

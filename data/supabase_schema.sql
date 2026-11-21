@@ -109,6 +109,20 @@ CREATE POLICY "Allow public read faq_items" ON faq_items FOR SELECT USING (true)
 CREATE POLICY "Allow public write faq_items" ON faq_items FOR ALL USING (true) WITH CHECK (true);
 
 -- =============================================================================
+-- 10. Database Optimization & Performance Indexes (RULES.md Standard)
+-- =============================================================================
+CREATE INDEX IF NOT EXISTS idx_products_category ON products(category);
+CREATE INDEX IF NOT EXISTS idx_products_status ON products(status);
+CREATE INDEX IF NOT EXISTS idx_products_featured ON products(featured);
+CREATE INDEX IF NOT EXISTS idx_products_display_order ON products(display_order);
+CREATE INDEX IF NOT EXISTS idx_products_code ON products(code);
+CREATE INDEX IF NOT EXISTS idx_products_created_at ON products(created_at);
+CREATE INDEX IF NOT EXISTS idx_categories_active ON categories(active);
+CREATE INDEX IF NOT EXISTS idx_categories_display_order ON categories(display_order);
+CREATE INDEX IF NOT EXISTS idx_site_content_section ON site_content(section);
+CREATE INDEX IF NOT EXISTS idx_faq_display_order ON faq_items(display_order);
+
+-- =============================================================================
 -- SEED DATA: Categories
 -- =============================================================================
 INSERT INTO categories (id, name, description, image, display_order, active, featured, seo_title, seo_description)

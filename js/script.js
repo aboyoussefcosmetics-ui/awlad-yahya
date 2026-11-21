@@ -283,10 +283,92 @@ document.addEventListener('DOMContentLoaded', () => {
     `;
   }
 
-  // Render Catalog Grid
-  function renderProducts(filter = 'all') {
+  // ==========================================
+  // RULES.md STANDARD 4 & 1: SKELETON LOADING & PAGINATION
+  // ==========================================
+  const catalogPagination = document.getElementById('catalogPagination');
+  let currentCatalogPage = 1;
+  const catalogPageSize = 12; // RULES.md Standard: 12 items per page for catalog grid
+  let currentCategoryFilter = 'all';
+
+  // Render Skeleton Loading Placeholders (Zero Blank Screens)
+  function renderProductsSkeleton(count = 8) {
     if (!productsContainer) return;
-    productsContainer.innerHTML = '';
+    if (catalogPagination) catalogPagination.innerHTML = '';
+    productsContainer.innerHTML = Array.from({ length: count }).map(() => `
+      <div class="product-card skeleton-card">
+        <div class="skeleton-img skeleton-shimmer"></div>
+        <div class="product-body">
+          <div class="skeleton-line title skeleton-shimmer"></div>
+          <div class="skeleton-line desc skeleton-shimmer"></div>
+          <div class="skeleton-chips">
+            <div class="skeleton-chip skeleton-shimmer"></div>
+            <div class="skeleton-chip skeleton-shimmer"></div>
+          </div>
+          <div class="skeleton-actions">
+            <div class="skeleton-btn skeleton-shimmer"></div>
+            <div class="skeleton-btn skeleton-shimmer"></div>
+          </div>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  // Render Catalog Pagination Controls
+  function renderCatalogPagination(totalItems, currentPage, pageSize) {
+    if (!catalogPagination) return;
+    const totalPages = Math.ceil(totalItems / pageSize);
+
+    if (totalPages <= 1) {
+      catalogPagination.innerHTML = '';
+      catalogPagination.style.display = 'none';
+      return;
+    }
+
+    catalogPagination.style.display = 'flex';
+    const from = (currentPage - 1) * pageSize + 1;
+    const to = Math.min(currentPage * pageSize, totalItems);
+
+    let pagesHtml = '';
+    for (let p = 1; p <= totalPages; p++) {
+      if (p === 1 || p === totalPages || (p >= currentPage - 1 && p <= currentPage + 1)) {
+        pagesHtml += `
+          <button type="button" class="pagination-btn ${p === currentPage ? 'active' : ''}" onclick="window.goToCatalogPage(${p})">
+            ${p}
+          </button>
+        `;
+      } else if (p === currentPage - 2 || p === currentPage + 2) {
+        pagesHtml += `<span style="color: var(--text-muted); padding: 0 4px;">...</span>`;
+      }
+    }
+
+    catalogPagination.innerHTML = `
+      <div class="pagination-controls">
+        <button type="button" class="pagination-btn" ${currentPage === 1 ? 'disabled' : ''} onclick="window.goToCatalogPage(${currentPage - 1})" aria-label="الصفحة السابقة">
+          ← السابق
+        </button>
+        ${pagesHtml}
+        <button type="button" class="pagination-btn" ${currentPage === totalPages ? 'disabled' : ''} onclick="window.goToCatalogPage(${currentPage + 1})" aria-label="الصفحة التالية">
+          التالي →
+        </button>
+      </div>
+      <div class="pagination-info">
+        عرض الموديلات من <strong>${from}</strong> إلى <strong>${to}</strong> من أصل <strong>${totalItems}</strong> موديل بالمصنع
+      </div>
+    `;
+  }
+
+  // Global Page Switcher
+  window.goToCatalogPage = function(page) {
+    currentCatalogPage = page;
+    renderProducts(currentCategoryFilter, currentCatalogPage, true);
+  };
+
+  // Render Catalog Grid with Filter & Pagination
+  function renderProducts(filter = 'all', page = 1, shouldScroll = false) {
+    if (!productsContainer) return;
+    currentCategoryFilter = filter;
+    currentCatalogPage = page;
 
     const targetCategory = categoryAliasMap[filter] || filter;
     const filtered = targetCategory === 'all'
@@ -302,26 +384,55 @@ document.addEventListener('DOMContentLoaded', () => {
           </a>
         </div>
       `;
+      if (catalogPagination) catalogPagination.style.display = 'none';
       return;
     }
 
-    productsContainer.innerHTML = filtered.map(buildProductCardHtml).join('');
+    // Paginate slice
+    const from = (currentCatalogPage - 1) * catalogPageSize;
+    const pagedItems = filtered.slice(from, from + catalogPageSize);
+
+    productsContainer.innerHTML = pagedItems.map(buildProductCardHtml).join('');
+    renderCatalogPagination(filtered.length, currentCatalogPage, catalogPageSize);
+
+    if (shouldScroll) {
+      const targetSec = document.getElementById('products');
+      if (targetSec) {
+        const headerOffset = 135;
+        const offsetPosition = targetSec.getBoundingClientRect().top + window.pageYOffset - headerOffset;
+        window.scrollTo({ top: offsetPosition, behavior: 'smooth' });
+      }
+    }
   }
 
   // Initial products render
-  renderProducts('all');
+  if (productsData.length === 0) {
+    renderProductsSkeleton(8);
+  } else {
+    renderProducts('all', 1);
+  }
 
-  // Background Cloud Sync from Supabase
+  // Background Cloud Sync from Supabase (Smart Caching)
   if (typeof window !== 'undefined' && window.AySupabase) {
     window.AySupabase.getProducts().then(cloudProds => {
       if (Array.isArray(cloudProds) && cloudProds.length > 0) {
         productsData = cloudProds;
-        const currentActiveBtn = document.querySelector('.products-filter-nav .filter-btn.active');
-        const activeCategory = currentActiveBtn ? currentActiveBtn.dataset.filter : 'all';
-        renderProducts(activeCategory);
+        renderProducts(currentCategoryFilter, currentCatalogPage);
       }
     }).catch(err => {
       console.debug('Cloud sync info:', err.message);
+    });
+
+    // Listen for live cache invalidations from Admin
+    window.addEventListener('ay_cache_invalidated', (e) => {
+      if (!e.detail || !e.detail.key || e.detail.key.startsWith('products')) {
+        window.AySupabase.getProducts({ bypassCache: true }).then(cloudProds => {
+          if (Array.isArray(cloudProds) && cloudProds.length > 0) {
+            productsData = cloudProds;
+            renderProducts(currentCategoryFilter, currentCatalogPage);
+          }
+        });
+      }
     });
   }
 
@@ -385,6 +496,68 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   // ==========================================
+  // RULES.md STANDARD 5: DYNAMIC SEO & STRUCTURED DATA (JSON-LD)
+  // ==========================================
+  const defaultSeo = {
+    title: document.title,
+    description: document.querySelector('meta[name="description"]')?.getAttribute('content') || '',
+    keywords: document.querySelector('meta[name="keywords"]')?.getAttribute('content') || '',
+    canonical: 'https://awladyahya.com',
+    ogTitle: document.querySelector('meta[property="og:title"]')?.getAttribute('content') || '',
+    ogDesc: document.querySelector('meta[property="og:description"]')?.getAttribute('content') || '',
+    ogImage: document.querySelector('meta[property="og:image"]')?.getAttribute('content') || 'assets/images/hero-barber-chair.jpg'
+  };
+
+  function updateHeadSeo(data) {
+    if (!data) return;
+    if (data.title) document.title = data.title;
+
+    const descMeta = document.querySelector('meta[name="description"]');
+    if (descMeta && data.description) descMeta.setAttribute('content', data.description);
+
+    const kwMeta = document.querySelector('meta[name="keywords"]');
+    if (kwMeta && data.keywords) kwMeta.setAttribute('content', data.keywords);
+
+    const canonicalEl = document.getElementById('canonicalLink');
+    if (canonicalEl && data.canonical) canonicalEl.setAttribute('href', data.canonical);
+
+    const ogTitle = document.querySelector('meta[property="og:title"]');
+    if (ogTitle && (data.ogTitle || data.title)) ogTitle.setAttribute('content', data.ogTitle || data.title);
+
+    const ogDesc = document.querySelector('meta[property="og:description"]');
+    if (ogDesc && (data.ogDesc || data.description)) ogDesc.setAttribute('content', data.ogDesc || data.description);
+
+    const ogImg = document.querySelector('meta[property="og:image"]');
+    if (ogImg && data.ogImage) ogImg.setAttribute('content', data.ogImage);
+
+    if (data.googleVerification) {
+      const gscMeta = document.getElementById('googleSiteVerificationMeta');
+      if (gscMeta) gscMeta.setAttribute('content', data.googleVerification);
+    }
+  }
+
+  // Load custom SEO / GSC settings from database
+  if (typeof window !== 'undefined' && window.AySupabase) {
+    window.AySupabase.getSiteContent('seo').then(seoData => {
+      if (seoData) {
+        if (seoData.title) defaultSeo.title = seoData.title;
+        if (seoData.description) defaultSeo.description = seoData.description;
+        if (seoData.keywords) defaultSeo.keywords = seoData.keywords;
+        if (seoData.canonicalUrl) defaultSeo.canonical = seoData.canonicalUrl;
+        if (seoData.ogImage) defaultSeo.ogImage = seoData.ogImage;
+        updateHeadSeo({
+          title: seoData.title,
+          description: seoData.description,
+          keywords: seoData.keywords,
+          canonical: seoData.canonicalUrl,
+          ogImage: seoData.ogImage,
+          googleVerification: seoData.googleVerification
+        });
+      }
+    }).catch(() => {});
+  }
+
+  // ==========================================
   // 7. PRODUCT DETAILS SHOWCASE VIEW (PDP)
   // ==========================================
   window.showProductDetails = function(productId, updateHash = true) {
@@ -393,6 +566,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const productCode = product.code || (product.specs && product.specs.code) || product.id;
     const shortDesc = product.shortDesc || (product.fullDescription ? (product.fullDescription.length > 130 ? product.fullDescription.slice(0, 127) + '...' : product.fullDescription) : `${product.categoryName} مصنع وفق أعلى معايير الجودة والمتانة من مصنع أولاد يحيى.`);
+
+    // Dynamic Head SEO for this product (RULES.md Standard 5)
+    const absoluteImg = product.image.startsWith('http') ? product.image : `https://awladyahya.com/${product.image.replace(/^\/+/, '')}`;
+    updateHeadSeo({
+      title: product.seoTitle || `${product.name} | مصنع أولاد يحيى`,
+      description: product.seoDescription || shortDesc,
+      keywords: product.keywords || `${product.name}, ${productCode}, كراسي حلاقة, مصنع أولاد يحيى`,
+      canonical: `https://awladyahya.com/#product/${product.id}`,
+      ogTitle: product.name,
+      ogDesc: shortDesc,
+      ogImage: absoluteImg
+    });
 
     // 1. Breadcrumbs
     if (pdpBreadcrumbs) {
@@ -537,7 +722,46 @@ document.addEventListener('DOMContentLoaded', () => {
       pdpRelatedGrid.innerHTML = related.map(buildProductCardHtml).join('');
     }
 
-    // 10. Switch View Visibility & Smooth Scroll
+    // 10. Inject Dynamic Product Schema (JSON-LD) for Google & AI Engines
+    const productSchemaEl = document.getElementById('productDynamicSchemaJson');
+    if (productSchemaEl) {
+      const allAbsoluteImgs = allImages.map(img => img.startsWith('http') ? img : `https://awladyahya.com/${img.replace(/^\/+/, '')}`);
+      const schemaData = {
+        "@context": "https://schema.org/",
+        "@type": "Product",
+        "@id": `https://awladyahya.com/#product-${product.id}`,
+        "name": product.name,
+        "image": allAbsoluteImgs,
+        "description": product.fullDescription || shortDesc,
+        "sku": productCode,
+        "mpn": productCode,
+        "brand": {
+          "@type": "Brand",
+          "name": "مصنع أولاد يحيى - Awlad Yahya"
+        },
+        "manufacturer": {
+          "@type": "Organization",
+          "name": "مصنع أولاد يحيى لتصنيع كراسي الحلاقة ومعدات الصالونات"
+        },
+        "category": product.categoryName,
+        "offers": {
+          "@type": "Offer",
+          "url": `https://awladyahya.com/#product/${product.id}`,
+          "priceCurrency": "EGP",
+          "price": (product.showPrice === 'Yes' && product.price) ? String(product.price).replace(/[^0-9.]/g, '') : "0",
+          "priceValidUntil": "2027-12-31",
+          "availability": product.status === 'Available' ? "https://schema.org/InStock" : "https://schema.org/PreOrder",
+          "itemCondition": "https://schema.org/NewCondition",
+          "seller": {
+            "@type": "Organization",
+            "name": "مصنع أولاد يحيى"
+          }
+        }
+      };
+      productSchemaEl.textContent = JSON.stringify(schemaData, null, 2);
+    }
+
+    // 11. Switch View Visibility & Smooth Scroll
     catalogGridView.style.display = 'none';
     productShowcaseView.style.display = 'block';
 
@@ -562,6 +786,13 @@ document.addEventListener('DOMContentLoaded', () => {
   window.backToCatalog = function(updateHash = true) {
     if (catalogGridView) catalogGridView.style.display = 'block';
     if (productShowcaseView) productShowcaseView.style.display = 'none';
+
+    // Restore Default SEO & Clear Dynamic Product Schema
+    updateHeadSeo(defaultSeo);
+    const productSchemaEl = document.getElementById('productDynamicSchemaJson');
+    if (productSchemaEl) {
+      productSchemaEl.textContent = '{}';
+    }
 
     if (updateHash) {
       history.pushState(null, '', '#products');

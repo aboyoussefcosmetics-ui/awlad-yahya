@@ -20,7 +20,9 @@
     statusFilter: 'all',
     editingProductId: null,
     editingCategoryId: null,
-    currentModalImages: []
+    currentModalImages: [],
+    currentProductPage: 1,
+    productPageSize: 15
   };
 
   // DOM Elements
@@ -190,10 +192,35 @@
   }
 
   // ==========================================
-  // 4. MODULE 1: PRODUCTS MANAGEMENT
+  // 4. MODULE 1: PRODUCTS MANAGEMENT (Pagination & Skeleton)
+  // RULES.md Standards 1 & 4
   // ==========================================
+  function renderProductsTableSkeleton(count = 6) {
+    const tbody = document.getElementById('productsTableBody');
+    if (!tbody) return;
+    tbody.innerHTML = Array.from({ length: count }).map(() => `
+      <tr>
+        <td>
+          <div class="product-row-info">
+            <div class="admin-skeleton-box" style="width: 48px; height: 48px; border-radius: 4px;"></div>
+            <div>
+              <div class="admin-skeleton-box" style="width: 140px; height: 16px; margin-bottom: 6px;"></div>
+              <div class="admin-skeleton-box" style="width: 80px; height: 12px;"></div>
+            </div>
+          </div>
+        </td>
+        <td><div class="admin-skeleton-box" style="width: 90px; height: 14px;"></div></td>
+        <td><div class="admin-skeleton-box" style="width: 60px; height: 14px;"></div></td>
+        <td><div class="admin-skeleton-box" style="width: 70px; height: 22px; border-radius: 50px;"></div></td>
+        <td><div class="admin-skeleton-box" style="width: 20px; height: 14px;"></div></td>
+        <td><div class="admin-skeleton-box" style="width: 80px; height: 32px;"></div></td>
+      </tr>
+    `).join('');
+  }
+
   function renderProductsTable() {
     const tbody = document.getElementById('productsTableBody');
+    const paginationEl = document.getElementById('productsTablePagination');
     if (!tbody) return;
 
     let filtered = state.products;
@@ -226,17 +253,27 @@
           </td>
         </tr>
       `;
+      if (paginationEl) paginationEl.innerHTML = '';
       return;
     }
 
-    tbody.innerHTML = filtered.map(p => {
+    // Pagination Calculation (RULES.md Standard 1: 15-20 items per page)
+    const total = filtered.length;
+    const totalPages = Math.ceil(total / state.productPageSize);
+    if (state.currentProductPage > totalPages) state.currentProductPage = totalPages;
+    if (state.currentProductPage < 1) state.currentProductPage = 1;
+
+    const from = (state.currentProductPage - 1) * state.productPageSize;
+    const paged = filtered.slice(from, from + state.productPageSize);
+
+    tbody.innerHTML = paged.map(p => {
       const priceText = (p.showPrice === 'Yes' && p.price) ? `${p.price} ج.م` : 'عند الطلب';
       const isFeatured = p.featured === 'Yes';
       return `
         <tr>
           <td>
             <div class="product-row-info">
-              <img src="${p.image || 'assets/images/chair-mens-classic.svg'}" class="product-thumb" alt="${p.name}">
+              <img src="${p.image || 'assets/images/chair-mens-classic.svg'}" class="product-thumb" alt="${p.name}" loading="lazy">
               <div>
                 <div class="product-title-text">${p.name}</div>
                 <div class="product-code-sub">كود: ${p.code || p.id} ${isFeatured ? '★ مميز' : ''}</div>
@@ -267,6 +304,57 @@
         </tr>
       `;
     }).join('');
+
+    renderProductsTablePagination(total, state.currentProductPage, state.productPageSize);
+  }
+
+  function renderProductsTablePagination(totalItems, currentPage, pageSize) {
+    const paginationEl = document.getElementById('productsTablePagination');
+    if (!paginationEl) return;
+    const totalPages = Math.ceil(totalItems / pageSize);
+
+    if (totalPages <= 1) {
+      paginationEl.innerHTML = `
+        <div class="admin-pagination-info">إجمالي: <strong>${totalItems}</strong> موديل مسجل بالمصنع</div>
+      `;
+      return;
+    }
+
+    const from = (currentPage - 1) * pageSize + 1;
+    const to = Math.min(currentPage * pageSize, totalItems);
+
+    let pagesHtml = '';
+    for (let p = 1; p <= totalPages; p++) {
+      if (p === 1 || p === totalPages || (p >= currentPage - 1 && p <= currentPage + 1)) {
+        pagesHtml += `
+          <button type="button" class="admin-page-btn ${p === currentPage ? 'active' : ''}" onclick="window.AyAdmin.goToAdminProductPage(${p})">
+            ${p}
+          </button>
+        `;
+      } else if (p === currentPage - 2 || p === currentPage + 2) {
+        pagesHtml += `<span style="color: var(--admin-text-muted); padding: 0 4px;">...</span>`;
+      }
+    }
+
+    paginationEl.innerHTML = `
+      <div class="admin-pagination-info">
+        عرض الموديلات <strong>${from} - ${to}</strong> من إجمالي <strong>${totalItems}</strong> موديل
+      </div>
+      <div class="admin-pagination-btns">
+        <button type="button" class="admin-page-btn" ${currentPage === 1 ? 'disabled' : ''} onclick="window.AyAdmin.goToAdminProductPage(${currentPage - 1})" aria-label="السابق">
+          ← السابق
+        </button>
+        ${pagesHtml}
+        <button type="button" class="admin-page-btn" ${currentPage === totalPages ? 'disabled' : ''} onclick="window.AyAdmin.goToAdminProductPage(${currentPage + 1})" aria-label="التالي">
+          التالي →
+        </button>
+      </div>
+    `;
+  }
+
+  function goToAdminProductPage(page) {
+    state.currentProductPage = page;
+    renderProductsTable();
   }
 
   // ==========================================
@@ -744,13 +832,15 @@
   }
 
   // ==========================================
-  // 6. MODULE 3: MEDIA LIBRARY
+  // ==========================================
+  // 6. MODULE 3: MEDIA LIBRARY (WebP & Supabase Storage)
+  // RULES.md Standard 2
   // ==========================================
   function renderMediaLibrary() {
     const grid = document.getElementById('mediaGrid');
     if (!grid) return;
 
-    // Collect all unique images from products and categories
+    // Collect all unique images from products, categories, and uploaded media
     const imageSet = new Set();
     state.products.forEach(p => {
       if (p.image) imageSet.add(p.image);
@@ -759,6 +849,12 @@
     state.categories.forEach(c => {
       if (c.image) imageSet.add(c.image);
     });
+    if (Array.isArray(state.media)) {
+      state.media.forEach(m => {
+        if (typeof m === 'string') imageSet.add(m);
+        else if (m && m.url) imageSet.add(m.url);
+      });
+    }
 
     const list = Array.from(imageSet);
     grid.innerHTML = list.map(url => `
@@ -766,9 +862,77 @@
         <div class="media-preview-box">
           <img src="${url}" loading="lazy" alt="وسائط">
         </div>
-        <div class="media-filename">${url.split('/').pop()}</div>
+        <div class="media-filename">${url.startsWith('data:') ? 'صورة WebP مرفوعة' : url.split('/').pop()}</div>
       </div>
     `).join('');
+  }
+
+  function setupMediaLibraryUpload() {
+    const dropzone = document.getElementById('mediaUploadDropzone');
+    const fileInput = document.getElementById('mediaUploadFileInput');
+    if (!dropzone || !fileInput) return;
+
+    ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+      dropzone.addEventListener(eventName, (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+      });
+    });
+
+    ['dragenter', 'dragover'].forEach(eventName => {
+      dropzone.addEventListener(eventName, () => dropzone.classList.add('dragover'));
+    });
+
+    ['dragleave', 'drop'].forEach(eventName => {
+      dropzone.addEventListener(eventName, () => dropzone.classList.remove('dragover'));
+    });
+
+    dropzone.addEventListener('drop', (e) => {
+      const dt = e.dataTransfer;
+      if (dt && dt.files && dt.files.length > 0) {
+        handleMediaLibraryFiles(dt.files);
+      }
+    });
+
+    fileInput.addEventListener('change', (e) => {
+      if (e.target.files && e.target.files.length > 0) {
+        handleMediaLibraryFiles(e.target.files);
+        e.target.value = '';
+      }
+    });
+  }
+
+  async function handleMediaLibraryFiles(fileList) {
+    if (!fileList || fileList.length === 0) return;
+    const files = Array.from(fileList).filter(f => f.type.startsWith('image/'));
+    if (files.length === 0) {
+      showToast('يرجى اختيار ملفات صور صالحة (JPG, PNG, WEBP).', 'error');
+      return;
+    }
+
+    showToast(`جاري تحويل وضغط ${files.length} صورة إلى صيغة WebP...`, 'info');
+
+    let uploadedCount = 0;
+    for (const file of files) {
+      try {
+        const compressed = await compressImageFile(file, 1600, 1600, 0.85);
+        const uploadRes = await window.AySupabase.uploadImageToStorage(compressed.dataUrl, file.name.replace(/\.[^.]+$/, '') + '.webp');
+        const finalUrl = uploadRes.url || compressed.dataUrl;
+
+        state.media.push({
+          url: finalUrl,
+          title: file.name
+        });
+        uploadedCount++;
+      } catch (err) {
+        console.error('Media upload error:', err);
+      }
+    }
+
+    if (uploadedCount > 0) {
+      renderMediaLibrary();
+      showToast(`تمت إضافة ${uploadedCount} صورة إلى مكتبة الوسائط بصيغة WebP بنجاح! ⚡`, 'success');
+    }
   }
 
   function copyImageUrl(url) {
@@ -815,11 +979,14 @@
     setVal('cmsContactAddress', contact.address || '');
     setVal('cmsContactHours', contact.workingHours || '');
 
-    // SEO
+    // SEO (RULES.md Standard 5)
     const seo = c.seo || {};
     setVal('cmsSeoTitle', seo.title || '');
-    setVal('cmsSeoDesc', seo.desc || '');
+    setVal('cmsSeoDesc', seo.desc || seo.description || '');
     setVal('cmsSeoKeywords', seo.keywords || '');
+    setVal('cmsGoogleVerification', seo.googleVerification || '');
+    setVal('cmsCanonicalUrl', seo.canonicalUrl || 'https://awladyahya.com');
+    setVal('cmsOgImage', seo.ogImage || 'assets/images/hero-barber-chair.jpg');
 
     // Supabase Settings
     setVal('settingSupabaseUrl', window.AySupabase.url);
@@ -885,14 +1052,73 @@
   async function saveSeoCMS(e) {
     e.preventDefault();
     const data = {
-      title: document.getElementById('cmsSeoTitle').value,
-      desc: document.getElementById('cmsSeoDesc').value,
-      keywords: document.getElementById('cmsSeoKeywords').value
+      title: document.getElementById('cmsSeoTitle').value.trim(),
+      desc: document.getElementById('cmsSeoDesc').value.trim(),
+      keywords: document.getElementById('cmsSeoKeywords').value.trim(),
+      googleVerification: document.getElementById('cmsGoogleVerification')?.value.trim() || '',
+      canonicalUrl: document.getElementById('cmsCanonicalUrl')?.value.trim() || 'https://awladyahya.com',
+      ogImage: document.getElementById('cmsOgImage')?.value.trim() || 'assets/images/hero-barber-chair.jpg'
     };
 
-    showToast('جاري حفظ إعدادات SEO...', 'info');
+    showToast('جاري حفظ إعدادات SEO و GSC...', 'info');
     await window.AySupabase.saveSiteContent('seo', data);
-    showToast('تم حفظ إعدادات محركات البحث بنجاح!', 'success');
+    showToast('تم حفظ إعدادات محركات البحث و Google Search Console بنجاح!', 'success');
+  }
+
+  // ==========================================
+  // RULES.md STANDARD 5: AUTOMATED SITEMAP & ROBOTS GENERATOR
+  // ==========================================
+  function generateSitemapsAction() {
+    showToast('جاري توليد ملفات sitemap.xml و robots.txt...', 'info');
+
+    const domain = (document.getElementById('cmsCanonicalUrl')?.value.trim() || 'https://awladyahya.com').replace(/\/+$/, '');
+    const now = new Date().toISOString().slice(0, 10);
+
+    // Build sitemap.xml
+    let xml = `<?xml version="1.0" encoding="UTF-8"?>\n`;
+    xml += `<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">\n`;
+
+    // 1. Homepage
+    xml += `  <url>\n    <loc>${domain}/</loc>\n    <lastmod>${now}</lastmod>\n    <changefreq>daily</changefreq>\n    <priority>1.0</priority>\n  </url>\n`;
+
+    // 2. Royal Chair Landing Page
+    xml += `  <url>\n    <loc>${domain}/royal-chair.html</loc>\n    <lastmod>${now}</lastmod>\n    <changefreq>weekly</changefreq>\n    <priority>0.9</priority>\n  </url>\n`;
+
+    // 3. Categories
+    state.categories.forEach(c => {
+      xml += `  <url>\n    <loc>${domain}/#category/${c.id}</loc>\n    <lastmod>${now}</lastmod>\n    <changefreq>weekly</changefreq>\n    <priority>0.8</priority>\n  </url>\n`;
+    });
+
+    // 4. Products
+    state.products.forEach(p => {
+      xml += `  <url>\n    <loc>${domain}/#product/${p.id}</loc>\n    <lastmod>${now}</lastmod>\n    <changefreq>weekly</changefreq>\n    <priority>0.85</priority>\n`;
+      if (p.image) {
+        const imgUrl = p.image.startsWith('http') ? p.image : `${domain}/${p.image.replace(/^\/+/, '')}`;
+        xml += `    <image:image>\n      <image:loc>${imgUrl}</image:loc>\n      <image:title><![CDATA[${p.name}]]></image:title>\n    </image:image>\n`;
+      }
+      xml += `  </url>\n`;
+    });
+
+    xml += `</urlset>\n`;
+
+    // Build robots.txt
+    let robots = `# Awlad Yahya Barber Chairs Factory - Robots Directives\n`;
+    robots += `# Optimized for Googlebot, Bingbot, and AI Search Crawlers\n\n`;
+    robots += `User-agent: *\n`;
+    robots += `Allow: /\n`;
+    robots += `Disallow: /admin.html\n\n`;
+    robots += `# AI Search Crawlers (GEO Optimization)\n`;
+    robots += `User-agent: GPTBot\nAllow: /\n\n`;
+    robots += `User-agent: Google-Extended\nAllow: /\n\n`;
+    robots += `User-agent: ClaudeBot\nAllow: /\n\n`;
+    robots += `Sitemap: ${domain}/sitemap.xml\n`;
+
+    downloadFile(xml, 'sitemap.xml', 'application/xml');
+    setTimeout(() => {
+      downloadFile(robots, 'robots.txt', 'text/plain');
+    }, 400);
+
+    showToast('تم إنشاء وتحميل sitemap.xml و robots.txt بنجاح!', 'success');
   }
 
   // ==========================================
@@ -1029,6 +1255,8 @@
         }
       });
     }
+
+    setupMediaLibraryUpload();
   }
 
   function closeModal(modalId) {
@@ -1093,6 +1321,7 @@
     editProduct: (id) => openProductModal(id),
     duplicateProduct: (id) => duplicateProduct(id),
     deleteProduct: (id) => deleteProduct(id),
+    goToAdminProductPage: (p) => goToAdminProductPage(p),
     switchProductModalTab: (tabId) => switchProductModalTab(tabId),
     setModalMainImage: (idx) => setModalMainImage(idx),
     removeModalImage: (idx) => removeModalImage(idx),
@@ -1101,6 +1330,7 @@
     openAddCategory: () => openCategoryModal(null),
     editCategory: (id) => openCategoryModal(id),
     copyImageUrl: (url) => copyImageUrl(url),
+    generateSitemapsAction: () => generateSitemapsAction(),
     testSupabaseConnection: () => testSupabaseConnectionAction(),
     copySqlSchema: () => copySqlSchema(),
     exportProductsDataJs: () => exportProductsDataJs(),
