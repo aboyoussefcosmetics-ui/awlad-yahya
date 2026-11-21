@@ -327,16 +327,73 @@
       <!-- ==========================================
            TAB 4: HOMEPAGE CMS
            ========================================== -->
+      <!-- ==========================================
+           TAB 4: HOMEPAGE CMS & BRAND IDENTITY
+           ========================================== -->
       <section class="admin-tab-pane" id="tab-homepage">
         <div class="admin-card">
           <div class="admin-card-header">
             <div>
-              <h2>إدارة الصفحة الرئيسية (Hero Section & Banners)</h2>
-              <p>تعديل العناوين الترويجية والوصف ونصوص الأزرار وإحصائيات المصنع</p>
+              <h2>إدارة الصفحة الرئيسية والهوية البصرية</h2>
+              <p>تعديل لوجو المصنع، صورة البانر الكبير، العناوين الترويجية، ونصوص الأزرار والإحصائيات</p>
             </div>
           </div>
 
           <form id="cmsHeroForm">
+            <!-- Brand Identity (Logo & Hero Banner Image) -->
+            <h3 style="font-size: 1.05rem; font-weight: 800; color: var(--admin-gold); margin-bottom: 14px; display: flex; align-items: center; gap: 8px;">
+              <span>👑 الهوية البصرية وشعار المصنع</span>
+            </h3>
+            <div class="form-grid-2" style="margin-bottom: 24px;">
+              <div class="form-group">
+                <label>لوجو وشعار المصنع (Site Logo)</label>
+                <div class="unified-image-picker" id="picker-cmsHeroLogo">
+                  <div class="image-picker-thumb">
+                    <img id="thumb-cmsHeroLogo" src="assets/images/logo.svg" alt="Logo">
+                  </div>
+                  <div class="image-picker-info">
+                    <span class="image-picker-path" id="path-cmsHeroLogo">assets/images/logo.svg</span>
+                    <input type="hidden" id="cmsHeroLogo" value="assets/images/logo.svg">
+                    <div class="image-picker-actions">
+                      <button type="button" class="image-picker-btn primary" onclick="window.AyAdmin.triggerUnifiedUpload('cmsHeroLogo', 'thumb-cmsHeroLogo', 'path-cmsHeroLogo')">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                        <span>رفع لوجو جديد</span>
+                      </button>
+                      <button type="button" class="image-picker-btn" onclick="window.AyAdmin.openUnifiedMediaPicker('cmsHeroLogo', 'thumb-cmsHeroLogo', 'path-cmsHeroLogo')">
+                        <span>من المكتبة</span>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label>صورة البانر الرئيسي الكبير (Hero Banner Image)</label>
+                <div class="unified-image-picker" id="picker-cmsHeroBannerImage">
+                  <div class="image-picker-thumb">
+                    <img id="thumb-cmsHeroBannerImage" src="assets/images/hero-barber-chair.jpg" alt="Hero Banner">
+                  </div>
+                  <div class="image-picker-info">
+                    <span class="image-picker-path" id="path-cmsHeroBannerImage">assets/images/hero-barber-chair.jpg</span>
+                    <input type="hidden" id="cmsHeroBannerImage" value="assets/images/hero-barber-chair.jpg">
+                    <div class="image-picker-actions">
+                      <button type="button" class="image-picker-btn primary" onclick="window.AyAdmin.triggerUnifiedUpload('cmsHeroBannerImage', 'thumb-cmsHeroBannerImage', 'path-cmsHeroBannerImage')">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                        <span>رفع صورة البانر</span>
+                      </button>
+                      <button type="button" class="image-picker-btn" onclick="window.AyAdmin.openUnifiedMediaPicker('cmsHeroBannerImage', 'thumb-cmsHeroBannerImage', 'path-cmsHeroBannerImage')">
+                        <span>من المكتبة</span>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Hero Text Contents -->
+            <h3 style="font-size: 1.05rem; font-weight: 800; border-top: 1px solid var(--admin-border); padding-top: 18px; margin-bottom: 14px;">
+              النصوص والأزرار الترويجية
+            </h3>
             <div class="form-grid-2">
               <div class="form-group full">
                 <label>وسم البانر العلوي (Badge)</label>
@@ -384,7 +441,7 @@
             </div>
 
             <button type="submit" class="header-btn primary" style="margin-top: 10px;">
-              <span>حفظ تعديلات الصفحة الرئيسية</span>
+              <span>حفظ تعديلات الصفحة الرئيسية والهوية</span>
             </button>
           </form>
         </div>
@@ -425,86 +482,109 @@
       </section>
 
       <!-- ==========================================
-           TAB 6: QUALITY & MANUFACTURING CMS
+           TAB 6: QUALITY & MANUFACTURING CMS (Full CRUD)
            ========================================== -->
       <section class="admin-tab-pane" id="tab-quality">
         <div class="admin-card">
           <div class="admin-card-header">
             <div>
               <h2>الجودة ومراحل التصنيع</h2>
-              <p>إدارة ركائز الجودة الأربعة (الهيدروليك، الجلد، الإسفنج، الخياطة)</p>
+              <p>إدارة ركائز ومعايير الجودة ومراحل الإنتاج (تعديل، حذف، وإضافة ركائز جديدة)</p>
             </div>
+            <button type="button" class="header-btn primary" onclick="window.AyAdmin.openAddQuality()">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              <span>+ إضافة ركيزة/مرحلة جديدة</span>
+            </button>
           </div>
-          <div class="form-grid-2">
-            <div class="admin-card" style="margin: 0;">
-              <h4>1. مضخة هيدروليك فولاذية</h4>
-              <p style="font-size: 0.88rem; color: var(--admin-text-muted); margin-top: 6px;">
-                مسار الصورة الحالي: <code>assets/images/quality-hydraulic.jpg</code><br>
-                تحمل أوزان شاقة وثبات فائق ومقاومة للتسريب والصدأ.
-              </p>
-            </div>
-            <div class="admin-card" style="margin: 0;">
-              <h4>2. جلد مستورد معالج</h4>
-              <p style="font-size: 0.88rem; color: var(--admin-text-muted); margin-top: 6px;">
-                مسار الصورة الحالي: <code>assets/images/quality-leather.jpg</code><br>
-                مقاوم للماء والكيماويات ومستحضرات الصباغة مع سهولة التنظيف.
-              </p>
-            </div>
-            <div class="admin-card" style="margin: 0;">
-              <h4>3. إسفنج محقون عالي الكثافة</h4>
-              <p style="font-size: 0.88rem; color: var(--admin-text-muted); margin-top: 6px;">
-                مسار الصورة الحالي: <code>assets/images/quality-foam.jpg</code><br>
-                مرونة فائقة وراحة دائمة تمنع هبوط مقاعد الكراسي طوال سنوات العمل.
-              </p>
-            </div>
-            <div class="admin-card" style="margin: 0;">
-              <h4>4. دقة التنجيد والخياطة</h4>
-              <p style="font-size: 0.88rem; color: var(--admin-text-muted); margin-top: 6px;">
-                مسار الصورة الحالي: <code>assets/images/quality-stitching.jpg</code><br>
-                تقفيل يدوي متقن وخياطة مزدوجة تمنح الكرسي لمسة الفخامة الملكية.
-              </p>
-            </div>
-          </div>
+          <div class="form-grid-2" id="qualityCardsContainer"></div>
         </div>
       </section>
 
       <!-- ==========================================
-           TAB 7: SERVICES, CLIENTS & GALLERY
+           TAB 7: SERVICES, CLIENTS & GALLERY (Full CRUD)
            ========================================== -->
       <section class="admin-tab-pane" id="tab-services">
         <div class="admin-card">
           <div class="admin-card-header">
             <div>
               <h2>الخدمات والعملاء والمعرض</h2>
-              <p>إدارة قطاعات العملاء (صالونات رجالي، كوافيرات، تجار جملة) ومعرض الصور</p>
+              <p>إدارة خدمات المصنع، صور المعرض، وآراء وقطاعات العملاء بحرية كاملة</p>
             </div>
           </div>
-          <div class="form-grid-3">
-            <div class="admin-card" style="margin: 0;">
-              <h4>صالونات الحلاقة الرجالي</h4>
-              <p style="font-size: 0.88rem; color: var(--admin-text-muted); margin-top: 6px;">تجهيزات متكاملة لكراسي الحلاقة والشامبو ومرايات العمل.</p>
+
+          <!-- Subtabs Navigation -->
+          <div class="admin-subtabs">
+            <button type="button" class="admin-subtab-btn active" id="subtabBtn-services" onclick="window.AyAdmin.switchServicesSubtab('services')">
+              <span>🛠️ خدمات وتجهيزات المصنع</span>
+            </button>
+            <button type="button" class="admin-subtab-btn" id="subtabBtn-gallery" onclick="window.AyAdmin.switchServicesSubtab('gallery')">
+              <span>🖼️ معرض الصور والمنتجات</span>
+            </button>
+            <button type="button" class="admin-subtab-btn" id="subtabBtn-testimonials" onclick="window.AyAdmin.switchServicesSubtab('testimonials')">
+              <span>⭐ آراء العملاء والقطاعات</span>
+            </button>
+          </div>
+
+          <!-- Subtab 1: Services -->
+          <div class="services-subtab-pane" id="pane-subtab-services">
+            <div style="display: flex; justify-content: flex-end; margin-bottom: 16px;">
+              <button type="button" class="header-btn primary" onclick="window.AyAdmin.openAddService()">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                <span>+ إضافة خدمة جديدة</span>
+              </button>
             </div>
-            <div class="admin-card" style="margin: 0;">
-              <h4>صالونات التجميل والكوافير</h4>
-              <p style="font-size: 0.88rem; color: var(--admin-text-muted); margin-top: 6px;">كراسي كوافير حريمي وشيزلونجات مساج وأحواض غسيل الشعر.</p>
+            <div class="form-grid-3" id="servicesCardsContainer"></div>
+          </div>
+
+          <!-- Subtab 2: Gallery -->
+          <div class="services-subtab-pane" id="pane-subtab-gallery" style="display: none;">
+            <div style="display: flex; justify-content: flex-end; margin-bottom: 16px;">
+              <button type="button" class="header-btn primary" onclick="window.AyAdmin.openAddGalleryItem()">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                <span>+ إضافة صورة للمعرض</span>
+              </button>
             </div>
-            <div class="admin-card" style="margin: 0;">
-              <h4>تجار الجملة والمشاريع الكبرى</h4>
-              <p style="font-size: 0.88rem; color: var(--admin-text-muted); margin-top: 6px;">توريد كميات بأسعار المصنع مباشرة وشحن لكافة المحافظات.</p>
+            <div class="media-grid" id="galleryCardsContainer"></div>
+          </div>
+
+          <!-- Subtab 3: Testimonials & Segments -->
+          <div class="services-subtab-pane" id="pane-subtab-testimonials" style="display: none;">
+            <div style="display: flex; justify-content: flex-end; margin-bottom: 16px;">
+              <button type="button" class="header-btn primary" onclick="window.AyAdmin.openAddTestimonial()">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                <span>+ إضافة رأي عميل / قطاع</span>
+              </button>
             </div>
+            <div class="form-grid-3" id="testimonialsCardsContainer"></div>
           </div>
         </div>
       </section>
 
       <!-- ==========================================
-           TAB 8: FAQ & CONTACT CMS
+           TAB 8: FAQ & CONTACT CMS (Full CRUD)
            ========================================== -->
       <section class="admin-tab-pane" id="tab-faq-contact">
+        <!-- FAQ Management -->
         <div class="admin-card">
           <div class="admin-card-header">
             <div>
+              <h2>إدارة الأسئلة الشائعة (FAQ Management)</h2>
+              <p>إضافة وتعديل وحذف إجابات الأسئلة التي تظهر لأصحاب الصالونات في الموقع</p>
+            </div>
+            <button type="button" class="header-btn primary" onclick="window.AyAdmin.openAddFaq()">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              <span>+ إضافة سؤال جديد</span>
+            </button>
+          </div>
+          <div id="faqsListContainer"></div>
+        </div>
+
+        <!-- Contact Channels -->
+        <div class="admin-card" style="margin-top: 24px;">
+          <div class="admin-card-header">
+            <div>
               <h2>قنوات التواصل وأرقام المصنع</h2>
-              <p>تعديل أرقام الهواتف، الواتساب، وروابط التليجرام والفيسبوك</p>
+              <p>تعديل أرقام الهواتف، الواتساب، وروابط التليجرام والفيسبوك ومقر المصنع</p>
             </div>
           </div>
 
@@ -1012,7 +1092,7 @@
        MODAL 2: ADD & EDIT CATEGORY
        ========================================================================= -->
   <div class="admin-modal-overlay" id="categoryEditModal">
-    <div class="admin-modal" style="max-width: 580px;">
+    <div class="admin-modal" style="max-width: 620px;">
       <div class="modal-header">
         <h3 id="categoryModalTitle">تعديل القسم</h3>
         <button type="button" class="icon-btn" onclick="window.AyAdmin.closeModal('categoryEditModal')">
@@ -1021,21 +1101,44 @@
       </div>
       <form id="categoryEditForm">
         <div class="modal-body">
-          <div class="form-group" style="margin-bottom: 16px;">
-            <label>كود القسم الفريد (مثل: BC, KC, SH) *</label>
-            <input type="text" id="catId" required dir="ltr">
-          </div>
-          <div class="form-group" style="margin-bottom: 16px;">
-            <label>اسم القسم *</label>
-            <input type="text" id="catName" required placeholder="مثال: كراسي حلاقة وكوافير">
+          <div class="form-grid-2" style="margin-bottom: 16px;">
+            <div class="form-group">
+              <label>كود القسم الفريد (مثل: BC, KC, SH) *</label>
+              <input type="text" id="catId" required dir="ltr">
+            </div>
+            <div class="form-group">
+              <label>اسم القسم *</label>
+              <input type="text" id="catName" required placeholder="مثال: كراسي حلاقة وكوافير">
+            </div>
           </div>
           <div class="form-group" style="margin-bottom: 16px;">
             <label>وصف القسم</label>
-            <textarea id="catDesc" rows="3" placeholder="وصف موجز للموديلات التابعة لهذا القسم"></textarea>
+            <textarea id="catDesc" rows="2" placeholder="وصف موجز للموديلات التابعة لهذا القسم"></textarea>
           </div>
           <div class="form-group" style="margin-bottom: 16px;">
-            <label>مسار صورة القسم</label>
-            <input type="text" id="catImage" placeholder="assets/categories/barber-chairs.webp" dir="ltr">
+            <label>أيقونة القسم (Emoji أو اسم الرمز)</label>
+            <input type="text" id="catIcon" placeholder="مثال: 💺 أو ✂️ أو barber-chair">
+          </div>
+          <div class="form-group" style="margin-bottom: 16px;">
+            <label>صورة القسم الرئيسية</label>
+            <div class="unified-image-picker" id="picker-catImage">
+              <div class="image-picker-thumb">
+                <img id="thumb-catImage" src="assets/categories/barber-chairs.webp" alt="Category Image">
+              </div>
+              <div class="image-picker-info">
+                <span class="image-picker-path" id="path-catImage">assets/categories/barber-chairs.webp</span>
+                <input type="hidden" id="catImage" value="assets/categories/barber-chairs.webp">
+                <div class="image-picker-actions">
+                  <button type="button" class="image-picker-btn primary" onclick="window.AyAdmin.triggerUnifiedUpload('catImage', 'thumb-catImage', 'path-catImage')">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                    <span>رفع صورة WebP</span>
+                  </button>
+                  <button type="button" class="image-picker-btn" onclick="window.AyAdmin.openUnifiedMediaPicker('catImage', 'thumb-catImage', 'path-catImage')">
+                    <span>من المكتبة</span>
+                  </button>
+                </div>
+              </div>
+            </div>
           </div>
           <div class="form-grid-2">
             <div class="form-group">
@@ -1058,6 +1161,246 @@
       </form>
     </div>
   </div>
+
+  <!-- =========================================================================
+       MODAL 4: ADD & EDIT QUALITY PILLAR
+       ========================================================================= -->
+  <div class="admin-modal-overlay" id="qualityEditModal">
+    <div class="admin-modal" style="max-width: 600px;">
+      <div class="modal-header">
+        <h3 id="qualityModalTitle">تعديل ركيزة الجودة</h3>
+        <button type="button" class="icon-btn" onclick="window.AyAdmin.closeModal('qualityEditModal')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+      <form id="qualityEditForm">
+        <div class="modal-body">
+          <input type="hidden" id="qualityId">
+          <div class="form-group" style="margin-bottom: 16px;">
+            <label>عنوان ركيزة / مرحلة الجودة *</label>
+            <input type="text" id="qualityTitle" required placeholder="مثال: مضخة هيدروليك فولاذية">
+          </div>
+          <div class="form-group" style="margin-bottom: 16px;">
+            <label>الوصف الفني والتفاصيل *</label>
+            <textarea id="qualityDesc" rows="3" required placeholder="وصف تفصيلي لميزة الجودة ومواصفاتها"></textarea>
+          </div>
+          <div class="form-group" style="margin-bottom: 16px;">
+            <label>صورة المرحلة أو الخامات</label>
+            <div class="unified-image-picker" id="picker-qualityImage">
+              <div class="image-picker-thumb">
+                <img id="thumb-qualityImage" src="assets/images/quality-hydraulic.jpg" alt="Quality Image">
+              </div>
+              <div class="image-picker-info">
+                <span class="image-picker-path" id="path-qualityImage">assets/images/quality-hydraulic.jpg</span>
+                <input type="hidden" id="qualityImage" value="assets/images/quality-hydraulic.jpg">
+                <div class="image-picker-actions">
+                  <button type="button" class="image-picker-btn primary" onclick="window.AyAdmin.triggerUnifiedUpload('qualityImage', 'thumb-qualityImage', 'path-qualityImage')">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                    <span>رفع صورة WebP</span>
+                  </button>
+                  <button type="button" class="image-picker-btn" onclick="window.AyAdmin.openUnifiedMediaPicker('qualityImage', 'thumb-qualityImage', 'path-qualityImage')">
+                    <span>من المكتبة</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>ترتيب العرض</label>
+            <input type="number" id="qualityOrder" value="1">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="header-btn" onclick="window.AyAdmin.closeModal('qualityEditModal')">إلغاء</button>
+          <button type="submit" class="header-btn primary">حفظ ركيزة الجودة</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       MODAL 5: ADD & EDIT SERVICE
+       ========================================================================= -->
+  <div class="admin-modal-overlay" id="serviceEditModal">
+    <div class="admin-modal" style="max-width: 580px;">
+      <div class="modal-header">
+        <h3 id="serviceModalTitle">تعديل الخدمة</h3>
+        <button type="button" class="icon-btn" onclick="window.AyAdmin.closeModal('serviceEditModal')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+      <form id="serviceEditForm">
+        <div class="modal-body">
+          <input type="hidden" id="serviceId">
+          <div class="form-group" style="margin-bottom: 16px;">
+            <label>عنوان الخدمة *</label>
+            <input type="text" id="serviceTitle" required placeholder="مثال: تصنيع كراسي الحلاقة">
+          </div>
+          <div class="form-group" style="margin-bottom: 16px;">
+            <label>وصف الخدمة *</label>
+            <textarea id="serviceDesc" rows="3" required placeholder="وصف ما يقدمه المصنع في هذه الخدمة"></textarea>
+          </div>
+          <div class="form-group" style="margin-bottom: 16px;">
+            <label>رمز الأيقونة (Emoji أو اسم)</label>
+            <input type="text" id="serviceIcon" placeholder="مثال: 🛠️ أو 💈 أو 🚚">
+          </div>
+          <div class="form-group">
+            <label>ترتيب العرض</label>
+            <input type="number" id="serviceOrder" value="1">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="header-btn" onclick="window.AyAdmin.closeModal('serviceEditModal')">إلغاء</button>
+          <button type="submit" class="header-btn primary">حفظ الخدمة</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       MODAL 6: ADD & EDIT GALLERY ITEM
+       ========================================================================= -->
+  <div class="admin-modal-overlay" id="galleryEditModal">
+    <div class="admin-modal" style="max-width: 620px;">
+      <div class="modal-header">
+        <h3 id="galleryModalTitle">إضافة صورة للمعرض</h3>
+        <button type="button" class="icon-btn" onclick="window.AyAdmin.closeModal('galleryEditModal')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+      <form id="galleryEditForm">
+        <div class="modal-body">
+          <input type="hidden" id="galleryId">
+          <div class="form-group" style="margin-bottom: 16px;">
+            <label>عنوان الصورة أو الموديل *</label>
+            <input type="text" id="galleryTitle" required placeholder="مثال: تجهيز صالون رجالي فاخر">
+          </div>
+          <div class="form-group" style="margin-bottom: 16px;">
+            <label>تصنيف الصورة (Category / Tag)</label>
+            <input type="text" id="galleryCategory" placeholder="مثال: كراسي حلاقة رجالي أو صالونات كوافير">
+          </div>
+          <div class="form-group" style="margin-bottom: 16px;">
+            <label>وصف فرعي</label>
+            <input type="text" id="galleryDesc" placeholder="مثال: كراسي رويال هيدروليك أسود كابوتونيه">
+          </div>
+          <div class="form-group">
+            <label>صورة المعرض *</label>
+            <div class="unified-image-picker" id="picker-galleryImage">
+              <div class="image-picker-thumb">
+                <img id="thumb-galleryImage" src="assets/images/hero-barber-chair.jpg" alt="Gallery Image">
+              </div>
+              <div class="image-picker-info">
+                <span class="image-picker-path" id="path-galleryImage">assets/images/hero-barber-chair.jpg</span>
+                <input type="hidden" id="galleryImage" value="assets/images/hero-barber-chair.jpg">
+                <div class="image-picker-actions">
+                  <button type="button" class="image-picker-btn primary" onclick="window.AyAdmin.triggerUnifiedUpload('galleryImage', 'thumb-galleryImage', 'path-galleryImage')">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                    <span>رفع صورة WebP</span>
+                  </button>
+                  <button type="button" class="image-picker-btn" onclick="window.AyAdmin.openUnifiedMediaPicker('galleryImage', 'thumb-galleryImage', 'path-galleryImage')">
+                    <span>من المكتبة</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="header-btn" onclick="window.AyAdmin.closeModal('galleryEditModal')">إلغاء</button>
+          <button type="submit" class="header-btn primary">حفظ الصورة في المعرض</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       MODAL 7: ADD & EDIT TESTIMONIAL / SEGMENT
+       ========================================================================= -->
+  <div class="admin-modal-overlay" id="testimonialEditModal">
+    <div class="admin-modal" style="max-width: 600px;">
+      <div class="modal-header">
+        <h3 id="testimonialModalTitle">تعديل رأي العميل</h3>
+        <button type="button" class="icon-btn" onclick="window.AyAdmin.closeModal('testimonialEditModal')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+      <form id="testimonialEditForm">
+        <div class="modal-body">
+          <input type="hidden" id="testimonialId">
+          <div class="form-grid-2" style="margin-bottom: 16px;">
+            <div class="form-group">
+              <label>اسم العميل / الصالون *</label>
+              <input type="text" id="testimonialName" required placeholder="مثال: كابتن أحمد يوسف">
+            </div>
+            <div class="form-group">
+              <label>الصفة أو المحافظة</label>
+              <input type="text" id="testimonialRole" placeholder="مثال: صالون رويال باربر - القاهرة">
+            </div>
+          </div>
+          <div class="form-group" style="margin-bottom: 16px;">
+            <label>نص الرأي أو التقييم *</label>
+            <textarea id="testimonialText" rows="3" required placeholder="رأي العميل في متانة الكراسي وجودة المصنع والتسليم..."></textarea>
+          </div>
+          <div class="form-grid-2">
+            <div class="form-group">
+              <label>التقييم بالنجوم</label>
+              <select id="testimonialRating">
+                <option value="5">★★★★★ (5 نجوم)</option>
+                <option value="4">★★★★☆ (4 نجوم)</option>
+                <option value="3">★★★☆☆ (3 نجوم)</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>ترتيب العرض</label>
+              <input type="number" id="testimonialOrder" value="1">
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="header-btn" onclick="window.AyAdmin.closeModal('testimonialEditModal')">إلغاء</button>
+          <button type="submit" class="header-btn primary">حفظ التقييم</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       MODAL 8: ADD & EDIT FAQ ITEM
+       ========================================================================= -->
+  <div class="admin-modal-overlay" id="faqEditModal">
+    <div class="admin-modal" style="max-width: 600px;">
+      <div class="modal-header">
+        <h3 id="faqModalTitle">إضافة سؤال شائع</h3>
+        <button type="button" class="icon-btn" onclick="window.AyAdmin.closeModal('faqEditModal')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+      <form id="faqEditForm">
+        <div class="modal-body">
+          <input type="hidden" id="faqId">
+          <div class="form-group" style="margin-bottom: 16px;">
+            <label>نص السؤال (Question) *</label>
+            <input type="text" id="faqQuestion" required placeholder="مثال: هل يوجد شحن لكافة المحافظات؟">
+          </div>
+          <div class="form-group" style="margin-bottom: 16px;">
+            <label>الإجابة المفصلة (Answer) *</label>
+            <textarea id="faqAnswer" rows="4" required placeholder="اكتب إجابة واضحة ومباشرة يستفيد منها العميل..."></textarea>
+          </div>
+          <div class="form-group">
+            <label>ترتيب الظهور</label>
+            <input type="number" id="faqOrder" value="1">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="header-btn" onclick="window.AyAdmin.closeModal('faqEditModal')">إلغاء</button>
+          <button type="submit" class="header-btn primary">حفظ السؤال</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Hidden File Input for Unified Uploads -->
+  <input type="file" id="unifiedFileInput" accept="image/*" style="display: none;">
 
   <!-- Toast Notification Container -->
   <div class="admin-toast-container" id="toastContainer"></div>

@@ -23,7 +23,13 @@
     currentModalImages: [],
     currentProductPage: 1,
     productPageSize: 15,
-    mediaPickerTarget: 'product'
+    mediaPickerTarget: 'product',
+    qualityPillars: [],
+    servicesList: [],
+    galleryList: [],
+    testimonialsList: [],
+    faqsList: [],
+    unifiedPickerTarget: null
   };
 
   // DOM Elements
@@ -599,9 +605,40 @@
   function handleMediaPickerSelect(url) {
     if (state.mediaPickerTarget === 'ogImage') {
       selectMediaForOgImage(url);
+    } else if (state.mediaPickerTarget === 'unified') {
+      selectMediaForUnifiedPicker(url);
     } else {
       selectMediaForProduct(url);
     }
+  }
+
+  function triggerUnifiedUpload(inputId, thumbId, pathId) {
+    state.unifiedPickerTarget = { inputId, thumbId, pathId };
+    const fileInput = document.getElementById('unifiedFileInput');
+    if (fileInput) {
+      fileInput.value = '';
+      fileInput.click();
+    }
+  }
+
+  function openUnifiedMediaPicker(inputId, thumbId, pathId) {
+    state.unifiedPickerTarget = { inputId, thumbId, pathId };
+    state.mediaPickerTarget = 'unified';
+    openMediaPickerModal('اختيار صورة من مكتبة الموقع');
+  }
+
+  function selectMediaForUnifiedPicker(url) {
+    if (state.unifiedPickerTarget) {
+      const { inputId, thumbId, pathId } = state.unifiedPickerTarget;
+      const inp = document.getElementById(inputId);
+      const thumb = document.getElementById(thumbId);
+      const pathEl = document.getElementById(pathId);
+      if (inp) inp.value = url;
+      if (thumb) thumb.src = url;
+      if (pathEl) pathEl.textContent = url;
+      showToast('تم اختيار الصورة بنجاح! ⚡', 'success');
+    }
+    closeModal('mediaPickerModal');
   }
 
   function selectMediaForOgImage(url) {
@@ -818,8 +855,8 @@
         <div class="admin-card" style="margin-bottom: 0;">
           <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
             <div style="display: flex; align-items: center; gap: 12px;">
-              <div style="width: 44px; height: 44px; border-radius: var(--radius-md); background: var(--admin-gold-subtle); border: 1px solid var(--admin-gold); display: flex; align-items: center; justify-content: center; font-weight: 800; color: var(--admin-gold);">
-                ${c.id}
+              <div style="width: 44px; height: 44px; border-radius: var(--radius-md); background: var(--admin-gold-subtle); border: 1px solid var(--admin-gold); display: flex; align-items: center; justify-content: center; font-weight: 800; color: var(--admin-gold); font-size: ${c.icon ? '1.4rem' : '1rem'};">
+                ${c.icon ? c.icon : c.id}
               </div>
               <div>
                 <h4 style="font-size: 1.1rem; font-weight: 800;">${c.name}</h4>
@@ -829,6 +866,9 @@
             <div class="action-btns">
               <button class="icon-btn" onclick="window.AyAdmin.editCategory('${c.id}')" title="تعديل القسم">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+              </button>
+              <button class="icon-btn delete-btn" onclick="window.AyAdmin.deleteCategory('${c.id}')" title="حذف القسم">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>
               </button>
             </div>
           </div>
@@ -855,7 +895,17 @@
       document.getElementById('catId').readOnly = true;
       document.getElementById('catName').value = c.name;
       document.getElementById('catDesc').value = c.description || '';
-      document.getElementById('catImage').value = c.image || '';
+      
+      const catImg = c.image || 'assets/images/hero-barber-chair.jpg';
+      document.getElementById('catImage').value = catImg;
+      const thumb = document.getElementById('thumb-catImage');
+      if (thumb) thumb.src = catImg;
+      const pathEl = document.getElementById('path-catImage');
+      if (pathEl) pathEl.textContent = catImg;
+
+      const iconSelect = document.getElementById('catIcon');
+      if (iconSelect) iconSelect.value = c.icon || '💈';
+
       document.getElementById('catOrder').value = c.displayOrder || 0;
       document.getElementById('catActive').value = c.active !== false ? 'true' : 'false';
     } else {
@@ -863,6 +913,16 @@
       document.getElementById('categoryEditForm').reset();
       document.getElementById('catId').readOnly = false;
       document.getElementById('catActive').value = 'true';
+
+      const defaultImg = 'assets/images/hero-barber-chair.jpg';
+      document.getElementById('catImage').value = defaultImg;
+      const thumb = document.getElementById('thumb-catImage');
+      if (thumb) thumb.src = defaultImg;
+      const pathEl = document.getElementById('path-catImage');
+      if (pathEl) pathEl.textContent = defaultImg;
+
+      const iconSelect = document.getElementById('catIcon');
+      if (iconSelect) iconSelect.value = '💈';
     }
     modal.classList.add('active');
   }
@@ -873,10 +933,11 @@
     const name = document.getElementById('catName').value.trim();
     const description = document.getElementById('catDesc').value.trim();
     const image = document.getElementById('catImage').value.trim();
+    const icon = document.getElementById('catIcon')?.value || '💈';
     const displayOrder = parseInt(document.getElementById('catOrder').value, 10) || 0;
     const active = document.getElementById('catActive').value === 'true';
 
-    const cat = { id, name, description, image, displayOrder, active, featured: false };
+    const cat = { id, name, description, image, icon, displayOrder, active, featured: false };
 
     showToast('جاري حفظ القسم...', 'info');
     await window.AySupabase.saveCategory(cat);
@@ -884,6 +945,29 @@
     renderCategoriesList();
     closeModal('categoryEditModal');
     showToast('تم حفظ القسم بنجاح!', 'success');
+  }
+
+  async function deleteCategory(catId) {
+    const c = state.categories.find(x => x.id === catId);
+    if (!c) return;
+
+    const relatedProds = state.products.filter(p => p.category === catId);
+    let confirmMsg = `هل أنت متأكد من حذف قسم "${c.name}" (${c.id}) نهائياً؟`;
+    if (relatedProds.length > 0) {
+      confirmMsg += `\n\n⚠️ تنبيه: يوجد ${relatedProds.length} موديلات مرتبطة بهذا القسم، سيتم فك ارتباطها تلقائياً.`;
+    }
+
+    if (!confirm(confirmMsg)) return;
+
+    showToast('جاري حذف القسم...', 'info');
+    const res = await window.AySupabase.deleteCategory(catId);
+    if (res && res.success !== false) {
+      state.categories = await window.AySupabase.getCategories();
+      renderCategoriesList();
+      showToast('تم حذف القسم بنجاح!', 'success');
+    } else {
+      showToast('تعذر حذف القسم، يرجى المحاولة مرة أخرى.', 'error');
+    }
   }
 
   // ==========================================
@@ -1001,6 +1085,52 @@
   // ==========================================
   // 7. MODULES 4-9: SITE CONTENT CMS
   // ==========================================
+  // ==========================================
+  // 7. SITE CONTENT CMS & FULL CRUD DATASETS
+  // ==========================================
+  const defaultQualityPillars = [
+    { id: 'q1', title: 'مضخة هيدروليك فولاذية', desc: 'تعتمد الموديلات المختارة على أنظمة هيدروليكية متينة من الفولاذ مع صمامات محكمة تضمن سلاسة الرفع والخفض مع دوران 360 درجة.', image: 'assets/images/quality-hydraulic.jpg', order: 1 },
+    { id: 'q2', title: 'جلد مستورد معالج', desc: 'خامات جلدية مختارة بعناية تتميز بمقاومتها العالية للسوائل والرطوبة وبقع الصبغات، مع سهولة التنظيف والتعقيم اليومي.', image: 'assets/images/quality-leather.jpg', order: 2 },
+    { id: 'q3', title: 'إسفنج محقون عالي الكثافة', desc: 'حشوات مقولبة ومحقونة ذات كثافة عالية تحافظ على قوامها ولا تهبط مع طول الاستخدام، لتمنح العميل راحة ودعماً ممتازاً.', image: 'assets/images/quality-foam.jpg', order: 3 },
+    { id: 'q4', title: 'دقة التنجيد والخياطة', desc: 'اهتمام بالغ بالغرز المزدوجة وتفاصيل الكابوتونيه وشد الجلد حول الإطار الداخلي لتقديم مظهر جمالي يدوم طويلاً.', image: 'assets/images/quality-stitching.jpg', order: 4 }
+  ];
+
+  const defaultServices = [
+    { id: 's1', title: 'تصنيع كراسي الحلاقة', desc: 'تصنيع كراسي حلاقة رجالي هيدروليك بموديلات كلاسيكية وعصرية تناسب مختلف الأذواق والمساحات.', icon: 'scissors', order: 1 },
+    { id: 's2', title: 'تصنيع كراسي الصالونات', desc: 'كراسي تجميل وتصفيف حريمي أنيقة بتصميمات انسيابية تناسب أرقى صالونات الكوافير.', icon: 'sparkles', order: 2 },
+    { id: 's3', title: 'تجهيز وتوريد الطلبات', desc: 'تجهيز شامل للصالونات يشمل كراسي الغسيل والشامبو والشيزلونجات والتروليات المساعدة.', icon: 'tool', order: 3 },
+    { id: 's4', title: 'طلبات الجملة والتوريد التجاري', desc: 'تلبية طلبيات التجار والمعارض وتجهيز سلاسل الصالونات بكميات وأسعار تصنيع مناسبة.', icon: 'truck', order: 4 },
+    { id: 's5', title: 'خيارات ألوان وتشطيبات حسب الموديل', desc: 'إتاحة تشكيلة واسعة من درجات الجلود ونوعية التنجيد لتلائم الديكور والهوية البصرية لمشروعك.', icon: 'palette', order: 5 },
+    { id: 's6', title: 'خدمة استفسارات ومتابعة الطلبات', desc: 'فريق متواجد للرد على أسئلتك، إرسال الكتالوجات الحالية، وتقديم النصيحة لاختيار الأنسب لصالونك.', icon: 'message', order: 6 }
+  ];
+
+  const defaultGallery = [
+    { id: 'g1', title: 'تجهيز صالون رجالي متكامل', category: 'كراسي رويال', desc: 'كراسي حلاقة رويال — أسود وفولاذ مطلي', image: 'assets/images/gallery-1.svg', order: 1 },
+    { id: 'g2', title: 'كرسي جلد كونياك كلاسيكي', category: 'تخصيص ألوان', desc: 'تنجيد كابوتونيه وتخصيص ألوان التنجيد', image: 'assets/images/gallery-2.svg', order: 2 },
+    { id: 'g3', title: 'تجهيز كوافير وصالون حريمي', category: 'صالونات حريمي', desc: 'كراسي تجميل انسيابية مع قواعد كروم هيدروليك', image: 'assets/images/gallery-3.svg', order: 3 },
+    { id: 'g4', title: 'هيدروليك وقاعدة فولاذية', category: 'مواصفات فنية', desc: 'دوران سلس 360 درجة مع قفل ثبات', image: 'assets/images/gallery-4.svg', order: 4 },
+    { id: 'g5', title: 'محطة غسيل شعر وشامبو', category: 'تجهيزات', desc: 'حوض سيراميك إيطالي متحرك ومقعد مريح', image: 'assets/images/gallery-5.svg', order: 5 },
+    { id: 'g6', title: 'شيزلونج تجميل ومساج', category: 'مراكز تجميل', desc: 'تعديل انسيابي لزوايا الظهر والأرجل', image: 'assets/images/gallery-6.svg', order: 6 },
+    { id: 'g7', title: 'تصنيع الهياكل المعدنية واللحام', category: 'داخل المصنع', desc: 'شاسيه فولاذي سميك معالج ضد الصدأ', image: 'assets/images/gallery-7.jpg', order: 7 },
+    { id: 'g8', title: 'ورشة التنجيد وتخصيص الألوان', category: 'تنجيد يدوي', desc: 'كتالوج واسع من الجلود والألوان', image: 'assets/images/gallery-8.svg', order: 8 }
+  ];
+
+  const defaultTestimonials = [
+    { id: 't1', name: 'أصحاب الصالونات الجديدة', role: 'حلول المشروعات الجديدة', text: 'لو بتبدأ مشروع جديد وعايز تجهز المكان بتكلفة مناسبة واختيارات عملية تحقق التوازن بين السعر والجودة بدون ما تضغط ميزانيتك.', rating: 5, order: 1 },
+    { id: 't2', name: 'أصحاب الصالونات القائمة', role: 'تجديد وتطوير', text: 'لو بتجدد صالونك وعايز تغير الكراسي وتحسن شكل وتجربة المكان بموديلات حديثة تلفت انتباه زبائنك وتزيد راحتهم.', rating: 5, order: 2 },
+    { id: 't3', name: 'أصحاب الصالونات الفاخرة', role: 'الفئة الفاخرة', text: 'لو اهتمامك الأساسي بالشكل والخامات والتفاصيل ومستوى التشطيب الفاخر اللي بيعكس مستوى الصالون ورقي الخدمة المقدمة.', rating: 5, order: 3 },
+    { id: 't4', name: 'التجار وأصحاب الطلبات بالجملة', role: 'توريد تجاري', text: 'حلول توريد مناسبة للطلبات التجارية والكميات وتجهيز الفروع الكبرى حسب الاتفاق مع جدول زمني واضح للتسليم.', rating: 5, order: 4 }
+  ];
+
+  const defaultFaqs = [
+    { id: 'f1', question: 'هل يوجد شحن؟', answer: 'نعم، تتوفر خدمة الشحن والتوصيل حسب المنطقة وطبيعة الطلب. يمكنك التواصل معنا لمعرفة تفاصيل ومصاريف الشحن لمحافظتك.', order: 1 },
+    { id: 'f2', question: 'هل يمكن اختيار لون الكرسي؟', answer: 'تتوفر اختيارات ألوان وتخصيصات لتنجيد الجلد حسب الموديل والإمكانيات المتاحة لكل فئة.', order: 2 },
+    { id: 'f3', question: 'هل يوجد موديلات اقتصادية؟', answer: 'نعم، لدينا موديلات مخصصة ومناسبة لمن يبدأ مشروعاً جديداً أو يبحث عن اختيار اقتصادي عملي يجمع بين السعر الجيد والمتانة.', order: 3 },
+    { id: 'f4', question: 'هل يوجد بيع بالجملة؟', answer: 'تتوفر طلبات الجملة والتوريد التجاري للمعارض ولأصحاب الصالونات المتعددة حسب الكميات والاتفاق.', order: 4 },
+    { id: 'f5', question: 'كيف أعرف سعر الموديل؟', answer: 'يمكنك التواصل معنا مباشرة عبر الواتساب أو الهاتف وإرسال اسم أو كود الموديل لمعرفة السعر والتفاصيل الحالية وخيارات التجهيز.', order: 5 },
+    { id: 'f6', question: 'هل يمكن طلب أكثر من كرسي؟', answer: 'نعم، يمكن طلب الكميات المطلوبة لتجهيز الصالون بالكامل حسب توافر الموديل والجدول الزمني للإنتاج.', order: 6 }
+  ];
+
   function populateSiteContentForms() {
     const c = state.siteContent || {};
 
@@ -1018,6 +1148,21 @@
     setVal('cmsHeroStat2Label', hero.stat2Label || '');
     setVal('cmsHeroStat3Val', hero.stat3Val || '');
     setVal('cmsHeroStat3Label', hero.stat3Label || '');
+
+    // Hero Visual Identity (Logo & Banner Image)
+    const logoVal = hero.logo || 'assets/images/logo.svg';
+    setVal('cmsHeroLogo', logoVal);
+    const logoThumb = document.getElementById('thumb-cmsHeroLogo');
+    if (logoThumb) logoThumb.src = logoVal;
+    const logoPath = document.getElementById('path-cmsHeroLogo');
+    if (logoPath) logoPath.textContent = logoVal;
+
+    const bannerVal = hero.bannerImage || 'assets/images/hero-barber-chair.jpg';
+    setVal('cmsHeroBannerImage', bannerVal);
+    const bannerThumb = document.getElementById('thumb-cmsHeroBannerImage');
+    if (bannerThumb) bannerThumb.src = bannerVal;
+    const bannerPath = document.getElementById('path-cmsHeroBannerImage');
+    if (bannerPath) bannerPath.textContent = bannerVal;
 
     // About
     const about = c.about || {};
@@ -1075,6 +1220,37 @@
     // Supabase Settings
     setVal('settingSupabaseUrl', window.AySupabase.url);
     setVal('settingSupabaseKey', window.AySupabase.key);
+
+    // Initialize CRUD Modules from Supabase Site Content or Defaults
+    const quality = c.quality || {};
+    state.qualityPillars = Array.isArray(quality.pillars) && quality.pillars.length > 0
+      ? quality.pillars
+      : [...defaultQualityPillars];
+    renderQualityList();
+
+    const services = c.services || {};
+    state.servicesList = Array.isArray(services.items) && services.items.length > 0
+      ? services.items
+      : [...defaultServices];
+    renderServicesList();
+
+    const gallery = c.gallery || {};
+    state.galleryList = Array.isArray(gallery.items) && gallery.items.length > 0
+      ? gallery.items
+      : [...defaultGallery];
+    renderGalleryList();
+
+    const testimonials = c.testimonials || {};
+    state.testimonialsList = Array.isArray(testimonials.items) && testimonials.items.length > 0
+      ? testimonials.items
+      : [...defaultTestimonials];
+    renderTestimonialsList();
+
+    const faqs = c.faqs || {};
+    state.faqsList = Array.isArray(faqs.items) && faqs.items.length > 0
+      ? faqs.items
+      : [...defaultFaqs];
+    renderFaqsList();
   }
 
   function setVal(id, val) {
@@ -1085,6 +1261,8 @@
   async function saveHeroCMS(e) {
     e.preventDefault();
     const data = {
+      logo: document.getElementById('cmsHeroLogo')?.value.trim() || 'assets/images/logo.svg',
+      bannerImage: document.getElementById('cmsHeroBannerImage')?.value.trim() || 'assets/images/hero-barber-chair.jpg',
       badge: document.getElementById('cmsHeroBadge').value,
       title: document.getElementById('cmsHeroTitle').value,
       titleGold: document.getElementById('cmsHeroTitleGold').value,
@@ -1099,9 +1277,600 @@
       stat3Label: document.getElementById('cmsHeroStat3Label').value
     };
 
-    showToast('جاري حفظ الصفحة الرئيسية...', 'info');
+    showToast('جاري حفظ الصفحة الرئيسية والهوية البصرية...', 'info');
     await window.AySupabase.saveSiteContent('hero', data);
-    showToast('تم حفظ إعدادات الصفحة الرئيسية بنجاح!', 'success');
+    showToast('تم حفظ إعدادات الصفحة الرئيسية والهوية البصرية بنجاح! ⚡', 'success');
+  }
+
+  // ==========================================
+  // UNIFIED FILE UPLOAD HANDLER (Client-side WebP)
+  // ==========================================
+  async function handleUnifiedFileUpload(file) {
+    if (!file || !file.type.startsWith('image/')) {
+      showToast('يرجى اختيار ملف صورة صالح.', 'error');
+      return;
+    }
+    if (!state.unifiedPickerTarget) return;
+
+    showToast('جاري ضغط الصورة بصيغة WebP ورفعها... ⚡', 'info');
+    try {
+      const compressed = await compressImageFile(file, 1600, 1600, 0.85);
+      const cleanName = file.name.replace(/\.[^.]+$/, '') + '.webp';
+      const uploadRes = await window.AySupabase.uploadImageToStorage(compressed.dataUrl, cleanName);
+      const finalUrl = uploadRes.url || compressed.dataUrl;
+
+      const { inputId, thumbId, pathId } = state.unifiedPickerTarget;
+      const inp = document.getElementById(inputId);
+      const thumb = document.getElementById(thumbId);
+      const pathEl = document.getElementById(pathId);
+
+      if (inp) inp.value = finalUrl;
+      if (thumb) thumb.src = finalUrl;
+      if (pathEl) pathEl.textContent = finalUrl;
+
+      if (!state.media) state.media = [];
+      state.media.push({ url: finalUrl, title: cleanName });
+      renderMediaLibrary();
+
+      const savedKb = Math.round(compressed.savedBytes / 1024);
+      const msg = savedKb > 0
+        ? `تم رفع وضغط الصورة بنجاح بصيغة WebP! ⚡ (تم توفير ${savedKb} KB)`
+        : `تم رفع وضغط الصورة بنجاح بصيغة WebP! ⚡`;
+      showToast(msg, 'success');
+    } catch (err) {
+      console.error('Unified upload error:', err);
+      showToast('تعذر رفع الصورة: ' + err.message, 'error');
+    }
+  }
+
+  // ==========================================
+  // QUALITY PILLARS CRUD
+  // ==========================================
+  function renderQualityList() {
+    const container = document.getElementById('qualityCardsContainer');
+    if (!container) return;
+
+    if (!state.qualityPillars || state.qualityPillars.length === 0) {
+      container.innerHTML = `
+        <div style="grid-column: 1 / -1; text-align: center; padding: 40px; color: var(--admin-text-muted);">
+          لا توجد ركائز جودة مضافة حالياً. اضغط على "+ إضافة ركيزة/مرحلة جديدة" للبدء.
+        </div>`;
+      return;
+    }
+
+    container.innerHTML = state.qualityPillars.map(item => `
+      <div class="admin-crud-card">
+        <div class="admin-crud-header">
+          <div style="display: flex; align-items: center; gap: 12px;">
+            <img class="admin-crud-thumb" src="${item.image || 'assets/images/quality-hydraulic.jpg'}" alt="${item.title}">
+            <div>
+              <h4 style="font-size: 1.05rem; font-weight: 800;">${item.title}</h4>
+              <span style="font-size: 0.8rem; color: var(--admin-text-muted);">ترتيب العرض: ${item.order || 1}</span>
+            </div>
+          </div>
+          <div class="admin-crud-actions">
+            <button type="button" class="icon-btn" onclick="window.AyAdmin.openQualityModal('${item.id}')" title="تعديل">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+            </button>
+            <button type="button" class="icon-btn delete-btn" onclick="window.AyAdmin.deleteQuality('${item.id}')" title="حذف">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>
+            </button>
+          </div>
+        </div>
+        <p style="font-size: 0.88rem; color: var(--admin-text-muted); line-height: 1.5; margin-top: 8px;">
+          ${item.desc || ''}
+        </p>
+      </div>
+    `).join('');
+  }
+
+  function openQualityModal(id = null) {
+    const modal = document.getElementById('qualityEditModal');
+    const titleEl = document.getElementById('qualityModalTitle');
+    const form = document.getElementById('qualityEditForm');
+    if (!modal || !form) return;
+
+    if (id) {
+      const item = state.qualityPillars.find(x => x.id === id);
+      if (!item) return;
+      titleEl.textContent = 'تعديل ركيزة الجودة';
+      document.getElementById('qualityId').value = item.id;
+      document.getElementById('qualityTitle').value = item.title;
+      document.getElementById('qualityDesc').value = item.desc || '';
+      document.getElementById('qualityOrder').value = item.order || 1;
+      const img = item.image || 'assets/images/quality-hydraulic.jpg';
+      document.getElementById('qualityImage').value = img;
+      const thumb = document.getElementById('thumb-qualityImage');
+      if (thumb) thumb.src = img;
+      const pathEl = document.getElementById('path-qualityImage');
+      if (pathEl) pathEl.textContent = img;
+    } else {
+      titleEl.textContent = 'إضافة ركيزة/مرحلة جودة جديدة';
+      form.reset();
+      document.getElementById('qualityId').value = 'q_' + Date.now();
+      document.getElementById('qualityOrder').value = (state.qualityPillars?.length || 0) + 1;
+      const defaultImg = 'assets/images/quality-hydraulic.jpg';
+      document.getElementById('qualityImage').value = defaultImg;
+      const thumb = document.getElementById('thumb-qualityImage');
+      if (thumb) thumb.src = defaultImg;
+      const pathEl = document.getElementById('path-qualityImage');
+      if (pathEl) pathEl.textContent = defaultImg;
+    }
+
+    modal.classList.add('active');
+  }
+
+  async function handleQualityFormSubmit(e) {
+    e.preventDefault();
+    const id = document.getElementById('qualityId').value;
+    const title = document.getElementById('qualityTitle').value.trim();
+    const desc = document.getElementById('qualityDesc').value.trim();
+    const order = parseInt(document.getElementById('qualityOrder').value, 10) || 1;
+    const image = document.getElementById('qualityImage').value.trim();
+
+    const existingIdx = state.qualityPillars.findIndex(x => x.id === id);
+    const item = { id, title, desc, order, image };
+
+    if (existingIdx >= 0) {
+      state.qualityPillars[existingIdx] = item;
+    } else {
+      state.qualityPillars.push(item);
+    }
+
+    state.qualityPillars.sort((a, b) => (a.order || 0) - (b.order || 0));
+
+    showToast('جاري حفظ ركيزة الجودة...', 'info');
+    await window.AySupabase.saveSiteContent('quality', { pillars: state.qualityPillars });
+    renderQualityList();
+    closeModal('qualityEditModal');
+    showToast('تم حفظ ركيزة الجودة بنجاح! ⚡', 'success');
+  }
+
+  async function deleteQuality(id) {
+    if (!confirm('هل أنت متأكد من حذف هذه الركيزة؟')) return;
+    state.qualityPillars = state.qualityPillars.filter(x => x.id !== id);
+    showToast('جاري حذف الركيزة...', 'info');
+    await window.AySupabase.saveSiteContent('quality', { pillars: state.qualityPillars });
+    renderQualityList();
+    showToast('تم حذف الركيزة بنجاح!', 'success');
+  }
+
+  // ==========================================
+  // SERVICES, GALLERY, TESTIMONIALS CRUD
+  // ==========================================
+  function switchServicesSubtab(tabName) {
+    const tabs = ['services', 'gallery', 'testimonials'];
+    tabs.forEach(t => {
+      const btn = document.getElementById(`subtabBtn-${t}`);
+      const pane = document.getElementById(`pane-subtab-${t}`);
+      if (btn) btn.classList.toggle('active', t === tabName);
+      if (pane) pane.style.display = (t === tabName) ? 'block' : 'none';
+    });
+  }
+
+  function getServiceIconSvg(icon) {
+    switch (icon) {
+      case 'scissors':
+        return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="22" height="22"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><line x1="20" y1="4" x2="8.12" y2="15.88"/><line x1="14.47" y1="14.48" x2="20" y2="20"/><line x1="8.12" y1="8.12" x2="12" y2="12"/></svg>`;
+      case 'sparkles':
+        return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="22" height="22"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>`;
+      case 'tool':
+        return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="22" height="22"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>`;
+      case 'truck':
+        return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="22" height="22"><rect x="1" y="3" width="15" height="13"></rect><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon><circle cx="5.5" cy="18.5" r="2.5"></circle><circle cx="18.5" cy="18.5" r="2.5"></circle></svg>`;
+      case 'palette':
+        return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="22" height="22"><circle cx="12" cy="12" r="10"></circle><path d="M12 8v8M8 12h8"/></svg>`;
+      case 'message':
+        return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="22" height="22"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>`;
+      default:
+        return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="22" height="22"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 14 14"/></svg>`;
+    }
+  }
+
+  function renderServicesList() {
+    const container = document.getElementById('servicesCardsContainer');
+    if (!container) return;
+
+    if (!state.servicesList || state.servicesList.length === 0) {
+      container.innerHTML = `
+        <div style="grid-column: 1 / -1; text-align: center; padding: 40px; color: var(--admin-text-muted);">
+          لا توجد خدمات مضافة حالياً.
+        </div>`;
+      return;
+    }
+
+    container.innerHTML = state.servicesList.map(item => `
+      <div class="admin-crud-card">
+        <div class="admin-crud-header">
+          <div style="display: flex; align-items: center; gap: 12px;">
+            <div style="width: 44px; height: 44px; border-radius: var(--radius-md); background: var(--admin-gold-subtle); border: 1px solid var(--admin-gold); display: flex; align-items: center; justify-content: center; color: var(--admin-gold);">
+              ${getServiceIconSvg(item.icon)}
+            </div>
+            <div>
+              <h4 style="font-size: 1.05rem; font-weight: 800;">${item.title}</h4>
+              <span style="font-size: 0.8rem; color: var(--admin-text-muted);">ترتيب العرض: ${item.order || 1}</span>
+            </div>
+          </div>
+          <div class="admin-crud-actions">
+            <button type="button" class="icon-btn" onclick="window.AyAdmin.openServiceModal('${item.id}')" title="تعديل">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+            </button>
+            <button type="button" class="icon-btn delete-btn" onclick="window.AyAdmin.deleteService('${item.id}')" title="حذف">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>
+            </button>
+          </div>
+        </div>
+        <p style="font-size: 0.88rem; color: var(--admin-text-muted); line-height: 1.5; margin-top: 8px;">
+          ${item.desc || ''}
+        </p>
+      </div>
+    `).join('');
+  }
+
+  function openServiceModal(id = null) {
+    const modal = document.getElementById('serviceEditModal');
+    const titleEl = document.getElementById('serviceModalTitle');
+    const form = document.getElementById('serviceEditForm');
+    if (!modal || !form) return;
+
+    if (id) {
+      const item = state.servicesList.find(x => x.id === id);
+      if (!item) return;
+      titleEl.textContent = 'تعديل الخدمة';
+      document.getElementById('serviceId').value = item.id;
+      document.getElementById('serviceTitle').value = item.title;
+      document.getElementById('serviceDesc').value = item.desc || '';
+      document.getElementById('serviceIcon').value = item.icon || 'scissors';
+      document.getElementById('serviceOrder').value = item.order || 1;
+    } else {
+      titleEl.textContent = 'إضافة خدمة جديدة';
+      form.reset();
+      document.getElementById('serviceId').value = 's_' + Date.now();
+      document.getElementById('serviceOrder').value = (state.servicesList?.length || 0) + 1;
+      document.getElementById('serviceIcon').value = 'scissors';
+    }
+
+    modal.classList.add('active');
+  }
+
+  async function handleServiceFormSubmit(e) {
+    e.preventDefault();
+    const id = document.getElementById('serviceId').value;
+    const title = document.getElementById('serviceTitle').value.trim();
+    const desc = document.getElementById('serviceDesc').value.trim();
+    const icon = document.getElementById('serviceIcon').value;
+    const order = parseInt(document.getElementById('serviceOrder').value, 10) || 1;
+
+    const existingIdx = state.servicesList.findIndex(x => x.id === id);
+    const item = { id, title, desc, icon, order };
+
+    if (existingIdx >= 0) {
+      state.servicesList[existingIdx] = item;
+    } else {
+      state.servicesList.push(item);
+    }
+
+    state.servicesList.sort((a, b) => (a.order || 0) - (b.order || 0));
+
+    showToast('جاري حفظ الخدمة...', 'info');
+    await window.AySupabase.saveSiteContent('services', { items: state.servicesList });
+    renderServicesList();
+    closeModal('serviceEditModal');
+    showToast('تم حفظ الخدمة بنجاح! ⚡', 'success');
+  }
+
+  async function deleteService(id) {
+    if (!confirm('هل أنت متأكد من حذف هذه الخدمة؟')) return;
+    state.servicesList = state.servicesList.filter(x => x.id !== id);
+    showToast('جاري حذف الخدمة...', 'info');
+    await window.AySupabase.saveSiteContent('services', { items: state.servicesList });
+    renderServicesList();
+    showToast('تم حذف الخدمة بنجاح!', 'success');
+  }
+
+  // Gallery CRUD
+  function renderGalleryList() {
+    const container = document.getElementById('galleryCardsContainer');
+    if (!container) return;
+
+    if (!state.galleryList || state.galleryList.length === 0) {
+      container.innerHTML = `
+        <div style="grid-column: 1 / -1; text-align: center; padding: 40px; color: var(--admin-text-muted);">
+          لا توجد صور في المعرض حالياً.
+        </div>`;
+      return;
+    }
+
+    container.innerHTML = state.galleryList.map(item => `
+      <div class="admin-crud-card">
+        <div class="admin-crud-header">
+          <div style="display: flex; align-items: center; gap: 12px;">
+            <img class="admin-crud-thumb" src="${item.image || 'assets/images/hero-barber-chair.jpg'}" alt="${item.title}">
+            <div>
+              <h4 style="font-size: 1.05rem; font-weight: 800;">${item.title}</h4>
+              <span style="font-size: 0.8rem; color: var(--admin-text-muted);">${item.category || 'معرض الأعمال'}</span>
+            </div>
+          </div>
+          <div class="admin-crud-actions">
+            <button type="button" class="icon-btn" onclick="window.AyAdmin.openGalleryModal('${item.id}')" title="تعديل">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+            </button>
+            <button type="button" class="icon-btn delete-btn" onclick="window.AyAdmin.deleteGalleryItem('${item.id}')" title="حذف">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>
+            </button>
+          </div>
+        </div>
+        <p style="font-size: 0.88rem; color: var(--admin-text-muted); line-height: 1.5; margin-top: 8px;">
+          ${item.desc || ''}
+        </p>
+      </div>
+    `).join('');
+  }
+
+  function openGalleryModal(id = null) {
+    const modal = document.getElementById('galleryEditModal');
+    const titleEl = document.getElementById('galleryModalTitle');
+    const form = document.getElementById('galleryEditForm');
+    if (!modal || !form) return;
+
+    if (id) {
+      const item = state.galleryList.find(x => x.id === id);
+      if (!item) return;
+      titleEl.textContent = 'تعديل صورة المعرض';
+      document.getElementById('galleryId').value = item.id;
+      document.getElementById('galleryTitle').value = item.title;
+      document.getElementById('galleryCategory').value = item.category || '';
+      document.getElementById('galleryDesc').value = item.desc || '';
+      const img = item.image || 'assets/images/hero-barber-chair.jpg';
+      document.getElementById('galleryImage').value = img;
+      const thumb = document.getElementById('thumb-galleryImage');
+      if (thumb) thumb.src = img;
+      const pathEl = document.getElementById('path-galleryImage');
+      if (pathEl) pathEl.textContent = img;
+    } else {
+      titleEl.textContent = 'إضافة صورة جديدة للمعرض';
+      form.reset();
+      document.getElementById('galleryId').value = 'g_' + Date.now();
+      const defaultImg = 'assets/images/hero-barber-chair.jpg';
+      document.getElementById('galleryImage').value = defaultImg;
+      const thumb = document.getElementById('thumb-galleryImage');
+      if (thumb) thumb.src = defaultImg;
+      const pathEl = document.getElementById('path-galleryImage');
+      if (pathEl) pathEl.textContent = defaultImg;
+    }
+
+    modal.classList.add('active');
+  }
+
+  async function handleGalleryFormSubmit(e) {
+    e.preventDefault();
+    const id = document.getElementById('galleryId').value;
+    const title = document.getElementById('galleryTitle').value.trim();
+    const category = document.getElementById('galleryCategory').value.trim();
+    const desc = document.getElementById('galleryDesc').value.trim();
+    const image = document.getElementById('galleryImage').value.trim();
+
+    const existingIdx = state.galleryList.findIndex(x => x.id === id);
+    const item = { id, title, category, desc, image };
+
+    if (existingIdx >= 0) {
+      state.galleryList[existingIdx] = item;
+    } else {
+      state.galleryList.push(item);
+    }
+
+    showToast('جاري حفظ صورة المعرض...', 'info');
+    await window.AySupabase.saveSiteContent('gallery', { items: state.galleryList });
+    renderGalleryList();
+    closeModal('galleryEditModal');
+    showToast('تم حفظ صورة المعرض بنجاح! ⚡', 'success');
+  }
+
+  async function deleteGalleryItem(id) {
+    if (!confirm('هل أنت متأكد من حذف هذه الصورة من المعرض؟')) return;
+    state.galleryList = state.galleryList.filter(x => x.id !== id);
+    showToast('جاري حذف الصورة...', 'info');
+    await window.AySupabase.saveSiteContent('gallery', { items: state.galleryList });
+    renderGalleryList();
+    showToast('تم حذف الصورة بنجاح!', 'success');
+  }
+
+  // Testimonials / Customer Segments CRUD
+  function renderTestimonialsList() {
+    const container = document.getElementById('testimonialsCardsContainer');
+    if (!container) return;
+
+    if (!state.testimonialsList || state.testimonialsList.length === 0) {
+      container.innerHTML = `
+        <div style="grid-column: 1 / -1; text-align: center; padding: 40px; color: var(--admin-text-muted);">
+          لا توجد تقييمات أو شرائح مضافة حالياً.
+        </div>`;
+      return;
+    }
+
+    container.innerHTML = state.testimonialsList.map(item => `
+      <div class="admin-crud-card">
+        <div class="admin-crud-header">
+          <div>
+            <h4 style="font-size: 1.05rem; font-weight: 800;">${item.name}</h4>
+            <span style="font-size: 0.8rem; color: var(--admin-text-muted);">${item.role || 'عميل المصنع'} — ترتيب: ${item.order || 1}</span>
+          </div>
+          <div class="admin-crud-actions">
+            <button type="button" class="icon-btn" onclick="window.AyAdmin.openTestimonialModal('${item.id}')" title="تعديل">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+            </button>
+            <button type="button" class="icon-btn delete-btn" onclick="window.AyAdmin.deleteTestimonial('${item.id}')" title="حذف">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>
+            </button>
+          </div>
+        </div>
+        <div style="color: var(--admin-gold); font-size: 0.95rem; margin-top: 6px;">
+          ${'★'.repeat(parseInt(item.rating || 5, 10))}
+        </div>
+        <p style="font-size: 0.88rem; color: var(--admin-text-muted); line-height: 1.5; margin-top: 6px;">
+          "${item.text || ''}"
+        </p>
+      </div>
+    `).join('');
+  }
+
+  function openTestimonialModal(id = null) {
+    const modal = document.getElementById('testimonialEditModal');
+    const titleEl = document.getElementById('testimonialModalTitle');
+    const form = document.getElementById('testimonialEditForm');
+    if (!modal || !form) return;
+
+    if (id) {
+      const item = state.testimonialsList.find(x => x.id === id);
+      if (!item) return;
+      titleEl.textContent = 'تعديل التقييم / الشريحة';
+      document.getElementById('testimonialId').value = item.id;
+      document.getElementById('testimonialName').value = item.name;
+      document.getElementById('testimonialRole').value = item.role || '';
+      document.getElementById('testimonialText').value = item.text || '';
+      document.getElementById('testimonialRating').value = item.rating || '5';
+      document.getElementById('testimonialOrder').value = item.order || 1;
+    } else {
+      titleEl.textContent = 'إضافة تقييم / شريحة جديدة';
+      form.reset();
+      document.getElementById('testimonialId').value = 't_' + Date.now();
+      document.getElementById('testimonialRating').value = '5';
+      document.getElementById('testimonialOrder').value = (state.testimonialsList?.length || 0) + 1;
+    }
+
+    modal.classList.add('active');
+  }
+
+  async function handleTestimonialFormSubmit(e) {
+    e.preventDefault();
+    const id = document.getElementById('testimonialId').value;
+    const name = document.getElementById('testimonialName').value.trim();
+    const role = document.getElementById('testimonialRole').value.trim();
+    const text = document.getElementById('testimonialText').value.trim();
+    const rating = parseInt(document.getElementById('testimonialRating').value, 10) || 5;
+    const order = parseInt(document.getElementById('testimonialOrder').value, 10) || 1;
+
+    const existingIdx = state.testimonialsList.findIndex(x => x.id === id);
+    const item = { id, name, role, text, rating, order };
+
+    if (existingIdx >= 0) {
+      state.testimonialsList[existingIdx] = item;
+    } else {
+      state.testimonialsList.push(item);
+    }
+
+    state.testimonialsList.sort((a, b) => (a.order || 0) - (b.order || 0));
+
+    showToast('جاري حفظ التقييم...', 'info');
+    await window.AySupabase.saveSiteContent('testimonials', { items: state.testimonialsList });
+    renderTestimonialsList();
+    closeModal('testimonialEditModal');
+    showToast('تم حفظ التقييم بنجاح! ⚡', 'success');
+  }
+
+  async function deleteTestimonial(id) {
+    if (!confirm('هل أنت متأكد من حذف هذا التقييم؟')) return;
+    state.testimonialsList = state.testimonialsList.filter(x => x.id !== id);
+    showToast('جاري حذف التقييم...', 'info');
+    await window.AySupabase.saveSiteContent('testimonials', { items: state.testimonialsList });
+    renderTestimonialsList();
+    showToast('تم حذف التقييم بنجاح!', 'success');
+  }
+
+  // ==========================================
+  // FAQS FULL CRUD
+  // ==========================================
+  function renderFaqsList() {
+    const container = document.getElementById('faqsListContainer');
+    if (!container) return;
+
+    if (!state.faqsList || state.faqsList.length === 0) {
+      container.innerHTML = `
+        <div style="text-align: center; padding: 40px; color: var(--admin-text-muted);">
+          لا توجد أسئلة شائعة مضافة حالياً.
+        </div>`;
+      return;
+    }
+
+    container.innerHTML = state.faqsList.map(item => `
+      <div class="admin-faq-item">
+        <div class="admin-faq-question">
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <span style="font-weight: 800; color: var(--admin-gold);">#${item.order || 1}</span>
+            <span style="font-weight: 800; font-size: 1.05rem;">${item.question}</span>
+          </div>
+          <div class="admin-crud-actions">
+            <button type="button" class="icon-btn" onclick="window.AyAdmin.openFaqModal('${item.id}')" title="تعديل">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+            </button>
+            <button type="button" class="icon-btn delete-btn" onclick="window.AyAdmin.deleteFaq('${item.id}')" title="حذف">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>
+            </button>
+          </div>
+        </div>
+        <div class="admin-faq-answer">
+          ${item.answer}
+        </div>
+      </div>
+    `).join('');
+  }
+
+  function openFaqModal(id = null) {
+    const modal = document.getElementById('faqEditModal');
+    const titleEl = document.getElementById('faqModalTitle');
+    const form = document.getElementById('faqEditForm');
+    if (!modal || !form) return;
+
+    if (id) {
+      const item = state.faqsList.find(x => x.id === id);
+      if (!item) return;
+      titleEl.textContent = 'تعديل السؤال الشائع';
+      document.getElementById('faqId').value = item.id;
+      document.getElementById('faqQuestion').value = item.question;
+      document.getElementById('faqAnswer').value = item.answer || '';
+      document.getElementById('faqOrder').value = item.order || 1;
+    } else {
+      titleEl.textContent = 'إضافة سؤال شائع جديد';
+      form.reset();
+      document.getElementById('faqId').value = 'f_' + Date.now();
+      document.getElementById('faqOrder').value = (state.faqsList?.length || 0) + 1;
+    }
+
+    modal.classList.add('active');
+  }
+
+  async function handleFaqFormSubmit(e) {
+    e.preventDefault();
+    const id = document.getElementById('faqId').value;
+    const question = document.getElementById('faqQuestion').value.trim();
+    const answer = document.getElementById('faqAnswer').value.trim();
+    const order = parseInt(document.getElementById('faqOrder').value, 10) || 1;
+
+    const existingIdx = state.faqsList.findIndex(x => x.id === id);
+    const item = { id, question, answer, order };
+
+    if (existingIdx >= 0) {
+      state.faqsList[existingIdx] = item;
+    } else {
+      state.faqsList.push(item);
+    }
+
+    state.faqsList.sort((a, b) => (a.order || 0) - (b.order || 0));
+
+    showToast('جاري حفظ السؤال الشائع...', 'info');
+    await window.AySupabase.saveSiteContent('faqs', { items: state.faqsList });
+    renderFaqsList();
+    closeModal('faqEditModal');
+    showToast('تم حفظ السؤال الشائع بنجاح! ⚡', 'success');
+  }
+
+  async function deleteFaq(id) {
+    if (!confirm('هل أنت متأكد من حذف هذا السؤال؟')) return;
+    state.faqsList = state.faqsList.filter(x => x.id !== id);
+    showToast('جاري حذف السؤال...', 'info');
+    await window.AySupabase.saveSiteContent('faqs', { items: state.faqsList });
+    renderFaqsList();
+    showToast('تم حذف السؤال بنجاح!', 'success');
   }
 
   async function saveAboutCMS(e) {
@@ -1490,6 +2259,17 @@
       });
     }
 
+    // Unified File Input for WebP uploads across all modules
+    const unifiedFileInput = document.getElementById('unifiedFileInput');
+    if (unifiedFileInput) {
+      unifiedFileInput.addEventListener('change', (e) => {
+        if (e.target.files && e.target.files.length > 0) {
+          handleUnifiedFileUpload(e.target.files[0]);
+          e.target.value = '';
+        }
+      });
+    }
+
     setupMediaLibraryUpload();
   }
 
@@ -1544,6 +2324,11 @@
   document.getElementById('cmsAboutForm')?.addEventListener('submit', saveAboutCMS);
   document.getElementById('cmsContactForm')?.addEventListener('submit', saveContactCMS);
   document.getElementById('cmsSeoForm')?.addEventListener('submit', saveSeoCMS);
+  document.getElementById('qualityEditForm')?.addEventListener('submit', handleQualityFormSubmit);
+  document.getElementById('serviceEditForm')?.addEventListener('submit', handleServiceFormSubmit);
+  document.getElementById('galleryEditForm')?.addEventListener('submit', handleGalleryFormSubmit);
+  document.getElementById('testimonialEditForm')?.addEventListener('submit', handleTestimonialFormSubmit);
+  document.getElementById('faqEditForm')?.addEventListener('submit', handleFaqFormSubmit);
   document.getElementById('supabaseSettingsForm')?.addEventListener('submit', saveSupabaseSettings);
 
   // Initialize on DOM ready
@@ -1564,8 +2349,27 @@
     handleMediaPickerSelect: (url) => handleMediaPickerSelect(url),
     selectMediaForProduct: (url) => selectMediaForProduct(url),
     switchSeoPreviewTab: (type) => switchSeoPreviewTab(type),
+    triggerUnifiedUpload: (inputId, thumbId, pathId) => triggerUnifiedUpload(inputId, thumbId, pathId),
+    openUnifiedMediaPicker: (inputId, thumbId, pathId) => openUnifiedMediaPicker(inputId, thumbId, pathId),
     openAddCategory: () => openCategoryModal(null),
     editCategory: (id) => openCategoryModal(id),
+    deleteCategory: (id) => deleteCategory(id),
+    openAddQuality: () => openQualityModal(null),
+    openQualityModal: (id) => openQualityModal(id),
+    deleteQuality: (id) => deleteQuality(id),
+    switchServicesSubtab: (t) => switchServicesSubtab(t),
+    openAddService: () => openServiceModal(null),
+    openServiceModal: (id) => openServiceModal(id),
+    deleteService: (id) => deleteService(id),
+    openAddGalleryItem: () => openGalleryModal(null),
+    openGalleryModal: (id) => openGalleryModal(id),
+    deleteGalleryItem: (id) => deleteGalleryItem(id),
+    openAddTestimonial: () => openTestimonialModal(null),
+    openTestimonialModal: (id) => openTestimonialModal(id),
+    deleteTestimonial: (id) => deleteTestimonial(id),
+    openAddFaq: () => openFaqModal(null),
+    openFaqModal: (id) => openFaqModal(id),
+    deleteFaq: (id) => deleteFaq(id),
     copyImageUrl: (url) => copyImageUrl(url),
     generateSitemapsAction: () => generateSitemapsAction(),
     testSupabaseConnection: () => testSupabaseConnectionAction(),

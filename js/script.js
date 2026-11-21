@@ -650,12 +650,37 @@ document.addEventListener('DOMContentLoaded', () => {
     }, null, 2);
   }
 
-  // Load custom SEO / GSC settings from database
-  if (typeof window !== 'undefined' && window.AySupabase) {
-    Promise.all([
-      window.AySupabase.getSiteContent('seo').catch(() => null),
-      window.AySupabase.getSiteContent('contact').catch(() => null)
-    ]).then(([seoData, contactData]) => {
+  // ==========================================
+  // DYNAMIC SITE CONTENT & FULL LIVE SYNC
+  // Synchronizes Hero, Quality, Services, Gallery, FAQs, Contact & Categories
+  // ==========================================
+  async function loadAndRenderDynamicSiteContent() {
+    if (typeof window === 'undefined' || !window.AySupabase) return;
+
+    try {
+      const [
+        heroData,
+        qualityData,
+        servicesData,
+        galleryData,
+        testimonialsData,
+        faqsData,
+        contactData,
+        seoData,
+        categoriesDataDb
+      ] = await Promise.all([
+        window.AySupabase.getSiteContent('hero').catch(() => null),
+        window.AySupabase.getSiteContent('quality').catch(() => null),
+        window.AySupabase.getSiteContent('services').catch(() => null),
+        window.AySupabase.getSiteContent('gallery').catch(() => null),
+        window.AySupabase.getSiteContent('testimonials').catch(() => null),
+        window.AySupabase.getSiteContent('faqs').catch(() => null),
+        window.AySupabase.getSiteContent('contact').catch(() => null),
+        window.AySupabase.getSiteContent('seo').catch(() => null),
+        window.AySupabase.getCategories().catch(() => null)
+      ]);
+
+      // 1. SEO & GEO Schema
       if (seoData) {
         if (seoData.title) defaultSeo.title = seoData.title;
         if (seoData.description || seoData.desc) defaultSeo.description = seoData.description || seoData.desc;
@@ -672,7 +697,307 @@ document.addEventListener('DOMContentLoaded', () => {
         });
       }
       updateBusinessJsonLd(seoData, contactData);
-    }).catch(() => {});
+
+      // 2. Categories Dynamic Render
+      if (Array.isArray(categoriesDataDb) && categoriesDataDb.length > 0) {
+        categoriesData = categoriesDataDb;
+        renderDynamicCategoryChips(categoriesDataDb);
+      }
+
+      // 3. Hero Visual Identity & Content
+      if (heroData) {
+        renderDynamicHero(heroData);
+      }
+
+      // 4. Quality Pillars
+      if (qualityData && Array.isArray(qualityData.pillars) && qualityData.pillars.length > 0) {
+        renderDynamicQuality(qualityData.pillars);
+      }
+
+      // 5. Services
+      if (servicesData && Array.isArray(servicesData.items) && servicesData.items.length > 0) {
+        renderDynamicServices(servicesData.items);
+      }
+
+      // 6. Gallery
+      if (galleryData && Array.isArray(galleryData.items) && galleryData.items.length > 0) {
+        renderDynamicGallery(galleryData.items);
+      }
+
+      // 7. Testimonials / Segments
+      if (testimonialsData && Array.isArray(testimonialsData.items) && testimonialsData.items.length > 0) {
+        renderDynamicTestimonials(testimonialsData.items);
+      }
+
+      // 8. FAQs
+      if (faqsData && Array.isArray(faqsData.items) && faqsData.items.length > 0) {
+        renderDynamicFaqs(faqsData.items);
+      }
+
+      // 9. Contact Info & Floating Links
+      if (contactData) {
+        renderDynamicContact(contactData);
+      }
+
+    } catch (err) {
+      console.warn('Dynamic site content load error:', err);
+    }
+  }
+
+  function renderDynamicCategoryChips(cats) {
+    const container = document.getElementById('categoryChipsList');
+    if (!container) return;
+    const sorted = [...cats].filter(c => c.active !== false).sort((a, b) => (a.displayOrder || 0) - (b.displayOrder || 0));
+    
+    let html = `
+      <button type="button" class="category-chip ${currentCategoryFilter === 'all' ? 'active' : ''}" data-category="all">
+        <span class="category-chip-dot"></span>
+        <span>جميع الأقسام</span>
+      </button>
+    `;
+
+    sorted.forEach(c => {
+      html += `
+        <button type="button" class="category-chip ${currentCategoryFilter === c.id ? 'active' : ''}" data-category="${c.id}">
+          <span class="category-chip-icon">${c.icon || '💈'}</span>
+          <span>${c.name}</span>
+        </button>
+      `;
+    });
+
+    container.innerHTML = html;
+
+    container.querySelectorAll('.category-chip').forEach(chip => {
+      chip.addEventListener('click', () => {
+        const cat = chip.dataset.category;
+        setGlobalCategoryFilter(cat, true);
+      });
+    });
+  }
+
+  function renderDynamicHero(hero) {
+    if (hero.logo) {
+      const logoEl = document.getElementById('siteLogoImg');
+      if (logoEl) logoEl.src = hero.logo;
+    }
+
+    if (hero.bannerImage) {
+      const bannerEl = document.getElementById('heroBannerImg');
+      if (bannerEl) bannerEl.src = hero.bannerImage;
+    }
+
+    if (hero.badge) {
+      const badge = document.querySelector('.hero-header-content .hero-subbrand');
+      if (badge) badge.textContent = hero.badge;
+    }
+
+    if (hero.title || hero.titleGold) {
+      const heading = document.querySelector('.hero-heading');
+      if (heading) {
+        heading.innerHTML = `${hero.title || 'مصنع'} <span class="highlight">${hero.titleGold || 'أولاد يحيى'}</span> لتصنيع كراسي الحلاقة`;
+      }
+    }
+
+    if (hero.desc) {
+      const desc = document.querySelector('.hero-description');
+      if (desc) desc.textContent = hero.desc;
+    }
+  }
+
+  function renderDynamicQuality(pillars) {
+    const grid = document.getElementById('qualityGrid');
+    if (!grid || !Array.isArray(pillars) || pillars.length === 0) return;
+
+    grid.innerHTML = pillars.map(p => `
+      <div class="quality-card fade-up">
+        <div class="quality-card-img">
+          <img src="${p.image || 'assets/images/quality-hydraulic.jpg'}" alt="${p.title}" width="500" height="400" loading="lazy">
+        </div>
+        <div class="quality-card-content">
+          <h4>${p.title}</h4>
+          <p>${p.desc}</p>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  function renderDynamicServices(items) {
+    const grid = document.getElementById('servicesGrid');
+    if (!grid || !Array.isArray(items) || items.length === 0) return;
+
+    function getIconSvg(icon) {
+      switch (icon) {
+        case 'scissors':
+          return `<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><line x1="20" y1="4" x2="8.12" y2="15.88"/><line x1="14.47" y1="14.48" x2="20" y2="20"/><line x1="8.12" y1="8.12" x2="12" y2="12"/></svg>`;
+        case 'sparkles':
+          return `<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>`;
+        case 'tool':
+          return `<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>`;
+        case 'truck':
+          return `<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="3" width="15" height="13"></rect><polygon points="16 8 20 8 23 11 23 16 16 16 8"></polygon><circle cx="5.5" cy="18.5" r="2.5"></circle><circle cx="18.5" cy="18.5" r="2.5"></circle></svg>`;
+        case 'palette':
+          return `<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><path d="M12 8v8M8 12h8"/></svg>`;
+        case 'message':
+          return `<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>`;
+        default:
+          return `<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 14 14"/></svg>`;
+      }
+    }
+
+    grid.innerHTML = items.map(s => `
+      <div class="service-card fade-up">
+        <div class="service-icon">
+          ${getIconSvg(s.icon)}
+        </div>
+        <div class="service-content">
+          <h4>${s.title}</h4>
+          <p>${s.desc}</p>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  function renderDynamicGallery(items) {
+    const grid = document.getElementById('galleryGrid');
+    if (!grid || !Array.isArray(items) || items.length === 0) return;
+
+    grid.innerHTML = items.map(g => `
+      <div class="gallery-item fade-up" data-image="${g.image || 'assets/images/hero-barber-chair.jpg'}" data-title="${g.title}" data-desc="${g.desc || g.category || ''}">
+        <img src="${g.image || 'assets/images/hero-barber-chair.jpg'}" alt="${g.title}" width="600" height="450" loading="lazy">
+        <div class="gallery-item-overlay">
+          <span class="gallery-overlay-title">${g.title}</span>
+          <span class="gallery-overlay-zoom">اضغط للتكبير 🔍</span>
+        </div>
+      </div>
+    `).join('');
+
+    grid.querySelectorAll('.gallery-item').forEach(item => {
+      item.addEventListener('click', () => {
+        const src = item.dataset.image || item.querySelector('img')?.src;
+        const title = item.dataset.title || item.querySelector('.gallery-overlay-title')?.textContent || '';
+        const desc = item.dataset.desc || item.querySelector('.gallery-overlay-zoom')?.textContent || '';
+
+        const modal = document.getElementById('lightboxModal');
+        const img = document.getElementById('lightboxImg');
+        const tEl = document.getElementById('lightboxTitle');
+        const dEl = document.getElementById('lightboxDesc');
+
+        if (modal && img) {
+          img.src = src;
+          img.alt = title;
+          if (tEl) tEl.textContent = title;
+          if (dEl) dEl.textContent = desc;
+          modal.classList.add('active');
+          document.body.style.overflow = 'hidden';
+        }
+      });
+    });
+  }
+
+  function renderDynamicTestimonials(items) {
+    const grid = document.getElementById('segmentsGrid');
+    if (!grid || !Array.isArray(items) || items.length === 0) return;
+
+    grid.innerHTML = items.map(t => `
+      <div class="segment-card fade-up">
+        <div class="segment-icon-badge">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+        </div>
+        <h4>${t.name}</h4>
+        <p>${t.text}</p>
+        <a href="#products" class="segment-btn">${t.role || 'تصفح الموديلات'} ←</a>
+      </div>
+    `).join('');
+  }
+
+  function renderDynamicFaqs(items) {
+    const accordion = document.getElementById('faqAccordion');
+    if (!accordion || !Array.isArray(items) || items.length === 0) return;
+
+    accordion.innerHTML = items.map(f => `
+      <div class="faq-item">
+        <button type="button" class="faq-question-btn" aria-expanded="false">
+          <span>${f.question}</span>
+          <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg>
+        </button>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">
+            ${f.answer}
+          </div>
+        </div>
+      </div>
+    `).join('');
+
+    const newItems = accordion.querySelectorAll('.faq-item');
+    newItems.forEach(item => {
+      const questionBtn = item.querySelector('.faq-question-btn');
+      const answer = item.querySelector('.faq-answer');
+
+      if (questionBtn && answer) {
+        questionBtn.addEventListener('click', () => {
+          const isActive = item.classList.contains('active');
+
+          newItems.forEach(other => {
+            if (other !== item) {
+              other.classList.remove('active');
+              const otherBtn = other.querySelector('.faq-question-btn');
+              const otherAnswer = other.querySelector('.faq-answer');
+              if (otherBtn) otherBtn.setAttribute('aria-expanded', 'false');
+              if (otherAnswer) otherAnswer.style.maxHeight = null;
+            }
+          });
+
+          if (isActive) {
+            item.classList.remove('active');
+            questionBtn.setAttribute('aria-expanded', 'false');
+            answer.style.maxHeight = null;
+          } else {
+            item.classList.add('active');
+            questionBtn.setAttribute('aria-expanded', 'true');
+            answer.style.maxHeight = answer.scrollHeight + 'px';
+          }
+        });
+      }
+    });
+  }
+
+  function renderDynamicContact(contact) {
+    if (contact.phone) {
+      document.querySelectorAll('a[href^="tel:"]').forEach(a => {
+        a.href = `tel:${contact.phone}`;
+        const span = a.querySelector('span[dir="ltr"]') || a.querySelector('span');
+        if (span && span.textContent.includes('010')) {
+          span.textContent = contact.phone;
+        }
+      });
+    }
+
+    if (contact.whatsapp) {
+      const cleanWa = contact.whatsapp.replace(/[^0-9]/g, '');
+      document.querySelectorAll('a.btn-whatsapp, a[href*="wa.me"]').forEach(a => {
+        try {
+          const url = new URL(a.href, window.location.origin);
+          if (url.hostname.includes('wa.me')) {
+            const textParam = url.searchParams.get('text');
+            a.href = textParam
+              ? `https://wa.me/${cleanWa}?text=${textParam}`
+              : `https://wa.me/${cleanWa}`;
+          }
+        } catch (_) {}
+      });
+    }
+  }
+
+  // Load Initial Dynamic Site Content from Supabase
+  if (typeof window !== 'undefined' && window.AySupabase) {
+    loadAndRenderDynamicSiteContent();
+
+    window.addEventListener('ay_cache_invalidated', (e) => {
+      const key = e.detail?.key;
+      if (!key || key.startsWith('site_content') || key.startsWith('categories')) {
+        loadAndRenderDynamicSiteContent();
+      }
+    });
   }
 
   // ==========================================
