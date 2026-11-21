@@ -555,14 +555,68 @@
             </div>
           </div>
           <form id="cmsSeoForm">
+            <!-- Live Search & Social Preview Card -->
+            <div class="seo-preview-wrapper" id="seoPreviewWrapper">
+              <div class="seo-preview-header">
+                <div class="seo-preview-title">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+                  <span>معاينة حية للظهور (Live Preview)</span>
+                </div>
+                <div class="seo-preview-tabs">
+                  <button type="button" class="seo-preview-tab-btn active" id="tabBtnGooglePreview" onclick="window.AyAdmin.switchSeoPreviewTab('google')">
+                    <span>🔍 بحث جوجل</span>
+                  </button>
+                  <button type="button" class="seo-preview-tab-btn" id="tabBtnSocialPreview" onclick="window.AyAdmin.switchSeoPreviewTab('social')">
+                    <span>💬 واتساب والسوشيال</span>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Google SERP Card -->
+              <div class="google-serp-card" id="googleSerpPreview">
+                <div class="google-serp-top">
+                  <div class="google-serp-favicon">
+                    <img src="assets/images/logo.svg" alt="logo" onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>👑</text></svg>'">
+                  </div>
+                  <div class="google-serp-site-info">
+                    <span class="google-serp-sitename" id="googlePreviewSitename">مصنع أولاد يحيى</span>
+                    <span class="google-serp-url" id="googlePreviewUrl">https://awladyahya.com</span>
+                  </div>
+                </div>
+                <div class="google-serp-title" id="googlePreviewTitle">مصنع أولاد يحيى لتصنيع كراسي الحلاقة ومعدات الصالونات</div>
+                <div class="google-serp-snippet" id="googlePreviewSnippet">مصنع مصري رائد في تصنيع كراسي الحلاقة الهيدروليك الفاخرة، كراسي صالونات التجميل والكوافير، أحواض غسيل الشعر بأعلى معايير المتانة والضمان المباشر.</div>
+              </div>
+
+              <!-- Social / WhatsApp Card -->
+              <div class="social-preview-card" id="socialSerpPreview" style="display: none;">
+                <div class="social-preview-image-wrap">
+                  <img id="socialPreviewImg" src="assets/images/hero-barber-chair.jpg" alt="معاينة المشاركة">
+                </div>
+                <div class="social-preview-body">
+                  <div class="social-preview-domain" id="socialPreviewDomain">AWLADYAHYA.COM</div>
+                  <div class="social-preview-title" id="socialPreviewTitle">مصنع أولاد يحيى لتصنيع كراسي الحلاقة</div>
+                  <div class="social-preview-desc" id="socialPreviewDesc">مصنع مصري رائد في تصنيع كراسي الحلاقة الهيدروليك الفاخرة بمواصفات احترافية وضمان مباشر.</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- SEO Input Fields -->
             <div class="form-grid-2">
               <div class="form-group full">
                 <label>عنوان الموقع الرئيسي (SEO Title)</label>
                 <input type="text" id="cmsSeoTitle" required>
+                <div class="char-counter-wrap">
+                  <span class="char-counter counter-neutral" id="seoTitleCounter">0 / 60 حرف</span>
+                  <span class="char-counter-hint">المثالي لمحركات البحث: 50 - 60 حرف</span>
+                </div>
               </div>
               <div class="form-group full">
-                <label>وصف الموقع في نتائج جوجل (Meta Description)</label>
+                <label>وصف الموقع في نتائج جوجل والمشاركات (Meta Description)</label>
                 <textarea id="cmsSeoDesc" rows="3" required></textarea>
+                <div class="char-counter-wrap">
+                  <span class="char-counter counter-neutral" id="seoDescCounter">0 / 160 حرف</span>
+                  <span class="char-counter-hint">المثالي لمحركات البحث: 140 - 160 حرف</span>
+                </div>
               </div>
               <div class="form-group full">
                 <label>الكلمات المفتاحية (Meta Keywords)</label>
@@ -575,18 +629,97 @@
                   الصق هنا رمز التحقق (HTML Tag) الذي يمنحه لك Google Search Console ليتم حقنه تلقائياً في وسوم &lt;head&gt; بالموقع وإثبات ملكية الدومين.
                 </small>
               </div>
-              <div class="form-group">
+              <div class="form-group full">
                 <label>الرابط الرئيسي المعتمد (Canonical URL)</label>
                 <input type="url" id="cmsCanonicalUrl" placeholder="https://awladyahya.com" dir="ltr">
               </div>
-              <div class="form-group">
-                <label>صورة المشاركة الافتراضية (OG Image URL)</label>
-                <input type="text" id="cmsOgImage" placeholder="assets/images/hero-barber-chair.jpg" dir="ltr">
+              <div class="form-group full">
+                <label>صورة المشاركة الافتراضية للروابط (OG Image URL)</label>
+                <div class="og-image-input-group">
+                  <div class="og-image-preview-thumb">
+                    <img id="cmsOgImageThumb" src="assets/images/hero-barber-chair.jpg" alt="OG Thumbnail">
+                  </div>
+                  <input type="text" id="cmsOgImage" placeholder="https://awladyahya.com/assets/images/hero-barber-chair.jpg" dir="ltr" style="flex: 1;">
+                  <button type="button" class="header-btn" onclick="window.AyAdmin.openMediaPickerForOgImage()">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 14 14"/></svg>
+                    <span>اختيار من مكتبة الصور</span>
+                  </button>
+                </div>
+                <small style="color: var(--admin-text-muted); font-size: 0.8rem; margin-top: 4px;">
+                  يتم تلقائياً تحويل مسار الصورة إلى رابط كامل (Full URL) لتقرأه خوارزميات فيسبوك وواتساب بدقة عند مشاركة الرابط.
+                </small>
               </div>
             </div>
-            <div style="display: flex; gap: 12px; margin-top: 14px; flex-wrap: wrap;">
+
+            <!-- GEO & LocalBusiness Schema Generator -->
+            <div style="margin-top: 28px; padding-top: 22px; border-top: 1px solid var(--admin-border);">
+              <div class="geo-schema-badge">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                <span>بيانات النشاط التجاري للظهور الذكي (LocalBusiness & GEO Schema)</span>
+              </div>
+              <p style="font-size: 0.86rem; color: var(--admin-text-muted); margin-bottom: 16px;">
+                تُستخدم هذه البيانات لتوليد كود الـ Schema المنظم (JSON-LD) المعتمد لدى جوجل وخرائط جوجل ومحركات الذكاء الاصطناعي (ChatGPT, Gemini, Perplexity) لعرض بطاقة المصنع وموقعه الجغرافي.
+              </p>
+              <div class="form-grid-2">
+                <div class="form-group">
+                  <label>الاسم التجاري للمصنع (بالعربية)</label>
+                  <input type="text" id="schemaBusinessNameAr" placeholder="مصنع أولاد يحيى لتصنيع كراسي الحلاقة ومعدات الصالونات">
+                </div>
+                <div class="form-group">
+                  <label>الاسم التجاري (بالإنجليزية)</label>
+                  <input type="text" id="schemaBusinessNameEn" placeholder="Awlad Yahya Barber Chairs Factory" dir="ltr">
+                </div>
+                <div class="form-group">
+                  <label>رقم هاتف المبيعات والاستفسار</label>
+                  <input type="text" id="schemaPhone" placeholder="+201008355616" dir="ltr">
+                </div>
+                <div class="form-group">
+                  <label>رقم الواتساب المعتمد</label>
+                  <input type="text" id="schemaWhatsapp" placeholder="+201064116703" dir="ltr">
+                </div>
+                <div class="form-group full">
+                  <label>العنوان الجغرافي للمصنع</label>
+                  <input type="text" id="schemaAddress" placeholder="القاهرة، جمهورية مصر العربية">
+                </div>
+                <div class="form-group">
+                  <label>إحداثيات خط العرض (Latitude)</label>
+                  <input type="text" id="schemaGeoLat" placeholder="30.0444" dir="ltr">
+                </div>
+                <div class="form-group">
+                  <label>إحداثيات خط الطول (Longitude)</label>
+                  <input type="text" id="schemaGeoLng" placeholder="31.2357" dir="ltr">
+                </div>
+                <div class="form-group full">
+                  <label>أيام ومواعيد العمل</label>
+                  <input type="text" id="schemaOpeningHours" placeholder="السبت - الخميس: 9:00 ص - 8:00 م">
+                </div>
+              </div>
+
+              <!-- Social Media URLs for Schema sameAs -->
+              <h4 style="font-size: 0.92rem; font-weight: 700; color: var(--admin-text-main); margin: 16px 0 10px;">روابط منصات التواصل الاجتماعي الرسمية (SameAs):</h4>
+              <div class="form-grid-2">
+                <div class="form-group">
+                  <label>صفحة الفيسبوك (Facebook)</label>
+                  <input type="url" id="schemaSocialFacebook" placeholder="https://www.facebook.com/YahiaSonsCosmetics" dir="ltr">
+                </div>
+                <div class="form-group">
+                  <label>حساب انستغرام (Instagram)</label>
+                  <input type="url" id="schemaSocialInstagram" placeholder="https://www.instagram.com/..." dir="ltr">
+                </div>
+                <div class="form-group">
+                  <label>قناة التليجرام (Telegram)</label>
+                  <input type="url" id="schemaSocialTelegram" placeholder="https://t.me/YahiaSons" dir="ltr">
+                </div>
+                <div class="form-group">
+                  <label>حساب تيك توك أو يوتيوب (TikTok / YouTube)</label>
+                  <input type="url" id="schemaSocialOther" placeholder="https://www.tiktok.com/@..." dir="ltr">
+                </div>
+              </div>
+            </div>
+
+            <div style="display: flex; gap: 12px; margin-top: 20px; flex-wrap: wrap;">
               <button type="submit" class="header-btn primary">
-                <span>حفظ إعدادات الـ SEO والـ GSC</span>
+                <span>حفظ إعدادات الـ SEO و Schema المنشأة</span>
               </button>
               <button type="button" class="header-btn" onclick="window.AyAdmin.generateSitemapsAction()">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
@@ -814,18 +947,35 @@
 
           <!-- TAB 4: WHATSAPP & SEO -->
           <div class="modal-tab-content" id="modalTab-seo">
+            <div style="background: rgba(197, 160, 89, 0.08); border: 1px solid rgba(197, 160, 89, 0.25); border-radius: var(--radius-md); padding: 14px 16px; margin-bottom: 16px;">
+              <h4 style="font-size: 0.92rem; font-weight: 800; color: var(--admin-gold); margin-bottom: 4px; display: flex; align-items: center; gap: 6px;">
+                <span>💡 إعدادات SEO ومحركات البحث (اختيارية بالكامل)</span>
+              </h4>
+              <p style="font-size: 0.82rem; color: var(--admin-text-muted); line-height: 1.5; margin: 0;">
+                إذا تركت حقلي العنوان والوصف فارغين، سيتولى محرك الموقع التوليد التلقائي الذكي لبيانات الـ SEO والمشاركة بناءً على اسم الموديل وقسمه ومواصفاته الفنية.
+              </p>
+            </div>
+
             <div class="form-grid-2">
               <div class="form-group full">
                 <label>رسالة الواتساب المخصصة للاستفسار</label>
                 <input type="text" id="prodWhatsapp" placeholder="مرحباً، أود الاستفسار عن كود هذا الموديل وحجزه من مصنع أولاد يحيى">
               </div>
               <div class="form-group full">
-                <label>عنوان صفحة الموديل لمحركات البحث (SEO Title)</label>
-                <input type="text" id="prodSeoTitle" placeholder="كرسي حلاقة ملكي هيدروليك | مصنع أولاد يحيى">
+                <label>عنوان صفحة الموديل لمحركات البحث (SEO Title) - اختياري</label>
+                <input type="text" id="prodSeoTitle" placeholder="مثال: كرسي حلاقة ملكي هيدروليك | مصنع أولاد يحيى">
+                <div class="char-counter-wrap">
+                  <span class="char-counter counter-neutral" id="prodSeoTitleCounter">0 / 60 حرف</span>
+                  <span class="char-counter-hint">المثالي: 50 - 60 حرف</span>
+                </div>
               </div>
               <div class="form-group full">
-                <label>وصف الموديل لمحركات البحث (SEO Meta Description)</label>
+                <label>وصف الموديل لمحركات البحث (SEO Meta Description) - اختياري</label>
                 <textarea id="prodSeoDesc" rows="3" placeholder="أفضل كرسي حلاقة هيدروليك بصناعة متقنة وضمان حقيقي من مصنع أولاد يحيى"></textarea>
+                <div class="char-counter-wrap">
+                  <span class="char-counter counter-neutral" id="prodSeoDescCounter">0 / 160 حرف</span>
+                  <span class="char-counter-hint">المثالي: 140 - 160 حرف</span>
+                </div>
               </div>
             </div>
           </div>

@@ -22,7 +22,8 @@
     editingCategoryId: null,
     currentModalImages: [],
     currentProductPage: 1,
-    productPageSize: 15
+    productPageSize: 15,
+    mediaPickerTarget: 'product'
   };
 
   // DOM Elements
@@ -41,6 +42,7 @@
     initTheme();
     setupNavigation();
     setupModals();
+    setupCharCountersAndPreview();
     await loadInitialData();
     checkDatabaseConnection();
   }
@@ -548,9 +550,21 @@
     }
   }
 
+  function openMediaPickerForOgImage() {
+    state.mediaPickerTarget = 'ogImage';
+    openMediaPickerModal('اختيار صورة المشاركة الافتراضية (OG Image)');
+  }
+
   function openMediaPickerForProduct() {
+    state.mediaPickerTarget = 'product';
+    openMediaPickerModal('اختيار صورة من مكتبة الموقع للموديل');
+  }
+
+  function openMediaPickerModal(customTitle = 'اختيار صورة من مكتبة الموقع') {
     const modal = document.getElementById('mediaPickerModal');
     const grid = document.getElementById('mediaPickerGrid');
+    const headerTitle = modal ? modal.querySelector('.modal-header h3') : null;
+    if (headerTitle) headerTitle.textContent = customTitle;
     if (!modal || !grid) return;
 
     // Collect all available image paths
@@ -562,18 +576,50 @@
     state.categories.forEach(c => {
       if (c.image) imageSet.add(c.image);
     });
+    if (Array.isArray(state.media)) {
+      state.media.forEach(m => {
+        if (typeof m === 'string') imageSet.add(m);
+        else if (m && m.url) imageSet.add(m.url);
+      });
+    }
 
     const list = Array.from(imageSet);
     grid.innerHTML = list.map(url => `
-      <div class="media-item-card" onclick="window.AyAdmin.selectMediaForProduct('${url}')" title="اضغط لاختيار هذه الصورة للموديل">
+      <div class="media-item-card" onclick="window.AyAdmin.handleMediaPickerSelect('${url}')" title="اضغط لاختيار هذه الصورة">
         <div class="media-preview-box">
           <img src="${url}" loading="lazy" alt="صورة">
         </div>
-        <div class="media-filename">${url.split('/').pop()}</div>
+        <div class="media-filename">${url.startsWith('data:') ? 'صورة WebP مرفوعة' : url.split('/').pop()}</div>
       </div>
     `).join('');
 
     modal.classList.add('active');
+  }
+
+  function handleMediaPickerSelect(url) {
+    if (state.mediaPickerTarget === 'ogImage') {
+      selectMediaForOgImage(url);
+    } else {
+      selectMediaForProduct(url);
+    }
+  }
+
+  function selectMediaForOgImage(url) {
+    const canonicalInput = document.getElementById('cmsCanonicalUrl');
+    const baseDomain = (canonicalInput?.value.trim() || 'https://awladyahya.com').replace(/\/+$/, '');
+    let fullUrl = url;
+    if (!url.startsWith('http://') && !url.startsWith('https://') && !url.startsWith('data:')) {
+      fullUrl = `${baseDomain}/${url.replace(/^\/+/, '')}`;
+    }
+
+    const ogInput = document.getElementById('cmsOgImage');
+    const ogThumb = document.getElementById('cmsOgImageThumb');
+    if (ogInput) ogInput.value = fullUrl;
+    if (ogThumb) ogThumb.src = url;
+
+    updateSeoLivePreview();
+    closeModal('mediaPickerModal');
+    showToast('تم تعيين صورة المشاركة الافتراضية بنجاح! ⚡', 'success');
   }
 
   function selectMediaForProduct(url) {
@@ -641,6 +687,15 @@
       state.currentModalImages = [];
       renderModalImagesGrid();
     }
+
+    // Refresh Product SEO Counters
+    const prodTitleInput = document.getElementById('prodSeoTitle');
+    const prodTitleCounter = document.getElementById('prodSeoTitleCounter');
+    if (prodTitleInput && prodTitleCounter) updateCounter(prodTitleInput, prodTitleCounter, 50, 60);
+
+    const prodDescInput = document.getElementById('prodSeoDesc');
+    const prodDescCounter = document.getElementById('prodSeoDescCounter');
+    if (prodDescInput && prodDescCounter) updateCounter(prodDescInput, prodDescCounter, 140, 160);
 
     modal.classList.add('active');
   }
@@ -979,14 +1034,43 @@
     setVal('cmsContactAddress', contact.address || '');
     setVal('cmsContactHours', contact.workingHours || '');
 
-    // SEO (RULES.md Standard 5)
+    // SEO & GEO (RULES.md Standard 5)
     const seo = c.seo || {};
     setVal('cmsSeoTitle', seo.title || '');
     setVal('cmsSeoDesc', seo.desc || seo.description || '');
     setVal('cmsSeoKeywords', seo.keywords || '');
     setVal('cmsGoogleVerification', seo.googleVerification || '');
     setVal('cmsCanonicalUrl', seo.canonicalUrl || 'https://awladyahya.com');
-    setVal('cmsOgImage', seo.ogImage || 'assets/images/hero-barber-chair.jpg');
+    setVal('cmsOgImage', seo.ogImage || 'https://awladyahya.com/assets/images/hero-barber-chair.jpg');
+
+    const ogThumb = document.getElementById('cmsOgImageThumb');
+    if (ogThumb) ogThumb.src = seo.ogImage || 'assets/images/hero-barber-chair.jpg';
+
+    // LocalBusiness & GEO Schema
+    const schema = seo.businessSchema || {};
+    setVal('schemaBusinessNameAr', schema.nameAr || 'مصنع أولاد يحيى لتصنيع كراسي الحلاقة ومعدات الصالونات');
+    setVal('schemaBusinessNameEn', schema.nameEn || 'Awlad Yahya Barber Chairs Factory');
+    setVal('schemaPhone', schema.phone || contact.phone || '+201008355616');
+    setVal('schemaWhatsapp', schema.whatsapp || contact.whatsapp || '+201064116703');
+    setVal('schemaAddress', schema.address || contact.address || 'القاهرة، جمهورية مصر العربية');
+    setVal('schemaGeoLat', schema.geoLat || '30.0444');
+    setVal('schemaGeoLng', schema.geoLng || '31.2357');
+    setVal('schemaOpeningHours', schema.openingHours || contact.workingHours || 'السبت - الخميس: 9:00 ص - 8:00 م');
+    setVal('schemaSocialFacebook', schema.socialFacebook || contact.facebook || 'https://www.facebook.com/YahiaSonsCosmetics');
+    setVal('schemaSocialInstagram', schema.socialInstagram || 'https://www.instagram.com/');
+    setVal('schemaSocialTelegram', schema.socialTelegram || contact.telegram || 'https://t.me/YahiaSons');
+    setVal('schemaSocialOther', schema.socialOther || '');
+
+    // Refresh SEO Character Counters and Live Preview
+    const titleInput = document.getElementById('cmsSeoTitle');
+    const titleCounter = document.getElementById('seoTitleCounter');
+    if (titleInput && titleCounter) updateCounter(titleInput, titleCounter, 50, 60);
+
+    const descInput = document.getElementById('cmsSeoDesc');
+    const descCounter = document.getElementById('seoDescCounter');
+    if (descInput && descCounter) updateCounter(descInput, descCounter, 140, 160);
+
+    updateSeoLivePreview();
 
     // Supabase Settings
     setVal('settingSupabaseUrl', window.AySupabase.url);
@@ -1057,12 +1141,162 @@
       keywords: document.getElementById('cmsSeoKeywords').value.trim(),
       googleVerification: document.getElementById('cmsGoogleVerification')?.value.trim() || '',
       canonicalUrl: document.getElementById('cmsCanonicalUrl')?.value.trim() || 'https://awladyahya.com',
-      ogImage: document.getElementById('cmsOgImage')?.value.trim() || 'assets/images/hero-barber-chair.jpg'
+      ogImage: document.getElementById('cmsOgImage')?.value.trim() || 'https://awladyahya.com/assets/images/hero-barber-chair.jpg',
+      businessSchema: {
+        nameAr: document.getElementById('schemaBusinessNameAr')?.value.trim() || 'مصنع أولاد يحيى لتصنيع كراسي الحلاقة ومعدات الصالونات',
+        nameEn: document.getElementById('schemaBusinessNameEn')?.value.trim() || 'Awlad Yahya Barber Chairs Factory',
+        phone: document.getElementById('schemaPhone')?.value.trim() || '',
+        whatsapp: document.getElementById('schemaWhatsapp')?.value.trim() || '',
+        address: document.getElementById('schemaAddress')?.value.trim() || '',
+        geoLat: document.getElementById('schemaGeoLat')?.value.trim() || '30.0444',
+        geoLng: document.getElementById('schemaGeoLng')?.value.trim() || '31.2357',
+        openingHours: document.getElementById('schemaOpeningHours')?.value.trim() || '',
+        socialFacebook: document.getElementById('schemaSocialFacebook')?.value.trim() || '',
+        socialInstagram: document.getElementById('schemaSocialInstagram')?.value.trim() || '',
+        socialTelegram: document.getElementById('schemaSocialTelegram')?.value.trim() || '',
+        socialOther: document.getElementById('schemaSocialOther')?.value.trim() || ''
+      }
     };
 
-    showToast('جاري حفظ إعدادات SEO و GSC...', 'info');
+    showToast('جاري حفظ إعدادات الـ SEO و Schema المنشأة...', 'info');
     await window.AySupabase.saveSiteContent('seo', data);
-    showToast('تم حفظ إعدادات محركات البحث و Google Search Console بنجاح!', 'success');
+    showToast('تم حفظ إعدادات محركات البحث و Google Search Console و Schema المنشأة بنجاح! ⚡', 'success');
+  }
+
+  // ==========================================
+  // SMART CHARACTER COUNTERS & SEO LIVE PREVIEW
+  // ==========================================
+  function setupCharCountersAndPreview() {
+    // 1. Character counters
+    const titleInput = document.getElementById('cmsSeoTitle');
+    const titleCounter = document.getElementById('seoTitleCounter');
+    const descInput = document.getElementById('cmsSeoDesc');
+    const descCounter = document.getElementById('seoDescCounter');
+
+    const prodTitleInput = document.getElementById('prodSeoTitle');
+    const prodTitleCounter = document.getElementById('prodSeoTitleCounter');
+    const prodDescInput = document.getElementById('prodSeoDesc');
+    const prodDescCounter = document.getElementById('prodSeoDescCounter');
+
+    if (titleInput && titleCounter) {
+      titleInput.addEventListener('input', () => {
+        updateCounter(titleInput, titleCounter, 50, 60);
+        updateSeoLivePreview();
+      });
+    }
+
+    if (descInput && descCounter) {
+      descInput.addEventListener('input', () => {
+        updateCounter(descInput, descCounter, 140, 160);
+        updateSeoLivePreview();
+      });
+    }
+
+    if (prodTitleInput && prodTitleCounter) {
+      prodTitleInput.addEventListener('input', () => {
+        updateCounter(prodTitleInput, prodTitleCounter, 50, 60);
+      });
+    }
+
+    if (prodDescInput && prodDescCounter) {
+      prodDescInput.addEventListener('input', () => {
+        updateCounter(prodDescInput, prodDescCounter, 140, 160);
+      });
+    }
+
+    // 2. Canonical & OG Image inputs live update
+    document.getElementById('cmsCanonicalUrl')?.addEventListener('input', updateSeoLivePreview);
+    document.getElementById('cmsOgImage')?.addEventListener('input', () => {
+      const val = document.getElementById('cmsOgImage').value.trim();
+      const thumb = document.getElementById('cmsOgImageThumb');
+      if (thumb && val) thumb.src = val;
+      updateSeoLivePreview();
+    });
+
+    document.getElementById('schemaBusinessNameAr')?.addEventListener('input', updateSeoLivePreview);
+  }
+
+  function updateCounter(inputEl, counterEl, minIdeal, maxIdeal) {
+    if (!inputEl || !counterEl) return;
+    const len = inputEl.value.trim().length;
+    counterEl.className = 'char-counter';
+
+    if (len === 0) {
+      counterEl.textContent = `0 / ${maxIdeal} حرف`;
+      counterEl.classList.add('counter-neutral');
+    } else if (len >= minIdeal && len <= maxIdeal) {
+      counterEl.textContent = `${len} / ${maxIdeal} حرف ✓ (طول مثالي ممتاز)`;
+      counterEl.classList.add('counter-ideal');
+    } else if (len > maxIdeal) {
+      const over = len - maxIdeal;
+      counterEl.textContent = `${len} / ${maxIdeal} حرف ⚠️ (تجاوز بمقدار ${over} حرف - سيتم قصه في جوجل)`;
+      counterEl.classList.add('counter-warning');
+    } else {
+      const remaining = minIdeal - len;
+      counterEl.textContent = `${len} / ${maxIdeal} حرف (يُفضل إضافة ${remaining} حرف إضافي)`;
+      counterEl.classList.add('counter-neutral');
+    }
+  }
+
+  function updateSeoLivePreview() {
+    const titleVal = document.getElementById('cmsSeoTitle')?.value.trim();
+    const descVal = document.getElementById('cmsSeoDesc')?.value.trim();
+    const canonicalVal = document.getElementById('cmsCanonicalUrl')?.value.trim();
+    const ogImgVal = document.getElementById('cmsOgImage')?.value.trim();
+    const businessNameAr = document.getElementById('schemaBusinessNameAr')?.value.trim();
+
+    const defaultTitle = 'مصنع أولاد يحيى لتصنيع كراسي الحلاقة ومعدات الصالونات';
+    const defaultDesc = 'مصنع مصري رائد في تصنيع كراسي الحلاقة الهيدروليك الفاخرة، كراسي صالونات التجميل والكوافير، أحواض غسيل الشعر بأعلى معايير المتانة والضمان المباشر.';
+    const defaultCanonical = 'https://awladyahya.com';
+    const defaultOgImg = 'assets/images/hero-barber-chair.jpg';
+
+    // Google SERP Elements
+    const googleSitename = document.getElementById('googlePreviewSitename');
+    const googleUrl = document.getElementById('googlePreviewUrl');
+    const googleTitle = document.getElementById('googlePreviewTitle');
+    const googleSnippet = document.getElementById('googlePreviewSnippet');
+
+    if (googleSitename) googleSitename.textContent = businessNameAr || 'مصنع أولاد يحيى';
+    if (googleUrl) googleUrl.textContent = (canonicalVal || defaultCanonical).replace(/\/+$/, '');
+    if (googleTitle) googleTitle.textContent = titleVal || defaultTitle;
+    if (googleSnippet) googleSnippet.textContent = descVal || defaultDesc;
+
+    // Social / WhatsApp Elements
+    const socialDomain = document.getElementById('socialPreviewDomain');
+    const socialTitle = document.getElementById('socialPreviewTitle');
+    const socialDesc = document.getElementById('socialPreviewDesc');
+    const socialImg = document.getElementById('socialPreviewImg');
+    const ogThumb = document.getElementById('cmsOgImageThumb');
+
+    let cleanDomain = 'AWLADYAHYA.COM';
+    try {
+      if (canonicalVal) cleanDomain = new URL(canonicalVal).hostname.toUpperCase();
+    } catch (_) {}
+
+    if (socialDomain) socialDomain.textContent = cleanDomain;
+    if (socialTitle) socialTitle.textContent = titleVal || defaultTitle;
+    if (socialDesc) socialDesc.textContent = descVal || defaultDesc;
+    if (socialImg) socialImg.src = ogImgVal || defaultOgImg;
+    if (ogThumb && ogImgVal) ogThumb.src = ogImgVal;
+  }
+
+  function switchSeoPreviewTab(type) {
+    const googleCard = document.getElementById('googleSerpPreview');
+    const socialCard = document.getElementById('socialSerpPreview');
+    const btnGoogle = document.getElementById('tabBtnGooglePreview');
+    const btnSocial = document.getElementById('tabBtnSocialPreview');
+
+    if (type === 'social') {
+      if (googleCard) googleCard.style.display = 'none';
+      if (socialCard) socialCard.style.display = 'block';
+      btnGoogle?.classList.remove('active');
+      btnSocial?.classList.add('active');
+    } else {
+      if (googleCard) googleCard.style.display = 'block';
+      if (socialCard) socialCard.style.display = 'none';
+      btnGoogle?.classList.add('active');
+      btnSocial?.classList.remove('active');
+    }
   }
 
   // ==========================================
@@ -1326,7 +1560,10 @@
     setModalMainImage: (idx) => setModalMainImage(idx),
     removeModalImage: (idx) => removeModalImage(idx),
     openMediaPickerForProduct: () => openMediaPickerForProduct(),
+    openMediaPickerForOgImage: () => openMediaPickerForOgImage(),
+    handleMediaPickerSelect: (url) => handleMediaPickerSelect(url),
     selectMediaForProduct: (url) => selectMediaForProduct(url),
+    switchSeoPreviewTab: (type) => switchSeoPreviewTab(type),
     openAddCategory: () => openCategoryModal(null),
     editCategory: (id) => openCategoryModal(id),
     copyImageUrl: (url) => copyImageUrl(url),

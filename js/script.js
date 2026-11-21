@@ -465,6 +465,22 @@ document.addEventListener('DOMContentLoaded', () => {
 
     renderProducts(canonicalCategory);
 
+    // Dynamic Category SEO Fallback (RULES.md Standard 5)
+    if (category !== 'all') {
+      const catObj = (window.categoriesData || []).find(c => c.id === canonicalCategory || c.id === category);
+      if (catObj) {
+        updateHeadSeo({
+          title: catObj.seoTitle || `${catObj.name} | مصنع أولاد يحيى لتصنيع كراسي الحلاقة ومعدات الصالونات`,
+          description: catObj.seoDescription || `${catObj.description} - تشكيلة متكاملة ومصنعة بأعلى معايير المتانة والضمان من مصنع أولاد يحيى.`,
+          canonical: `https://awladyahya.com/#category/${catObj.id}`,
+          ogTitle: `${catObj.name} | مصنع أولاد يحيى`,
+          ogDesc: catObj.description
+        });
+      }
+    } else {
+      updateHeadSeo(defaultSeo);
+    }
+
     if (shouldScroll) {
       const targetSec = document.getElementById('products');
       if (targetSec) {
@@ -521,6 +537,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const canonicalEl = document.getElementById('canonicalLink');
     if (canonicalEl && data.canonical) canonicalEl.setAttribute('href', data.canonical);
 
+    // OpenGraph Tags
     const ogTitle = document.querySelector('meta[property="og:title"]');
     if (ogTitle && (data.ogTitle || data.title)) ogTitle.setAttribute('content', data.ogTitle || data.title);
 
@@ -530,30 +547,131 @@ document.addEventListener('DOMContentLoaded', () => {
     const ogImg = document.querySelector('meta[property="og:image"]');
     if (ogImg && data.ogImage) ogImg.setAttribute('content', data.ogImage);
 
+    const ogUrl = document.querySelector('meta[property="og:url"]');
+    if (ogUrl && data.canonical) ogUrl.setAttribute('content', data.canonical);
+
+    // Twitter Tags
+    const twTitle = document.querySelector('meta[name="twitter:title"]');
+    if (twTitle && (data.ogTitle || data.title)) twTitle.setAttribute('content', data.ogTitle || data.title);
+
+    const twDesc = document.querySelector('meta[name="twitter:description"]');
+    if (twDesc && (data.ogDesc || data.description)) twDesc.setAttribute('content', data.ogDesc || data.description);
+
+    const twImg = document.querySelector('meta[name="twitter:image"]');
+    if (twImg && data.ogImage) twImg.setAttribute('content', data.ogImage);
+
     if (data.googleVerification) {
       const gscMeta = document.getElementById('googleSiteVerificationMeta');
       if (gscMeta) gscMeta.setAttribute('content', data.googleVerification);
     }
   }
 
+  // Dynamic Injection of LocalBusiness & Organization JSON-LD Schema (GEO Optimization)
+  function updateBusinessJsonLd(seoData, contactData) {
+    const orgSchemaScript = document.getElementById('orgSchemaJson');
+    if (!orgSchemaScript) return;
+
+    const bSchema = (seoData && seoData.businessSchema) || {};
+    const nameAr = bSchema.nameAr || 'مصنع أولاد يحيى لتصنيع كراسي الحلاقة ومعدات الصالونات';
+    const nameEn = bSchema.nameEn || 'Awlad Yahya Barber Chairs Factory';
+    const phone = bSchema.phone || (contactData && contactData.phone) || '+201008355616';
+    const whatsapp = bSchema.whatsapp || (contactData && contactData.whatsapp) || '+201064116703';
+    const address = bSchema.address || (contactData && contactData.address) || 'القاهرة، جمهورية مصر العربية';
+    const geoLat = bSchema.geoLat || '30.0444';
+    const geoLng = bSchema.geoLng || '31.2357';
+    const canonical = (seoData && seoData.canonicalUrl) || 'https://awladyahya.com';
+
+    // Collect sameAs social links
+    const sameAsList = [];
+    if (bSchema.socialFacebook || (contactData && contactData.facebook)) {
+      sameAsList.push(bSchema.socialFacebook || contactData.facebook);
+    }
+    if (bSchema.socialInstagram) sameAsList.push(bSchema.socialInstagram);
+    if (bSchema.socialTelegram || (contactData && contactData.telegram)) {
+      sameAsList.push(bSchema.socialTelegram || contactData.telegram);
+    }
+    if (bSchema.socialOther) sameAsList.push(bSchema.socialOther);
+    if (whatsapp) sameAsList.push(`https://wa.me/${whatsapp.replace(/[^0-9]/g, '')}`);
+
+    // Parse existing FAQ if any
+    let existingFaq = null;
+    try {
+      const parsed = JSON.parse(orgSchemaScript.textContent);
+      if (parsed && Array.isArray(parsed['@graph'])) {
+        existingFaq = parsed['@graph'].find(item => item['@type'] === 'FAQPage');
+      }
+    } catch (_) {}
+
+    const graph = [
+      {
+        "@type": ["LocalBusiness", "Organization"],
+        "@id": `${canonical}/#organization`,
+        "name": nameAr,
+        "alternateName": nameEn,
+        "url": canonical,
+        "logo": `${canonical}/assets/images/logo.svg`,
+        "image": (seoData && seoData.ogImage) || `${canonical}/assets/images/hero-barber-chair.jpg`,
+        "description": (seoData && (seoData.description || seoData.desc)) || "مصنع مصري متخصص ورائد في تصنيع كراسي الحلاقة الهيدروليك الفاخرة، كراسي صالونات التجميل والكوافير، أحواض غسيل الشعر، الشيزلونجات، وتجهيزات الصالونات المتكاملة بأعلى معايير المتانة والضمان المباشر.",
+        "telephone": phone,
+        "priceRange": "$$",
+        "currenciesAccepted": "EGP",
+        "paymentAccepted": "Cash, Bank Transfer, Vodafone Cash, Instapay",
+        "address": {
+          "@type": "PostalAddress",
+          "streetAddress": address,
+          "addressLocality": "القاهرة",
+          "addressRegion": "القاهرة",
+          "addressCountry": "EG"
+        },
+        "geo": {
+          "@type": "GeoCoordinates",
+          "latitude": geoLat,
+          "longitude": geoLng
+        },
+        "openingHoursSpecification": [
+          {
+            "@type": "OpeningHoursSpecification",
+            "dayOfWeek": ["Saturday", "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday"],
+            "opens": "09:00",
+            "closes": "20:00"
+          }
+        ],
+        "sameAs": sameAsList
+      }
+    ];
+
+    if (existingFaq) {
+      graph.push(existingFaq);
+    }
+
+    orgSchemaScript.textContent = JSON.stringify({
+      "@context": "https://schema.org",
+      "@graph": graph
+    }, null, 2);
+  }
+
   // Load custom SEO / GSC settings from database
   if (typeof window !== 'undefined' && window.AySupabase) {
-    window.AySupabase.getSiteContent('seo').then(seoData => {
+    Promise.all([
+      window.AySupabase.getSiteContent('seo').catch(() => null),
+      window.AySupabase.getSiteContent('contact').catch(() => null)
+    ]).then(([seoData, contactData]) => {
       if (seoData) {
         if (seoData.title) defaultSeo.title = seoData.title;
-        if (seoData.description) defaultSeo.description = seoData.description;
+        if (seoData.description || seoData.desc) defaultSeo.description = seoData.description || seoData.desc;
         if (seoData.keywords) defaultSeo.keywords = seoData.keywords;
         if (seoData.canonicalUrl) defaultSeo.canonical = seoData.canonicalUrl;
         if (seoData.ogImage) defaultSeo.ogImage = seoData.ogImage;
         updateHeadSeo({
-          title: seoData.title,
-          description: seoData.description,
-          keywords: seoData.keywords,
-          canonical: seoData.canonicalUrl,
-          ogImage: seoData.ogImage,
+          title: defaultSeo.title,
+          description: defaultSeo.description,
+          keywords: defaultSeo.keywords,
+          canonical: defaultSeo.canonical,
+          ogImage: defaultSeo.ogImage,
           googleVerification: seoData.googleVerification
         });
       }
+      updateBusinessJsonLd(seoData, contactData);
     }).catch(() => {});
   }
 
@@ -565,17 +683,34 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!product || !productShowcaseView || !catalogGridView) return;
 
     const productCode = product.code || (product.specs && product.specs.code) || product.id;
-    const shortDesc = product.shortDesc || (product.fullDescription ? (product.fullDescription.length > 130 ? product.fullDescription.slice(0, 127) + '...' : product.fullDescription) : `${product.categoryName} مصنع وفق أعلى معايير الجودة والمتانة من مصنع أولاد يحيى.`);
+    const catName = product.categoryName || 'كراسي ومعدات الصالونات';
 
-    // Dynamic Head SEO for this product (RULES.md Standard 5)
-    const absoluteImg = product.image.startsWith('http') ? product.image : `https://awladyahya.com/${product.image.replace(/^\/+/, '')}`;
+    // Dynamic Fallback Title (RULES.md Standard 5)
+    const fallbackTitle = `${product.name} (${productCode}) - ${catName} | مصنع أولاد يحيى`;
+    const finalSeoTitle = (product.seoTitle && product.seoTitle.trim()) ? product.seoTitle.trim() : fallbackTitle;
+
+    // Dynamic Fallback Description
+    let fallbackDesc = product.shortDesc;
+    if (!fallbackDesc || fallbackDesc.trim().length < 20) {
+      const hydraulic = product.hydraulicPump || (product.specs && product.specs.hydraulic) || 'هيدروليك عالي التحمل';
+      const leather = product.leatherType || (product.specs && product.specs.leather) || 'جلد عالي الجودة متين';
+      const pricePart = (product.price && product.showPrice !== 'No') ? `بسعر ${product.price} ج.م` : 'متاح للطلب والتوريد المباشر';
+      fallbackDesc = `اكتشف ${product.name} كود (${productCode}) من ${catName} بمصنع أولاد يحيى. نظام ${hydraulic} وخامات ${leather}، ${pricePart}. ضمان مصنع وتوريد لجميع المحافظات والدول العربية.`;
+    }
+    const finalSeoDesc = (product.seoDescription && product.seoDescription.trim()) ? product.seoDescription.trim() : fallbackDesc;
+
+    // Dynamic OG Image
+    const absoluteImg = (product.image && product.image.startsWith('http'))
+      ? product.image
+      : `https://awladyahya.com/${(product.image || 'assets/images/hero-barber-chair.jpg').replace(/^\/+/, '')}`;
+
     updateHeadSeo({
-      title: product.seoTitle || `${product.name} | مصنع أولاد يحيى`,
-      description: product.seoDescription || shortDesc,
-      keywords: product.keywords || `${product.name}, ${productCode}, كراسي حلاقة, مصنع أولاد يحيى`,
+      title: finalSeoTitle,
+      description: finalSeoDesc,
+      keywords: product.keywords || `${product.name}, ${productCode}, ${catName}, كراسي حلاقة, كوافير, مصنع أولاد يحيى`,
       canonical: `https://awladyahya.com/#product/${product.id}`,
       ogTitle: product.name,
-      ogDesc: shortDesc,
+      ogDesc: finalSeoDesc,
       ogImage: absoluteImg
     });
 
