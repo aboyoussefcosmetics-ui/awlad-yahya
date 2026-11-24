@@ -22,3 +22,4 @@ ehthumbs_vista.db
 *.log
 scratch/
 push.bat
+serve.js
