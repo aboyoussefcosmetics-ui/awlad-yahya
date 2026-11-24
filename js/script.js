@@ -262,7 +262,7 @@ document.addEventListener('DOMContentLoaded', () => {
       <div class="product-card fade-up in-view" data-id="${product.id}">
         <div class="product-image-box" onclick="window.showProductDetails('${product.id}')" title="اضغط لعرض تفاصيل الموديل الكاملة">
           <span class="product-category-tag">${product.categoryName}</span>
-          <img src="${product.image}" alt="${product.name}" loading="lazy" width="600" height="500" onerror="this.src='assets/images/chair-mens-classic.svg'">
+          <img src="${product.image}" alt="${product.name}" loading="lazy" width="600" height="648" onerror="this.src='assets/images/chair-mens-classic.svg'">
         </div>
         <div class="product-body">
           <h4 class="product-title" onclick="window.showProductDetails('${product.id}')" style="cursor: pointer;">${product.name}</h4>
