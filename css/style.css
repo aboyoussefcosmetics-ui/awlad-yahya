@@ -993,7 +993,7 @@ ul, ol {
 }
 
 .product-body {
-  padding: 22px;
+  padding: 18px 14px;
   display: flex;
   flex-direction: column;
   flex-grow: 1;
@@ -1084,7 +1084,25 @@ ul, ol {
 .product-actions {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 10px;
+  gap: 8px;
+  margin-top: auto;
+}
+
+.product-actions .btn {
+  padding: 9px 6px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  gap: 5px;
+  white-space: nowrap;
+  width: 100%;
+  box-sizing: border-box;
+  border-radius: var(--border-radius-sm);
+  text-align: center;
+  justify-content: center;
+}
+
+.product-actions .btn-whatsapp {
+  padding: 9px 4px;
 }
 
 /* 8.1. Dedicated Product Details Showcase View (PDP) */
